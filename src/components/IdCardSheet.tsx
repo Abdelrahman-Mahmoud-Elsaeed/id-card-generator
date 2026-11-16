@@ -3,6 +3,7 @@ import {
   Download,
   ImagePlus,
   Loader2,
+  Move,
   Printer,
   RotateCcw,
   ShieldCheck,
@@ -16,12 +17,14 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import {
   clearLocalCardData,
+  DEFAULT_LOGOS,
   EMPTY_CARD_DATA,
   JOB_PROFILE_GROUPS,
   loadLocalCardData,
   PROGRAM_OPTIONS,
   saveLocalCardData,
   type CardFormData,
+  type ElementOffset,
 } from "@/data/programs";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +89,13 @@ interface ResolvedCardDisplay {
   hasQrUrl: boolean;
   accreditationFooter: string;
   photoDataUrl: string;
+  logos: [string, string, string];
+}
+
+interface DragProps {
+  offsets: Record<string, ElementOffset>;
+  dragEnabled: boolean;
+  onMove: (id: string, offset: ElementOffset) => void;
 }
 
 function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
@@ -119,7 +129,80 @@ function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
     accreditationFooter:
       accreditationFooter || "DiGiLiANS • MCIT • Military Academy",
     photoDataUrl: data.photoDataUrl,
+    logos: data.logos?.length === 3 ? data.logos : [...DEFAULT_LOGOS],
   };
+}
+
+function DraggableBox({
+  id,
+  drag,
+  className,
+  children,
+}: {
+  id: string;
+  drag: DragProps;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const offset = drag.offsets[id] ?? { x: 0, y: 0 };
+  const startRef = useRef<{
+    pointerX: number;
+    pointerY: number;
+    origX: number;
+    origY: number;
+  } | null>(null);
+
+  function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (!drag.dragEnabled) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    startRef.current = {
+      pointerX: e.clientX,
+      pointerY: e.clientY,
+      origX: offset.x,
+      origY: offset.y,
+    };
+  }
+
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (!drag.dragEnabled || !startRef.current) return;
+    const dx = Math.round(e.clientX - startRef.current.pointerX);
+    const dy = Math.round(e.clientY - startRef.current.pointerY);
+    drag.onMove(id, {
+      x: startRef.current.origX + dx,
+      y: startRef.current.origY + dy,
+    });
+  }
+
+  function handlePointerUp(e: React.PointerEvent<HTMLDivElement>) {
+    if (!startRef.current) return;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    startRef.current = null;
+  }
+
+  return (
+    <div
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      style={{
+        transform:
+          offset.x || offset.y
+            ? `translate(${offset.x}px, ${offset.y}px)`
+            : undefined,
+      }}
+      className={cn(
+        drag.dragEnabled &&
+          "touch-none cursor-grab select-none outline-1 outline-dashed outline-sky-400/70 hover:outline-sky-600 active:cursor-grabbing print:outline-none",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 const DIAGONAL_BG = {
@@ -148,6 +231,7 @@ function PortraitBox({
         <img
           src={photoDataUrl}
           alt="Card Portrait"
+          draggable={false}
           className="h-full w-full object-cover object-center"
         />
       ) : (
@@ -160,7 +244,7 @@ function PortraitBox({
           )}
         >
           <User className="h-5 w-5 opacity-70" />
-          <span className="text-[6px] font-medium leading-tight">
+          <span className="text-[6px] leading-tight font-medium">
             Your Photo
           </span>
         </div>
@@ -169,29 +253,38 @@ function PortraitBox({
   );
 }
 
-function LogosRow({ compact = false }: { compact?: boolean }) {
+function LogosRow({
+  logos,
+  compact = false,
+}: {
+  logos: [string, string, string];
+  compact?: boolean;
+}) {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center">
       <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
         <img
-          src="/logos/military-academy.png"
-          alt="Egyptian Military Academy"
+          src={logos[0]}
+          alt="Left Institution Logo"
+          draggable={false}
           className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
         />
       </div>
       <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
       <div className={cn("flex items-center justify-center px-2", compact ? "h-5" : "h-7")}>
         <img
-          src="/logos/digilians.png"
-          alt="DiGiLiANS"
+          src={logos[1]}
+          alt="Center Institution Logo"
+          draggable={false}
           className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
         />
       </div>
       <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
       <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
         <img
-          src="/logos/mcit.png"
-          alt="MCIT"
+          src={logos[2]}
+          alt="Right Institution Logo"
+          draggable={false}
           className={cn("max-w-full object-contain mix-blend-multiply", compact ? "max-h-4" : "max-h-6")}
         />
       </div>
@@ -200,7 +293,7 @@ function LogosRow({ compact = false }: { compact?: boolean }) {
 }
 
 /* ---------------- THEME 1: DIGILIANS CLASSIC ---------------- */
-function ClassicFront({ d }: { d: ResolvedCardDisplay }) {
+function ClassicFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   const rows = [
     { label: "NAME", value: d.name, filled: d.hasName },
     { label: "EMAIL", value: d.email, filled: d.hasEmail },
@@ -216,7 +309,9 @@ function ClassicFront({ d }: { d: ResolvedCardDisplay }) {
     >
       <div className="h-1.5 w-full bg-[#172554]" />
       <div className="px-4 pt-1.5">
-        <LogosRow />
+        <DraggableBox id="front-logos" drag={drag}>
+          <LogosRow logos={d.logos} />
+        </DraggableBox>
         <div className="relative mt-1.5 flex items-center justify-center">
           <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-300 to-transparent" />
           <span className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400" />
@@ -224,31 +319,35 @@ function ClassicFront({ d }: { d: ResolvedCardDisplay }) {
       </div>
 
       <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
-        <PortraitBox
-          photoDataUrl={d.photoDataUrl}
-          className="h-[2.35cm] w-[1.95cm] border border-white shadow-md"
-        />
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
-          {rows.map((row) => (
-            <div
-              key={row.label}
-              className="grid grid-cols-[54px_6px_1fr] items-center text-[7.3px] leading-tight"
-            >
-              <span className="font-medium tracking-wide text-slate-500">
-                {row.label}
-              </span>
-              <span className="text-sky-400/80">|</span>
-              <span
-                className={cn(
-                  "truncate font-bold",
-                  row.filled ? "text-slate-900" : "text-slate-400"
-                )}
+        <DraggableBox id="front-photo" drag={drag}>
+          <PortraitBox
+            photoDataUrl={d.photoDataUrl}
+            className="h-[2.35cm] w-[1.95cm] border border-white shadow-md"
+          />
+        </DraggableBox>
+        <DraggableBox id="front-info" drag={drag} className="min-w-0 flex-1">
+          <div className="flex flex-col gap-1.5 text-left">
+            {rows.map((row) => (
+              <div
+                key={row.label}
+                className="grid grid-cols-[54px_6px_1fr] items-center text-[7.3px] leading-tight"
               >
-                {row.value}
-              </span>
-            </div>
-          ))}
-        </div>
+                <span className="font-medium tracking-wide text-slate-500">
+                  {row.label}
+                </span>
+                <span className="text-sky-400/80">|</span>
+                <span
+                  className={cn(
+                    "truncate font-bold",
+                    row.filled ? "text-slate-900" : "text-slate-400"
+                  )}
+                >
+                  {row.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </DraggableBox>
       </div>
 
       <div className="flex flex-col">
@@ -264,7 +363,7 @@ function ClassicFront({ d }: { d: ResolvedCardDisplay }) {
 }
 
 /* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
-function CanvaOrganicWaveFront({ d }: { d: ResolvedCardDisplay }) {
+function CanvaOrganicWaveFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       <svg
@@ -285,46 +384,52 @@ function CanvaOrganicWaveFront({ d }: { d: ResolvedCardDisplay }) {
       </svg>
 
       <div className="relative z-10 px-4 pt-2.5">
-        <LogosRow compact />
+        <DraggableBox id="front-logos" drag={drag}>
+          <LogosRow logos={d.logos} compact />
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <PortraitBox
-          photoDataUrl={d.photoDataUrl}
-          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-sky-200"
-        />
+        <DraggableBox id="front-photo" drag={drag}>
+          <PortraitBox
+            photoDataUrl={d.photoDataUrl}
+            className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-sky-200"
+          />
+        </DraggableBox>
 
-        <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span
-            className={cn(
-              "w-fit bg-sky-100 px-1.5 py-0.5 text-[6px] font-bold tracking-wider uppercase",
-              d.hasJobProfile ? "text-sky-900" : "text-sky-600/70"
-            )}
-          >
-            {d.jobProfile}
-          </span>
-          <h2
-            className={cn(
-              "mt-1 truncate font-heading text-[10.8px] leading-tight font-bold",
-              d.hasName ? "text-slate-900" : "text-slate-400"
-            )}
-          >
-            {d.name}
-          </h2>
-          <span
-            className={cn(
-              "mt-0.5 truncate text-[6.8px] font-semibold",
-              d.hasEmail ? "text-slate-600" : "text-slate-400"
-            )}
-          >
-            {d.email}
-          </span>
+        <DraggableBox id="front-info" drag={drag} className="min-w-0 flex-1">
+          <div className="flex flex-col text-left">
+            <span
+              className={cn(
+                "w-fit bg-sky-100 px-1.5 py-0.5 text-[6px] font-bold tracking-wider uppercase",
+                d.hasJobProfile ? "text-sky-900" : "text-sky-600/70"
+              )}
+            >
+              {d.jobProfile}
+            </span>
+            <h2
+              className={cn(
+                "mt-1 truncate font-heading text-[10.8px] leading-tight font-bold",
+                d.hasName ? "text-slate-900" : "text-slate-400"
+              )}
+            >
+              {d.name}
+            </h2>
+            <span
+              className={cn(
+                "mt-0.5 truncate text-[6.8px] font-semibold",
+                d.hasEmail ? "text-slate-600" : "text-slate-400"
+              )}
+            >
+              {d.email}
+            </span>
 
-          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.3px] text-slate-800">
-            <span className="truncate font-bold">{d.program}</span>
-            <span className="truncate font-medium text-slate-600">{d.track}</span>
+            <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.3px] text-slate-800">
+              <span className="truncate font-bold">{d.program}</span>
+              <span className="truncate font-medium text-slate-600">{d.track}</span>
+            </div>
           </div>
-        </div>
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-semibold tracking-wider text-white">
@@ -336,7 +441,7 @@ function CanvaOrganicWaveFront({ d }: { d: ResolvedCardDisplay }) {
 }
 
 /* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
-function CanvaDiagonalRibbonFront({ d }: { d: ResolvedCardDisplay }) {
+function CanvaDiagonalRibbonFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       <svg
@@ -351,19 +456,23 @@ function CanvaDiagonalRibbonFront({ d }: { d: ResolvedCardDisplay }) {
       </svg>
 
       <div className="relative z-10 px-4 pt-2.5">
-        <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
-          <LogosRow compact />
-        </div>
+        <DraggableBox id="front-logos" drag={drag}>
+          <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
+            <LogosRow logos={d.logos} compact />
+          </div>
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex flex-1 items-center gap-3 px-4 py-1.5">
-        <PortraitBox
-          photoDataUrl={d.photoDataUrl}
-          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md"
-        />
+        <DraggableBox id="front-photo" drag={drag}>
+          <PortraitBox
+            photoDataUrl={d.photoDataUrl}
+            className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md"
+          />
+        </DraggableBox>
 
-        <div className="flex min-w-0 flex-1 flex-col text-left">
-          <div className="w-full border border-slate-200/80 bg-white px-2.5 py-1.5 shadow-sm">
+        <DraggableBox id="front-info" drag={drag} className="min-w-0 flex-1">
+          <div className="w-full border border-slate-200/80 bg-white px-2.5 py-1.5 text-left shadow-sm">
             <h2
               className={cn(
                 "truncate font-heading text-[10.2px] leading-tight font-bold",
@@ -394,7 +503,7 @@ function CanvaDiagonalRibbonFront({ d }: { d: ResolvedCardDisplay }) {
               </span>
             </div>
           </div>
-        </div>
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6px] font-bold tracking-wider">
@@ -406,11 +515,13 @@ function CanvaDiagonalRibbonFront({ d }: { d: ResolvedCardDisplay }) {
 }
 
 /* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
-function CanvaCurvedHeaderFront({ d }: { d: ResolvedCardDisplay }) {
+function CanvaCurvedHeaderFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
       <div className="relative z-10 bg-white px-4 pt-2 pb-1">
-        <LogosRow compact />
+        <DraggableBox id="front-logos" drag={drag}>
+          <LogosRow logos={d.logos} compact />
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 -mt-0.5">
@@ -422,41 +533,45 @@ function CanvaCurvedHeaderFront({ d }: { d: ResolvedCardDisplay }) {
       </div>
 
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1.5">
-        <PortraitBox
-          photoDataUrl={d.photoDataUrl}
-          className="h-[2.25cm] w-[1.85cm] border-2 border-white shadow-md ring-1 ring-slate-200"
-        />
+        <DraggableBox id="front-photo" drag={drag}>
+          <PortraitBox
+            photoDataUrl={d.photoDataUrl}
+            className="h-[2.25cm] w-[1.85cm] border-2 border-white shadow-md ring-1 ring-slate-200"
+          />
+        </DraggableBox>
 
-        <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
-          <div>
-            <h2
-              className={cn(
-                "truncate font-heading text-[10.5px] leading-tight font-bold",
-                d.hasName ? "text-slate-900" : "text-slate-400"
-              )}
-            >
-              {d.name}
-            </h2>
-            <p
-              className={cn(
-                "truncate text-[6.6px] font-semibold",
-                d.hasEmail ? "text-sky-800" : "text-slate-400"
-              )}
-            >
-              {d.email}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[5.9px]">
-            <div className="flex items-center justify-between gap-1">
-              <span className="shrink-0 font-medium text-slate-600">PROGRAM</span>
-              <span className="truncate font-bold text-slate-900">{d.program}</span>
+        <DraggableBox id="front-info" drag={drag} className="min-w-0 flex-1">
+          <div className="flex flex-col gap-1 text-left">
+            <div>
+              <h2
+                className={cn(
+                  "truncate font-heading text-[10.5px] leading-tight font-bold",
+                  d.hasName ? "text-slate-900" : "text-slate-400"
+                )}
+              >
+                {d.name}
+              </h2>
+              <p
+                className={cn(
+                  "truncate text-[6.6px] font-semibold",
+                  d.hasEmail ? "text-sky-800" : "text-slate-400"
+                )}
+              >
+                {d.email}
+              </p>
             </div>
-            <div className="flex items-center justify-between gap-1">
-              <span className="shrink-0 font-medium text-slate-600">TRACK</span>
-              <span className="truncate font-bold text-slate-900">{d.track}</span>
+            <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[5.9px]">
+              <div className="flex items-center justify-between gap-1">
+                <span className="shrink-0 font-medium text-slate-600">PROGRAM</span>
+                <span className="truncate font-bold text-slate-900">{d.program}</span>
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="shrink-0 font-medium text-slate-600">TRACK</span>
+                <span className="truncate font-bold text-slate-900">{d.track}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </DraggableBox>
       </div>
 
       <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-semibold tracking-wider text-white">
@@ -468,7 +583,7 @@ function CanvaCurvedHeaderFront({ d }: { d: ResolvedCardDisplay }) {
 }
 
 /* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
-function CanvaCornerGeometryFront({ d }: { d: ResolvedCardDisplay }) {
+function CanvaCornerGeometryFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       <svg
@@ -484,41 +599,47 @@ function CanvaCornerGeometryFront({ d }: { d: ResolvedCardDisplay }) {
       </svg>
 
       <div className="relative z-10 px-4 pt-2.5 pr-8">
-        <LogosRow compact />
+        <DraggableBox id="front-logos" drag={drag}>
+          <LogosRow logos={d.logos} compact />
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <PortraitBox
-          photoDataUrl={d.photoDataUrl}
-          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-slate-200"
-        />
+        <DraggableBox id="front-photo" drag={drag}>
+          <PortraitBox
+            photoDataUrl={d.photoDataUrl}
+            className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-slate-200"
+          />
+        </DraggableBox>
 
-        <div className="flex min-w-0 flex-1 flex-col text-left">
-          <h2
-            className={cn(
-              "truncate font-heading text-[10.8px] leading-tight font-bold",
-              d.hasName ? "text-slate-900" : "text-slate-400"
-            )}
-          >
-            {d.name}
-          </h2>
-          <span className="mt-1 w-fit max-w-full truncate bg-[#172554] px-2 py-0.5 text-[6px] font-bold tracking-wider text-white uppercase">
-            {d.jobProfile}
-          </span>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.1px] text-slate-700">
-            <span
+        <DraggableBox id="front-info" drag={drag} className="min-w-0 flex-1">
+          <div className="flex flex-col text-left">
+            <h2
               className={cn(
-                "truncate font-bold",
-                d.hasEmail ? "text-slate-900" : "text-slate-400"
+                "truncate font-heading text-[10.8px] leading-tight font-bold",
+                d.hasName ? "text-slate-900" : "text-slate-400"
               )}
             >
-              {d.email}
+              {d.name}
+            </h2>
+            <span className="mt-1 w-fit max-w-full truncate bg-[#172554] px-2 py-0.5 text-[6px] font-bold tracking-wider text-white uppercase">
+              {d.jobProfile}
             </span>
-            <span className="truncate">
-              {d.program} · {d.track}
-            </span>
+            <div className="mt-2 flex flex-col gap-0.5 text-[6.1px] text-slate-700">
+              <span
+                className={cn(
+                  "truncate font-bold",
+                  d.hasEmail ? "text-slate-900" : "text-slate-400"
+                )}
+              >
+                {d.email}
+              </span>
+              <span className="truncate">
+                {d.program} · {d.track}
+              </span>
+            </div>
           </div>
-        </div>
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-bold tracking-wider text-slate-700">
@@ -532,9 +653,11 @@ function CanvaCornerGeometryFront({ d }: { d: ResolvedCardDisplay }) {
 function CardBack({
   d,
   themeId,
+  drag,
 }: {
   d: ResolvedCardDisplay;
   themeId: CardThemeId;
+  drag: DragProps;
 }) {
   return (
     <div
@@ -574,43 +697,47 @@ function CardBack({
           themeId === "3" ? "pr-5 pl-9" : "px-6"
         )}
       >
-        <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-          <span className="max-w-full truncate border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-700 uppercase">
-            {d.jobProfile}
-          </span>
-          <h2
-            className={cn(
-              "mt-1.5 max-w-full truncate font-heading text-[10.5px] font-bold tracking-tight",
-              d.hasName ? "text-slate-900" : "text-slate-400"
-            )}
-          >
-            {d.name}
-          </h2>
-          <p className="mt-0.5 text-[7.2px] font-medium text-slate-600">
-            Scan QR for Profile &amp; Contact
-          </p>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px]">
-            <span className={d.hasPhone ? "text-slate-600" : "text-slate-400"}>
-              {d.phone}
+        <DraggableBox id="back-info" drag={drag} className="min-w-0 flex-1">
+          <div className="flex flex-col items-start text-left">
+            <span className="max-w-full truncate border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-700 uppercase">
+              {d.jobProfile}
             </span>
-            <span className={d.hasLocation ? "text-slate-600" : "text-slate-400"}>
-              {d.location}
+            <h2
+              className={cn(
+                "mt-1.5 max-w-full truncate font-heading text-[10.5px] font-bold tracking-tight",
+                d.hasName ? "text-slate-900" : "text-slate-400"
+              )}
+            >
+              {d.name}
+            </h2>
+            <p className="mt-0.5 text-[7.2px] font-medium text-slate-600">
+              Scan QR for Profile &amp; Contact
+            </p>
+            <div className="mt-2 flex flex-col gap-0.5 text-[6.8px]">
+              <span className={d.hasPhone ? "text-slate-600" : "text-slate-400"}>
+                {d.phone}
+              </span>
+              <span className={d.hasLocation ? "text-slate-600" : "text-slate-400"}>
+                {d.location}
+              </span>
+            </div>
+          </div>
+        </DraggableBox>
+
+        <DraggableBox id="back-qr" drag={drag}>
+          <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
+            <QRCodeSVG
+              value={d.qrUrl}
+              size={82}
+              level="M"
+              fgColor={d.hasQrUrl ? "#0f172a" : "#94a3b8"}
+              bgColor="#ffffff"
+            />
+            <span className="mt-1 text-[5.8px] font-semibold tracking-widest text-slate-400 uppercase">
+              {d.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
             </span>
           </div>
-        </div>
-
-        <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
-          <QRCodeSVG
-            value={d.qrUrl}
-            size={82}
-            level="M"
-            fgColor={d.hasQrUrl ? "#0f172a" : "#94a3b8"}
-            bgColor="#ffffff"
-          />
-          <span className="mt-1 text-[5.8px] font-semibold tracking-widest text-slate-400 uppercase">
-            {d.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
-          </span>
-        </div>
+        </DraggableBox>
       </div>
 
       <div className="relative z-10 flex flex-col">
@@ -631,21 +758,23 @@ function CardBack({
 function CardFrontByTheme({
   d,
   themeId,
+  drag,
 }: {
   d: ResolvedCardDisplay;
   themeId: CardThemeId;
+  drag: DragProps;
 }) {
   switch (themeId) {
     case "1":
-      return <ClassicFront d={d} />;
+      return <ClassicFront d={d} drag={drag} />;
     case "2":
-      return <CanvaOrganicWaveFront d={d} />;
+      return <CanvaOrganicWaveFront d={d} drag={drag} />;
     case "3":
-      return <CanvaDiagonalRibbonFront d={d} />;
+      return <CanvaDiagonalRibbonFront d={d} drag={drag} />;
     case "4":
-      return <CanvaCurvedHeaderFront d={d} />;
+      return <CanvaCurvedHeaderFront d={d} drag={drag} />;
     case "5":
-      return <CanvaCornerGeometryFront d={d} />;
+      return <CanvaCornerGeometryFront d={d} drag={drag} />;
   }
 }
 
@@ -658,6 +787,7 @@ export function IdCardSheet({
 }) {
   const [form, setForm] = useState<CardFormData>(() => loadLocalCardData());
   const [isDownloading, setIsDownloading] = useState(false);
+  const [dragEnabled, setDragEnabled] = useState(false);
   const frontRef = useRef<HTMLDivElement | null>(null);
   const backRef = useRef<HTMLDivElement | null>(null);
 
@@ -686,6 +816,24 @@ export function IdCardSheet({
     });
   }
 
+  function handleMove(id: string, offset: ElementOffset) {
+    setForm((prev) => {
+      const next: CardFormData = {
+        ...prev,
+        elementOffsets: {
+          ...prev.elementOffsets,
+          [id]: offset,
+        },
+      };
+      saveLocalCardData(next);
+      return next;
+    });
+  }
+
+  function handleResetPositions() {
+    updateField("elementOffsets", {});
+  }
+
   function handleProgramChange(nextProgram: string) {
     const matched = PROGRAM_OPTIONS.find((p) => p.label === nextProgram);
     setForm((prev) => {
@@ -712,6 +860,35 @@ export function IdCardSheet({
     e.target.value = "";
   }
 
+  function handleLogoUpload(index: 0 | 1 | 2, e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        const nextLogos: [string, string, string] = [...display.logos] as [
+          string,
+          string,
+          string,
+        ];
+        nextLogos[index] = reader.result;
+        updateField("logos", nextLogos);
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  function handleResetLogo(index: 0 | 1 | 2) {
+    const nextLogos: [string, string, string] = [...display.logos] as [
+      string,
+      string,
+      string,
+    ];
+    nextLogos[index] = DEFAULT_LOGOS[index];
+    updateField("logos", nextLogos);
+  }
+
   function handleReset() {
     clearLocalCardData();
     setForm(EMPTY_CARD_DATA);
@@ -719,8 +896,11 @@ export function IdCardSheet({
 
   async function downloadCardPdf() {
     if (!frontRef.current || !backRef.current) return;
+    const wasDragOn = dragEnabled;
+    setDragEnabled(false);
     setIsDownloading(true);
     try {
+      await new Promise((r) => setTimeout(r, 40));
       const [frontImg, backImg] = await Promise.all([
         toPng(frontRef.current, { pixelRatio: 4, cacheBust: true }),
         toPng(backRef.current, { pixelRatio: 4, cacheBust: true }),
@@ -742,8 +922,19 @@ export function IdCardSheet({
       pdf.save(`${safeName}-design-${themeId}.pdf`);
     } finally {
       setIsDownloading(false);
+      if (wasDragOn) setDragEnabled(true);
     }
   }
+
+  const dragProps: DragProps = {
+    offsets: form.elementOffsets ?? {},
+    dragEnabled,
+    onMove: handleMove,
+  };
+
+  const hasCustomOffsets = Object.values(form.elementOffsets ?? {}).some(
+    (o) => o.x !== 0 || o.y !== 0
+  );
 
   return (
     <div className="min-h-dvh bg-slate-100 p-4 print:bg-white print:p-0">
@@ -972,18 +1163,78 @@ export function IdCardSheet({
               className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
             />
           </label>
+
+          {/* Optional Custom Logos */}
+          <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-2 text-left">
+            <span className="text-xs font-semibold text-slate-700">
+              Header Logos (Optional)
+            </span>
+            <div className="grid grid-cols-3 gap-1.5">
+              {(["Left", "Center", "Right"] as const).map((slot, idx) => {
+                const i = idx as 0 | 1 | 2;
+                const isCustom = display.logos[i] !== DEFAULT_LOGOS[i];
+                return (
+                  <div key={slot} className="flex flex-col gap-1">
+                    <label className="flex cursor-pointer items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100">
+                      <ImagePlus className="h-3 w-3 text-sky-600" />
+                      <span>{slot}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleLogoUpload(i, e)}
+                        className="hidden"
+                      />
+                    </label>
+                    {isCustom && (
+                      <button
+                        type="button"
+                        onClick={() => handleResetLogo(i)}
+                        className="cursor-pointer text-[10px] font-medium text-slate-400 hover:text-slate-700"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </aside>
 
         {/* Live Card Preview & Export */}
         <section className="flex flex-col items-center gap-4 print:block">
-          <div className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm print:hidden">
+          <div className="flex w-full flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm print:hidden">
             <div>
               <h2 className="font-heading text-sm font-bold text-slate-900">
                 {activeTheme.name}
               </h2>
-              <p className="text-xs text-slate-500">{activeTheme.subtitle}</p>
+              <p className="text-xs text-slate-500">
+                {dragEnabled
+                  ? "Drag any element on the card to reposition it"
+                  : activeTheme.subtitle}
+              </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <Button
+                type="button"
+                size="sm"
+                variant={dragEnabled ? "default" : "outline"}
+                onClick={() => setDragEnabled((prev) => !prev)}
+              >
+                <Move className="h-3.5 w-3.5" />
+                <span>{dragEnabled ? "Drag: ON" : "Drag Layout"}</span>
+              </Button>
+              {hasCustomOffsets && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleResetPositions}
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  <span>Reset Pos</span>
+                </Button>
+              )}
               <Button
                 type="button"
                 size="sm"
@@ -1017,7 +1268,7 @@ export function IdCardSheet({
                 Front Side (Page 1 — 8.6 × 5.4 cm)
               </span>
               <div ref={frontRef}>
-                <CardFrontByTheme d={display} themeId={themeId} />
+                <CardFrontByTheme d={display} themeId={themeId} drag={dragProps} />
               </div>
             </div>
 
@@ -1026,7 +1277,7 @@ export function IdCardSheet({
                 Back Side with QR (Page 2 — 8.6 × 5.4 cm)
               </span>
               <div ref={backRef}>
-                <CardBack d={display} themeId={themeId} />
+                <CardBack d={display} themeId={themeId} drag={dragProps} />
               </div>
             </div>
           </div>

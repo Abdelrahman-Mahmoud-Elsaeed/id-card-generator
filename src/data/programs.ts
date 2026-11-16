@@ -87,6 +87,17 @@ export const JOB_PROFILE_GROUPS: JobProfileGroup[] = [
   },
 ];
 
+export interface ElementOffset {
+  x: number;
+  y: number;
+}
+
+export const DEFAULT_LOGOS: [string, string, string] = [
+  "/logos/military-academy.png",
+  "/logos/digilians.png",
+  "/logos/mcit.png",
+];
+
 export interface CardFormData {
   name: string;
   email: string;
@@ -98,6 +109,8 @@ export interface CardFormData {
   qrUrl: string;
   accreditationFooter: string;
   photoDataUrl: string;
+  logos: [string, string, string];
+  elementOffsets: Record<string, ElementOffset>;
 }
 
 export const EMPTY_CARD_DATA: CardFormData = {
@@ -111,6 +124,8 @@ export const EMPTY_CARD_DATA: CardFormData = {
   qrUrl: "",
   accreditationFooter: "DiGiLiANS • MCIT • Military Academy • NTI",
   photoDataUrl: "",
+  logos: [...DEFAULT_LOGOS],
+  elementOffsets: {},
 };
 
 const STORAGE_KEY = "digilians-id-card-data-v1";
