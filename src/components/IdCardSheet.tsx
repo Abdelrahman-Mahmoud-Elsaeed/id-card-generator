@@ -309,15 +309,17 @@ function ClassicFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) 
       style={DIAGONAL_BG}
     >
       <div className="h-1.5 w-full bg-[#172554]" />
-      <div className="px-4 pt-1.5">
-        <DraggableBox id="front-logos" drag={drag}>
-          <LogosRow logos={d.logos} />
-        </DraggableBox>
-        <div className="relative mt-1.5 flex items-center justify-center">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-300 to-transparent" />
-          <span className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400" />
+      {d.logos.length > 0 && (
+        <div className="px-4 pt-1.5">
+          <DraggableBox id="front-logos" drag={drag}>
+            <LogosRow logos={d.logos} />
+          </DraggableBox>
+          <div className="relative mt-1.5 flex items-center justify-center">
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-300 to-transparent" />
+            <span className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400" />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
         <DraggableBox id="front-photo" drag={drag}>
@@ -384,11 +386,13 @@ function CanvaOrganicWaveFront({ d, drag }: { d: ResolvedCardDisplay; drag: Drag
         <path d="M0,0 L115,0 C82,34 38,38 0,68 Z" fill="#eff6ff" />
       </svg>
 
-      <div className="relative z-10 px-4 pt-2.5">
-        <DraggableBox id="front-logos" drag={drag}>
-          <LogosRow logos={d.logos} compact />
-        </DraggableBox>
-      </div>
+      {d.logos.length > 0 && (
+        <div className="relative z-10 px-4 pt-2.5">
+          <DraggableBox id="front-logos" drag={drag}>
+            <LogosRow logos={d.logos} compact />
+          </DraggableBox>
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
         <DraggableBox id="front-photo" drag={drag}>
@@ -456,13 +460,15 @@ function CanvaDiagonalRibbonFront({ d, drag }: { d: ResolvedCardDisplay; drag: D
         <polygon points="193,0 205,0 155,200 143,200" fill="#bae6fd" />
       </svg>
 
-      <div className="relative z-10 px-4 pt-2.5">
-        <DraggableBox id="front-logos" drag={drag}>
-          <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
-            <LogosRow logos={d.logos} compact />
-          </div>
-        </DraggableBox>
-      </div>
+      {d.logos.length > 0 && (
+        <div className="relative z-10 px-4 pt-2.5">
+          <DraggableBox id="front-logos" drag={drag}>
+            <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
+              <LogosRow logos={d.logos} compact />
+            </div>
+          </DraggableBox>
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-1 items-center gap-3 px-4 py-1.5">
         <DraggableBox id="front-photo" drag={drag}>
@@ -519,13 +525,15 @@ function CanvaDiagonalRibbonFront({ d, drag }: { d: ResolvedCardDisplay; drag: D
 function CanvaCurvedHeaderFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
-      <div className="relative z-10 bg-white px-4 pt-2 pb-1">
-        <DraggableBox id="front-logos" drag={drag}>
-          <LogosRow logos={d.logos} compact />
-        </DraggableBox>
-      </div>
+      {d.logos.length > 0 && (
+        <div className="relative z-10 bg-white px-4 pt-2 pb-1">
+          <DraggableBox id="front-logos" drag={drag}>
+            <LogosRow logos={d.logos} compact />
+          </DraggableBox>
+        </div>
+      )}
 
-      <div className="relative z-10 -mt-0.5">
+      <div className={cn("relative z-10", d.logos.length > 0 && "-mt-0.5")}>
         <div className="bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] px-4 py-1 text-center text-white">
           <span className="block truncate text-[6.8px] font-bold tracking-[0.14em] uppercase">
             {d.jobProfile}
@@ -599,11 +607,13 @@ function CanvaCornerGeometryFront({ d, drag }: { d: ResolvedCardDisplay; drag: D
         <polygon points="278,0 320,0 320,32" fill="#172554" />
       </svg>
 
-      <div className="relative z-10 px-4 pt-2.5 pr-8">
-        <DraggableBox id="front-logos" drag={drag}>
-          <LogosRow logos={d.logos} compact />
-        </DraggableBox>
-      </div>
+      {d.logos.length > 0 && (
+        <div className="relative z-10 px-4 pt-2.5 pr-8">
+          <DraggableBox id="front-logos" drag={drag}>
+            <LogosRow logos={d.logos} compact />
+          </DraggableBox>
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
         <DraggableBox id="front-photo" drag={drag}>
