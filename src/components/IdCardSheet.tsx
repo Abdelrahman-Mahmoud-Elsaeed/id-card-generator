@@ -186,11 +186,11 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
         aria-hidden="true"
       >
         <path
-          d="M0,152 C75,180 155,112 320,145 L320,200 L0,200 Z"
+          d="M0,144 C75,172 155,108 320,138 L320,200 L0,200 Z"
           fill="#e0f2fe"
         />
         <path
-          d="M0,174 C95,188 185,132 320,164 L320,200 L0,200 Z"
+          d="M0,164 C95,180 185,126 320,156 L320,200 L0,200 Z"
           fill="#172554"
         />
         <path
@@ -211,26 +211,26 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span className="w-fit bg-sky-100 px-1.5 py-0.5 text-[6.2px] font-bold tracking-wider text-sky-800 uppercase">
+          <span className="w-fit bg-sky-100 px-1.5 py-0.5 text-[6.2px] font-bold tracking-wider text-sky-900 uppercase">
             {spec.jobProfile}
           </span>
           <h2 className="mt-1 font-heading text-[11px] leading-tight font-bold text-slate-900">
             ABDELRAHMAN MAHMOUD
           </h2>
-          <span className="mt-0.5 truncate text-[7px] font-medium text-slate-500">
+          <span className="mt-0.5 truncate text-[7px] font-semibold text-slate-600">
             abdelrahman.mahmoud.elsaeed
           </span>
 
-          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-500 pl-2 text-[6.8px] text-slate-700">
-            <span className="font-semibold">SPECIALIZED DIPLOMA</span>
-            <span className="text-slate-500">AI Based Software Development</span>
+          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.8px] text-slate-800">
+            <span className="font-bold">SPECIALIZED DIPLOMA</span>
+            <span className="font-medium text-slate-600">AI Based Software Development</span>
           </div>
         </div>
       </div>
 
-      {/* Footer sitting on the Navy Wave */}
-      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-medium tracking-wider text-white/95">
-        <span className="text-slate-600">CAIRO, EGYPT</span>
+      {/* Footer sitting cleanly on the Navy Wave */}
+      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-semibold tracking-wider text-white">
+        <span className="text-sky-200">CAIRO, EGYPT</span>
         <span>DIGILIANS • الرواد الرقميون</span>
       </div>
     </div>
@@ -267,15 +267,15 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <div className="w-fit bg-white/95 px-2 py-1 shadow-sm backdrop-blur-xs">
+          <div className="w-fit border border-slate-200/80 bg-white px-2.5 py-1.5 shadow-sm">
             <h2 className="font-heading text-[10.5px] leading-tight font-bold text-slate-900">
               ABDELRAHMAN MAHMOUD
             </h2>
-            <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-700 uppercase">
+            <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-800 uppercase">
               {spec.jobProfile}
             </p>
-            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.5px] text-slate-600">
-              <span className="truncate font-medium text-slate-800">
+            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.5px] text-slate-700">
+              <span className="truncate font-semibold text-slate-900">
                 abdelrahman.mahmoud.elsaeed
               </span>
               <span>Specialized Diploma • AI Dev Track</span>
@@ -284,8 +284,8 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
         </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6px] font-semibold tracking-wider">
-        <span className="text-slate-500">MCIT • MILITARY ACADEMY</span>
+      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6px] font-bold tracking-wider">
+        <span className="text-slate-700">MCIT • MILITARY ACADEMY</span>
         <span className="text-white">DIGILIANS</span>
       </div>
     </div>
@@ -320,27 +320,27 @@ function CanvaCurvedHeaderFront({ spec }: { spec: CardSpec }) {
             <h2 className="font-heading text-[10.8px] leading-tight font-bold text-slate-900">
               ABDELRAHMAN MAHMOUD
             </h2>
-            <p className="truncate text-[6.8px] font-medium text-sky-700">
+            <p className="truncate text-[6.8px] font-semibold text-sky-800">
               abdelrahman.mahmoud.elsaeed
             </p>
           </div>
           <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6.6px]">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">PROGRAM</span>
-              <span className="font-bold text-slate-800">SPECIALIZED DIPLOMA</span>
+              <span className="font-medium text-slate-600">PROGRAM</span>
+              <span className="font-bold text-slate-900">SPECIALIZED DIPLOMA</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">TRACK</span>
-              <span className="font-bold text-slate-800">AI SOFTWARE DEV</span>
+              <span className="font-medium text-slate-600">TRACK</span>
+              <span className="font-bold text-slate-900">AI SOFTWARE DEV</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom Navy Accent */}
-      <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-medium tracking-wider text-white/90">
+      <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-semibold tracking-wider text-white">
         <span>الرواد الرقميون • DIGILIANS</span>
-        <span className="text-sky-300">CAIRO, EGYPT</span>
+        <span className="text-sky-200">CAIRO, EGYPT</span>
       </div>
     </div>
   );
@@ -381,8 +381,8 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
           <span className="mt-1 w-fit bg-[#172554] px-2 py-0.5 text-[6.2px] font-bold tracking-wider text-white uppercase">
             {spec.jobProfile}
           </span>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px] text-slate-600">
-            <span className="truncate font-semibold text-slate-800">
+          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px] text-slate-700">
+            <span className="truncate font-bold text-slate-900">
               abdelrahman.mahmoud.elsaeed
             </span>
             <span>Specialized Diploma · AI Software Dev</span>
@@ -391,7 +391,7 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
       </div>
 
       {/* Bottom Footer */}
-      <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-semibold tracking-wider text-slate-500">
+      <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-bold tracking-wider text-slate-700">
         <span>DIGILIANS • الرواد الرقميون</span>
       </div>
     </div>
@@ -412,7 +412,7 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0,165 C90,185 180,140 320,168 L320,200 L0,200 Z" fill="#172554" />
+          <path d="M0,162 C90,180 180,136 320,160 L320,200 L0,200 Z" fill="#172554" />
         </svg>
       )}
       {themeId === "3" && (
@@ -422,14 +422,19 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <polygon points="0,0 45,0 15,200 0,200" fill="#172554" />
-          <polygon points="45,0 53,0 23,200 15,200" fill="#0ea5e9" />
+          <polygon points="0,0 24,0 10,200 0,200" fill="#172554" />
+          <polygon points="24,0 30,0 16,200 10,200" fill="#0ea5e9" />
         </svg>
       )}
 
       <div className="relative z-10 h-1.5 w-full bg-[#172554]" />
 
-      <div className="relative z-10 flex flex-1 items-center justify-between gap-3 px-6 py-2">
+      <div
+        className={cn(
+          "relative z-10 flex flex-1 items-center justify-between gap-3 py-2",
+          themeId === "3" ? "pr-5 pl-9" : "px-6"
+        )}
+      >
         <div className="flex min-w-0 flex-1 flex-col items-start text-left">
           <span className="border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[7px] font-bold tracking-wider text-sky-700 uppercase">
             {spec.jobProfile}
