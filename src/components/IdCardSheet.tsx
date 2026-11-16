@@ -154,7 +154,7 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
       </div>
 
       <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.35cm] w-[1.95cm] shrink-0 overflow-hidden border border-white bg-[#132444] shadow-md">
+        <div className="h-[2.35cm] w-[1.95cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
           <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
