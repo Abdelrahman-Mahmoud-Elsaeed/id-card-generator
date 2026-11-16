@@ -96,6 +96,7 @@ export interface CardFormData {
   phone: string;
   location: string;
   qrUrl: string;
+  accreditationFooter: string;
   photoDataUrl: string;
 }
 
@@ -108,6 +109,7 @@ export const EMPTY_CARD_DATA: CardFormData = {
   phone: "",
   location: "Cairo, Egypt",
   qrUrl: "",
+  accreditationFooter: "DiGiLiANS • MCIT • Military Academy • NTI",
   photoDataUrl: "",
 };
 

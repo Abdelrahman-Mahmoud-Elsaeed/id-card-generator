@@ -84,6 +84,7 @@ interface ResolvedCardDisplay {
   hasLocation: boolean;
   qrUrl: string;
   hasQrUrl: boolean;
+  accreditationFooter: string;
   photoDataUrl: string;
 }
 
@@ -96,6 +97,7 @@ function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
   const phone = data.phone.trim();
   const location = data.location.trim();
   const qrUrl = data.qrUrl.trim();
+  const accreditationFooter = data.accreditationFooter.trim();
 
   return {
     name: name ? name.toUpperCase() : "YOUR FULL NAME",
@@ -114,6 +116,8 @@ function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
     hasLocation: Boolean(location),
     qrUrl: qrUrl || "https://digilians.gov.eg",
     hasQrUrl: Boolean(qrUrl),
+    accreditationFooter:
+      accreditationFooter || "DiGiLiANS • MCIT • Military Academy",
     photoDataUrl: data.photoDataUrl,
   };
 }
@@ -616,7 +620,7 @@ function CardBack({
             themeId === "2" ? "text-white/95" : "text-slate-500"
           )}
         >
-          DiGiLiANS • MCIT • Military Academy • NTI
+          {d.accreditationFooter}
         </div>
         <div className="h-1.5 w-full bg-[#172554]" />
       </div>
@@ -952,6 +956,19 @@ export function IdCardSheet({
               value={form.qrUrl}
               onChange={(e) => updateField("qrUrl", e.target.value)}
               placeholder="https://linkedin.com/in/your-profile"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">
+              Back Footer Entities
+            </span>
+            <input
+              type="text"
+              value={form.accreditationFooter}
+              onChange={(e) => updateField("accreditationFooter", e.target.value)}
+              placeholder="DiGiLiANS • MCIT • Military Academy • NTI"
               className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
             />
           </label>
