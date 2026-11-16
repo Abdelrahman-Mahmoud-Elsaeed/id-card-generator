@@ -6,7 +6,6 @@ import {
   Move,
   Printer,
   RotateCcw,
-  ShieldCheck,
   Trash2,
   User,
 } from "lucide-react";
@@ -945,12 +944,6 @@ export function IdCardSheet({
             <h1 className="font-heading text-base font-bold text-slate-900">
               Digilians ID Card Builder (8.6 cm × 5.4 cm)
             </h1>
-            <p className="mt-0.5 flex items-center gap-1.5 text-xs text-emerald-700">
-              <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-              <span>
-                100% Local — Your photo &amp; info are saved only in your browser (never uploaded)
-              </span>
-            </p>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
             {CARD_THEMES.map((theme) => (
