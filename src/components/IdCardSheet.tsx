@@ -58,32 +58,45 @@ interface CardSpec {
   key: ProfileVariantKey;
   label: string;
   jobProfile: string;
+  techStack: string[];
   qrUrl: string;
 }
+
+const PERSONAL_INFO = {
+  name: "ABDELRAHMAN MAHMOUD",
+  email: "abdelrahman.mahmoud.elsaeed@gmail.com",
+  phone: "+20 109 516 0726",
+  location: "Cairo",
+  initiative: "DIGILIANS - MCIT",
+};
 
 const CARD_SPECS: CardSpec[] = [
   {
     key: "software",
     label: "Software Engineer",
     jobProfile: "SOFTWARE ENGINEER",
+    techStack: ["System Design", "REST APIs", "TypeScript", "Databases", "CI/CD", "Cloud"],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.software}`,
   },
   {
     key: "fullstack",
     label: "Full-Stack Developer",
     jobProfile: "FULL-STACK DEVELOPER",
+    techStack: ["Next.js", "React", "Node.js", "Express", "PostgreSQL", "Docker"],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.fullstack}`,
   },
   {
     key: "backend",
     label: "Back-End Engineer",
     jobProfile: "BACKEND & CLOUD ENGINEER",
+    techStack: ["Node.js", "Express", "PostgreSQL", "Redis", "AWS", "Terraform"],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.backend}`,
   },
   {
     key: "frontend",
     label: "Front-End Engineer",
     jobProfile: "FRONT-END ENGINEER",
+    techStack: ["React 19", "Next.js", "TypeScript", "Tailwind CSS", "UI Systems", "Web Perf"],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.frontend}`,
   },
 ];
@@ -93,80 +106,62 @@ const DIAGONAL_BG = {
     "repeating-linear-gradient(-35deg, rgba(148, 163, 184, 0.08) 0px, rgba(148, 163, 184, 0.08) 1px, transparent 1px, transparent 11px)",
 };
 
-function LogosRow({ compact = false }: { compact?: boolean }) {
+function InitiativeText({ light = false }: { light?: boolean }) {
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center">
-      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
-        <img
-          src="/logos/military-academy.png"
-          alt="Egyptian Military Academy"
-          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
-        />
-      </div>
-      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
-      <div className={cn("flex items-center justify-center px-2", compact ? "h-5" : "h-7")}>
-        <img
-          src="/logos/digilians.png"
-          alt="DiGiLiANS"
-          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
-        />
-      </div>
-      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
-      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
-        <img
-          src="/logos/mcit.png"
-          alt="MCIT"
-          className={cn("max-w-full object-contain mix-blend-multiply", compact ? "max-h-4" : "max-h-6")}
-        />
-      </div>
-    </div>
+    <span
+      className={cn(
+        "text-[7pt] font-semibold tracking-[0.16em] uppercase",
+        light ? "text-sky-200" : "text-slate-500"
+      )}
+    >
+      DIGILIANS · MCIT
+    </span>
   );
 }
 
 /* ---------------- THEME 1: DIGILIANS CLASSIC ---------------- */
-function ClassicFront({ spec }: { spec: CardSpec }) {
-  const rows = [
-    { label: "NAME", value: "ABDELRAHMAN MAHMOUD" },
-    { label: "EMAIL", value: "abdelrahman.mahmoud.elsaeed" },
-    { label: "PROGRAM", value: "SPECIALIZED DIPLOMA" },
-    { label: "TRACK", value: "AI BASED SOFTWARE DEVELOPMENT" },
-    { label: "JOB PROFILE", value: spec.jobProfile },
-  ];
-
+function ClassicFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div
       className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 shadow-md"
       style={DIAGONAL_BG}
     >
       <div className="h-1.5 w-full bg-[#172554]" />
-      <div className="px-4 pt-1.5">
-        <LogosRow />
-        <div className="relative mt-1.5 flex items-center justify-center">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-indigo-300 to-transparent" />
-          <span className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400" />
-        </div>
-      </div>
 
-      <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.35cm] w-[1.95cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
-          {rows.map((row) => (
-            <div key={row.label} className="grid grid-cols-[54px_6px_1fr] items-center text-[7.5px] leading-tight">
-              <span className="font-medium tracking-wide text-slate-500">{row.label}</span>
-              <span className="text-sky-400/80">|</span>
-              <span className="truncate font-bold text-slate-900">{row.value}</span>
-            </div>
-          ))}
+      <div className={cn("flex flex-1 items-center gap-4 py-2", showPhoto ? "px-4" : "px-6")}>
+        {showPhoto && (
+          <div className="h-[2.3cm] w-[1.85cm] shrink-0 overflow-hidden rounded-full border-2 border-white bg-[#132444] shadow-md">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+        )}
+
+        <div className="flex min-w-0 flex-1 flex-col text-left">
+          <h2
+            className={cn(
+              "font-heading leading-tight font-bold tracking-tight text-slate-900",
+              showPhoto ? "text-[11pt]" : "text-[12.5pt]"
+            )}
+          >
+            {PERSONAL_INFO.name}
+          </h2>
+          <p className="mt-1 text-[8pt] font-bold tracking-[0.14em] text-sky-800 uppercase">
+            {spec.jobProfile}
+          </p>
+
+          <div className="mt-3 flex flex-col gap-0.5 border-t border-slate-200/90 pt-2">
+            <span className="text-[7.5pt] font-semibold break-all text-slate-700">
+              {PERSONAL_INFO.email}
+            </span>
+            <span className="text-[7pt] font-medium text-slate-500">
+              {PERSONAL_INFO.phone}  •  {PERSONAL_INFO.location}
+            </span>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center justify-center gap-2 pb-1 text-[6.8px] font-medium tracking-wide text-slate-600">
-          <span className="h-1 w-1 rounded-full bg-[#172554]" />
-          <span>DIGILIANS • الرواد الرقميون</span>
-          <span className="h-1 w-1 rounded-full bg-[#172554]" />
+        <div className={cn("flex items-center justify-end pb-1", showPhoto ? "px-4" : "px-6")}>
+          <InitiativeText />
         </div>
         <div className="h-1.5 w-full bg-[#172554]" />
       </div>
@@ -175,7 +170,7 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
 }
 
 /* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
-function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
+function CanvaOrganicWaveFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       {/* Canva Layered Bottom-Right Organic SVG Waves */}
@@ -199,46 +194,43 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
         />
       </svg>
 
-      {/* Top Logos */}
-      <div className="relative z-10 px-4 pt-2.5">
-        <LogosRow compact />
-      </div>
-
-      {/* Center Portrait & Details */}
-      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-sky-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+      {/* Center Content */}
+      <div className={cn("relative z-10 flex flex-1 items-center gap-4 pt-3 pb-1", showPhoto ? "px-4" : "px-6")}>
+        {showPhoto && (
+          <div className="h-[2.2cm] w-[1.8cm] shrink-0 overflow-hidden rounded-full border-2 border-white bg-[#132444] shadow-md ring-1 ring-sky-200">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+        )}
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span className="w-fit bg-sky-100 px-1.5 py-0.5 text-[6.2px] font-bold tracking-wider text-sky-900 uppercase">
+          <h2
+            className={cn(
+              "font-heading leading-tight font-bold text-slate-900",
+              showPhoto ? "text-[11pt]" : "text-[12.5pt]"
+            )}
+          >
+            {PERSONAL_INFO.name}
+          </h2>
+          <span className="mt-1 text-[8pt] font-bold tracking-[0.14em] text-sky-800 uppercase">
             {spec.jobProfile}
           </span>
-          <h2 className="mt-1 font-heading text-[11px] leading-tight font-bold text-slate-900">
-            ABDELRAHMAN MAHMOUD
-          </h2>
-          <span className="mt-0.5 truncate text-[7px] font-semibold text-slate-600">
-            abdelrahman.mahmoud.elsaeed
+          <span className="mt-2.5 text-[7.5pt] font-semibold break-all text-slate-700">
+            {PERSONAL_INFO.email}
           </span>
-
-          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.5px] text-slate-800">
-            <span className="font-bold">SPECIALIZED DIPLOMA</span>
-            <span className="font-medium text-slate-600">AI Based Software Development</span>
-          </div>
         </div>
       </div>
 
       {/* Footer sitting cleanly on the Navy Wave */}
-      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-semibold tracking-wider text-white">
-        <span className="text-sky-200">CAIRO, EGYPT</span>
-        <span>DIGILIANS • الرواد الرقميون</span>
+      <div className={cn("relative z-10 flex items-center justify-between pb-1.5 text-[7pt] font-semibold tracking-wider text-white", showPhoto ? "px-4" : "px-6")}>
+        <span className="text-sky-200">{PERSONAL_INFO.phone}  •  {PERSONAL_INFO.location}</span>
+        <InitiativeText light />
       </div>
     </div>
   );
 }
 
 /* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
-function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
+function CanvaDiagonalRibbonFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       {/* Canva Diagonal Geometric Shapes */}
@@ -248,106 +240,97 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <polygon points="225,0 320,0 320,200 175,200" fill="#172554" />
-        <polygon points="205,0 228,0 178,200 155,200" fill="#0ea5e9" />
-        <polygon points="193,0 205,0 155,200 143,200" fill="#bae6fd" />
+        <polygon points="242,0 320,0 320,200 198,200" fill="#172554" />
+        <polygon points="222,0 245,0 201,200 178,200" fill="#0ea5e9" />
+        <polygon points="210,0 222,0 178,200 166,200" fill="#bae6fd" />
       </svg>
 
-      {/* Top White Pill for Logos */}
-      <div className="relative z-10 px-4 pt-2.5">
-        <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
-          <LogosRow compact />
-        </div>
-      </div>
+      <div className="relative z-10 h-2" />
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+      <div className={cn("relative z-10 flex flex-1 items-center gap-3.5 py-1", showPhoto ? "px-4" : "px-6")}>
+        {showPhoto && (
+          <div className="h-[2.2cm] w-[1.8cm] shrink-0 overflow-hidden rounded-full border-2 border-white bg-[#132444] shadow-md">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+        )}
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <div className="w-fit border border-slate-200/80 bg-white px-2.5 py-1.5 shadow-sm">
-            <h2 className="font-heading text-[10.5px] leading-tight font-bold text-slate-900">
-              ABDELRAHMAN MAHMOUD
+          <div className="border border-slate-200/90 bg-white/95 px-3 py-2.5 shadow-sm">
+            <h2
+              className={cn(
+                "font-heading leading-tight font-bold text-slate-900",
+                showPhoto ? "text-[10.5pt]" : "text-[11.5pt]"
+              )}
+            >
+              {PERSONAL_INFO.name}
             </h2>
-            <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-800 uppercase">
+            <p className="mt-0.5 text-[7.5pt] font-bold tracking-[0.14em] text-sky-800 uppercase">
               {spec.jobProfile}
             </p>
-            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.2px] text-slate-700">
-              <span className="truncate font-semibold text-slate-900">
-                abdelrahman.mahmoud.elsaeed
-              </span>
-              <span>Specialized Diploma • AI Based Software Development</span>
+            <div className="mt-2 border-t border-slate-200 pt-1.5 text-[7.5pt] font-semibold break-all text-slate-700">
+              {PERSONAL_INFO.email}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6px] font-bold tracking-wider">
-        <span className="text-slate-700">MCIT • MILITARY ACADEMY</span>
-        <span className="text-white">DIGILIANS</span>
+      <div className={cn("relative z-10 flex items-center justify-between pb-1.5", showPhoto ? "px-4" : "px-6")}>
+        <span className="text-[7pt] font-semibold text-slate-600">{PERSONAL_INFO.phone}  •  {PERSONAL_INFO.location}</span>
+        <InitiativeText light />
       </div>
     </div>
   );
 }
 
 /* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
-function CanvaCurvedHeaderFront({ spec }: { spec: CardSpec }) {
+function CanvaCurvedHeaderFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
-      {/* Top White Logo Bar + Navy Curved Banner */}
-      <div className="relative z-10 bg-white px-4 pt-2 pb-1">
-        <LogosRow compact />
-      </div>
-
-      <div className="relative z-10 -mt-0.5">
-        <div className="bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] px-4 py-1 text-center text-white">
-          <span className="text-[7px] font-bold tracking-[0.16em] uppercase">
+      {/* Navy Header Banner */}
+      <div className={cn("relative z-10 bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] py-2 text-white", showPhoto ? "px-4" : "px-6")}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[8pt] font-bold tracking-[0.14em] uppercase">
             {spec.jobProfile}
           </span>
+          <InitiativeText light />
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1.5">
-        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+      <div className={cn("relative z-10 flex flex-1 items-center gap-4 py-1.5", showPhoto ? "px-4" : "px-6")}>
+        {showPhoto && (
+          <div className="h-[2.2cm] w-[1.8cm] shrink-0 overflow-hidden rounded-full border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+        )}
 
-        <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
-          <div>
-            <h2 className="font-heading text-[10.8px] leading-tight font-bold text-slate-900">
-              ABDELRAHMAN MAHMOUD
-            </h2>
-            <p className="truncate text-[6.8px] font-semibold text-sky-800">
-              abdelrahman.mahmoud.elsaeed
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6px]">
-            <div className="flex items-center justify-between gap-1">
-              <span className="font-medium text-slate-600">PROGRAM</span>
-              <span className="font-bold text-slate-900">SPECIALIZED DIPLOMA</span>
-            </div>
-            <div className="flex items-center justify-between gap-1">
-              <span className="font-medium text-slate-600">TRACK</span>
-              <span className="font-bold text-slate-900">AI BASED SOFTWARE DEVELOPMENT</span>
-            </div>
-          </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
+          <h2
+            className={cn(
+              "font-heading leading-tight font-bold text-slate-900",
+              showPhoto ? "text-[11pt]" : "text-[12.5pt]"
+            )}
+          >
+            {PERSONAL_INFO.name}
+          </h2>
+          <p className="text-[7.5pt] font-semibold break-all text-sky-800">
+            {PERSONAL_INFO.email}
+          </p>
+          <p className="text-[7pt] font-medium text-slate-500">
+            {PERSONAL_INFO.phone}  •  {PERSONAL_INFO.location}
+          </p>
         </div>
       </div>
 
       {/* Bottom Navy Accent */}
-      <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-semibold tracking-wider text-white">
-        <span>الرواد الرقميون • DIGILIANS</span>
-        <span className="text-sky-200">CAIRO, EGYPT</span>
-      </div>
+      <div className="h-1.5 w-full bg-[#172554]" />
     </div>
   );
 }
 
 /* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
-function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
+function CanvaCornerGeometryFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
       {/* Canva Geometric Corner Ribbons */}
@@ -363,36 +346,39 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
         <polygon points="278,0 320,0 320,32" fill="#172554" />
       </svg>
 
-      {/* Top Logos */}
-      <div className="relative z-10 px-4 pt-2.5 pr-8">
-        <LogosRow compact />
-      </div>
+      <div className="relative z-10 h-2" />
 
       {/* Center Content */}
-      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+      <div className={cn("relative z-10 flex flex-1 items-center gap-4 py-1", showPhoto ? "px-4" : "px-6")}>
+        {showPhoto && (
+          <div className="h-[2.2cm] w-[1.8cm] shrink-0 overflow-hidden rounded-full border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+        )}
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <h2 className="font-heading text-[11px] leading-tight font-bold text-slate-900">
-            ABDELRAHMAN MAHMOUD
+          <h2
+            className={cn(
+              "font-heading leading-tight font-bold text-slate-900",
+              showPhoto ? "text-[11pt]" : "text-[12.5pt]"
+            )}
+          >
+            {PERSONAL_INFO.name}
           </h2>
-          <span className="mt-1 w-fit bg-[#172554] px-2 py-0.5 text-[6.2px] font-bold tracking-wider text-white uppercase">
+          <span className="mt-1 text-[8pt] font-bold tracking-[0.14em] text-sky-800 uppercase">
             {spec.jobProfile}
           </span>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.3px] text-slate-700">
-            <span className="truncate font-bold text-slate-900">
-              abdelrahman.mahmoud.elsaeed
-            </span>
-            <span>Specialized Diploma · AI Based Software Development</span>
-          </div>
+          <span className="mt-2.5 text-[7.5pt] font-semibold break-all text-slate-700">
+            {PERSONAL_INFO.email}
+          </span>
+          <span className="mt-0.5 text-[7pt] font-medium text-slate-500">
+            {PERSONAL_INFO.phone}  •  {PERSONAL_INFO.location}
+          </span>
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-bold tracking-wider text-slate-700">
-        <span>DIGILIANS • الرواد الرقميون</span>
+      <div className={cn("relative z-10 flex items-center justify-end pb-1.5", showPhoto ? "px-4" : "px-6")}>
+        <InitiativeText />
       </div>
     </div>
   );
@@ -400,6 +386,12 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
 
 /* ---------------- UNIFIED BACK RENDERER PER THEME ---------------- */
 function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
+  const skillRows = [
+    spec.techStack.slice(0, 2),
+    spec.techStack.slice(2, 4),
+    spec.techStack.slice(4, 6),
+  ].filter((row) => row.length > 0);
+
   return (
     <div
       className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
@@ -412,7 +404,7 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0,162 C90,180 180,136 320,160 L320,200 L0,200 Z" fill="#172554" />
+          <path d="M0,172 C90,186 180,152 320,170 L320,200 L0,200 Z" fill="#172554" />
         </svg>
       )}
       {themeId === "3" && (
@@ -431,78 +423,83 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
 
       <div
         className={cn(
-          "relative z-10 flex flex-1 items-center justify-between gap-3 py-2",
-          themeId === "3" ? "pr-5 pl-9" : "px-6"
+          "relative z-10 flex flex-1 items-center justify-between gap-4",
+          themeId === "2" ? "pt-1.5 pb-4" : "py-2",
+          themeId === "3" ? "pr-5 pl-8" : "px-6"
         )}
       >
-        <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-          <span className="border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[7px] font-bold tracking-wider text-sky-700 uppercase">
-            {spec.jobProfile}
-          </span>
-          <h2 className="mt-1.5 font-heading text-[11px] font-bold tracking-tight">
-            ABDELRAHMAN MAHMOUD
-          </h2>
-          <p className="mt-0.5 text-[7.5px] font-medium text-slate-600">
-            Scan QR for CV, Projects &amp; vCard
-          </p>
-          <div className="mt-2 flex flex-col gap-0.5 text-[7px] text-slate-500">
-            <span>+20 109 516 0726</span>
-            <span>Cairo, Egypt</span>
+        <div className="flex min-w-0 flex-1 flex-col items-start justify-center text-left">
+          <div className="flex flex-col gap-1.5 border-l-2 border-[#172554] pl-3 text-[7.5pt] leading-snug font-semibold text-slate-800">
+            {skillRows.map((row, rowIdx) => (
+              <div key={rowIdx} className="flex items-center gap-2 whitespace-nowrap">
+                <span>{row[0]}</span>
+                {row[1] && (
+                  <>
+                    <span className="text-slate-400">•</span>
+                    <span>{row[1]}</span>
+                  </>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
+        <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-1.5 shadow-sm">
           <QRCodeSVG
             value={spec.qrUrl}
-            size={84}
+            size={72}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
           />
-          <span className="mt-1 text-[6px] font-semibold tracking-widest text-slate-400 uppercase">
+          <span className="mt-1 text-[7pt] leading-none font-bold tracking-wider text-slate-700 uppercase">
             SCAN ME
+          </span>
+          <span className="mt-0.5 text-[7pt] leading-none font-medium text-slate-500">
+            CV &amp; Projects
           </span>
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-col">
-        <div
-          className={cn(
-            "pb-1 text-center text-[6.5px] font-medium tracking-wider",
-            themeId === "2" ? "text-white/95" : "text-slate-500"
-          )}
-        >
-          DiGiLiANS • MCIT • Military Academy • NTI
-        </div>
-        <div className="h-1.5 w-full bg-[#172554]" />
-      </div>
+      {themeId !== "2" && <div className="relative z-10 h-1.5 w-full bg-[#172554]" />}
     </div>
   );
 }
 
-function CardFrontByTheme({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
+function CardFrontByTheme({
+  spec,
+  themeId,
+  showPhoto,
+}: {
+  spec: CardSpec;
+  themeId: CardThemeId;
+  showPhoto: boolean;
+}) {
   switch (themeId) {
     case "1":
-      return <ClassicFront spec={spec} />;
+      return <ClassicFront spec={spec} showPhoto={showPhoto} />;
     case "2":
-      return <CanvaOrganicWaveFront spec={spec} />;
+      return <CanvaOrganicWaveFront spec={spec} showPhoto={showPhoto} />;
     case "3":
-      return <CanvaDiagonalRibbonFront spec={spec} />;
+      return <CanvaDiagonalRibbonFront spec={spec} showPhoto={showPhoto} />;
     case "4":
-      return <CanvaCurvedHeaderFront spec={spec} />;
+      return <CanvaCurvedHeaderFront spec={spec} showPhoto={showPhoto} />;
     case "5":
-      return <CanvaCornerGeometryFront spec={spec} />;
+      return <CanvaCornerGeometryFront spec={spec} showPhoto={showPhoto} />;
   }
 }
 
 export function IdCardSheet({
   themeId,
   onSelectTheme,
+  onSelectBadge,
 }: {
   themeId: CardThemeId;
   onSelectTheme: (id: CardThemeId) => void;
+  onSelectBadge?: () => void;
 }) {
   const [selected, setSelected] = useState<ProfileVariantKey | "all">("all");
+  const [showPhoto, setShowPhoto] = useState(false);
   const [downloadingKey, setDownloadingKey] = useState<string | null>(null);
   const faceRefs = useRef<
     Record<string, { front: HTMLDivElement | null; back: HTMLDivElement | null }>
@@ -576,6 +573,18 @@ export function IdCardSheet({
                 {theme.route} · {theme.name.replace(/^\d+\.\s*/, "")}
               </a>
             ))}
+            {onSelectBadge && (
+              <a
+                href="/badge"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelectBadge();
+                }}
+                className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100"
+              >
+                /badge · Lanyard 9×12
+              </a>
+            )}
           </div>
         </div>
 
@@ -611,15 +620,29 @@ export function IdCardSheet({
             ))}
           </div>
 
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => window.print()}
-          >
-            <Printer className="h-3.5 w-3.5" />
-            <span>Print</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowPhoto((prev) => !prev)}
+              className={cn(
+                "cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
+                showPhoto
+                  ? "border-sky-600 bg-sky-50 text-sky-800"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+              )}
+            >
+              {showPhoto ? "Photo: On" : "Photo: Off"}
+            </button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => window.print()}
+            >
+              <Printer className="h-3.5 w-3.5" />
+              <span>Print</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -665,7 +688,7 @@ export function IdCardSheet({
                     };
                   }}
                 >
-                  <CardFrontByTheme spec={spec} themeId={themeId} />
+                  <CardFrontByTheme spec={spec} themeId={themeId} showPhoto={showPhoto} />
                 </div>
                 <div
                   ref={(el) => {
