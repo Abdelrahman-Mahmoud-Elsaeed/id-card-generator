@@ -1,15 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, Loader2, Printer } from "lucide-react";
+import {
+  Download,
+  ImagePlus,
+  Loader2,
+  Printer,
+  RotateCcw,
+  ShieldCheck,
+  Trash2,
+  User,
+} from "lucide-react";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { QRCodeSVG } from "qrcode.react";
 
 import { Button } from "@/components/ui/button";
 import {
-  BASE_PUBLIC_URL,
-  VARIANT_CODES,
-  type ProfileVariantKey,
-} from "@/lib/variant";
+  clearLocalCardData,
+  EMPTY_CARD_DATA,
+  JOB_PROFILE_GROUPS,
+  loadLocalCardData,
+  PROGRAM_OPTIONS,
+  saveLocalCardData,
+  type CardFormData,
+} from "@/data/programs";
 import { cn } from "@/lib/utils";
 
 export type CardThemeId = "1" | "2" | "3" | "4" | "5";
@@ -54,44 +67,103 @@ export const CARD_THEMES: CardThemeMeta[] = [
   },
 ];
 
-interface CardSpec {
-  key: ProfileVariantKey;
-  label: string;
+interface ResolvedCardDisplay {
+  name: string;
+  hasName: boolean;
+  email: string;
+  hasEmail: boolean;
+  program: string;
+  hasProgram: boolean;
+  track: string;
+  hasTrack: boolean;
   jobProfile: string;
+  hasJobProfile: boolean;
+  phone: string;
+  hasPhone: boolean;
+  location: string;
+  hasLocation: boolean;
   qrUrl: string;
+  hasQrUrl: boolean;
+  photoDataUrl: string;
 }
 
-const CARD_SPECS: CardSpec[] = [
-  {
-    key: "software",
-    label: "Software Engineer",
-    jobProfile: "SOFTWARE ENGINEER",
-    qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.software}`,
-  },
-  {
-    key: "fullstack",
-    label: "Full-Stack Developer",
-    jobProfile: "FULL-STACK DEVELOPER",
-    qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.fullstack}`,
-  },
-  {
-    key: "backend",
-    label: "Back-End Engineer",
-    jobProfile: "BACKEND & CLOUD ENGINEER",
-    qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.backend}`,
-  },
-  {
-    key: "frontend",
-    label: "Front-End Engineer",
-    jobProfile: "FRONT-END ENGINEER",
-    qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.frontend}`,
-  },
-];
+function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
+  const name = data.name.trim();
+  const email = data.email.trim();
+  const program = data.program.trim();
+  const track = data.track.trim();
+  const jobProfile = data.jobProfile.trim();
+  const phone = data.phone.trim();
+  const location = data.location.trim();
+  const qrUrl = data.qrUrl.trim();
+
+  return {
+    name: name ? name.toUpperCase() : "YOUR FULL NAME",
+    hasName: Boolean(name),
+    email: email || "name@digilians.gov.eg",
+    hasEmail: Boolean(email),
+    program: program ? program.toUpperCase() : "SPECIALIZED DIPLOMA",
+    hasProgram: Boolean(program),
+    track: track ? track.toUpperCase() : "AI BASED SOFTWARE DEVELOPMENT",
+    hasTrack: Boolean(track),
+    jobProfile: jobProfile ? jobProfile.toUpperCase() : "YOUR JOB PROFILE",
+    hasJobProfile: Boolean(jobProfile),
+    phone: phone || "+20 1XX XXX XXXX",
+    hasPhone: Boolean(phone),
+    location: location || "Cairo, Egypt",
+    hasLocation: Boolean(location),
+    qrUrl: qrUrl || "https://digilians.gov.eg",
+    hasQrUrl: Boolean(qrUrl),
+    photoDataUrl: data.photoDataUrl,
+  };
+}
 
 const DIAGONAL_BG = {
   backgroundImage:
     "repeating-linear-gradient(-35deg, rgba(148, 163, 184, 0.08) 0px, rgba(148, 163, 184, 0.08) 1px, transparent 1px, transparent 11px)",
 };
+
+function PortraitBox({
+  photoDataUrl,
+  className,
+  dark = false,
+}: {
+  photoDataUrl: string;
+  className: string;
+  dark?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "shrink-0 overflow-hidden rounded-lg",
+        dark ? "bg-slate-800" : "bg-slate-100",
+        className
+      )}
+    >
+      {photoDataUrl ? (
+        <img
+          src={photoDataUrl}
+          alt="Card Portrait"
+          className="h-full w-full object-cover object-center"
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex h-full w-full flex-col items-center justify-center gap-1 border border-dashed px-1 text-center",
+            dark
+              ? "border-slate-600 text-slate-400"
+              : "border-slate-300 text-slate-400"
+          )}
+        >
+          <User className="h-5 w-5 opacity-70" />
+          <span className="text-[6px] font-medium leading-tight">
+            Your Photo
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function LogosRow({ compact = false }: { compact?: boolean }) {
   return (
@@ -124,13 +196,13 @@ function LogosRow({ compact = false }: { compact?: boolean }) {
 }
 
 /* ---------------- THEME 1: DIGILIANS CLASSIC ---------------- */
-function ClassicFront({ spec }: { spec: CardSpec }) {
+function ClassicFront({ d }: { d: ResolvedCardDisplay }) {
   const rows = [
-    { label: "NAME", value: "ABDELRAHMAN MAHMOUD" },
-    { label: "EMAIL", value: "abdelrahman.mahmoud.elsaeed" },
-    { label: "PROGRAM", value: "SPECIALIZED DIPLOMA" },
-    { label: "TRACK", value: "AI BASED SOFTWARE DEVELOPMENT" },
-    { label: "JOB PROFILE", value: spec.jobProfile },
+    { label: "NAME", value: d.name, filled: d.hasName },
+    { label: "EMAIL", value: d.email, filled: d.hasEmail },
+    { label: "PROGRAM", value: d.program, filled: d.hasProgram },
+    { label: "TRACK", value: d.track, filled: d.hasTrack },
+    { label: "JOB PROFILE", value: d.jobProfile, filled: d.hasJobProfile },
   ];
 
   return (
@@ -148,15 +220,28 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
       </div>
 
       <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.35cm] w-[1.95cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+        <PortraitBox
+          photoDataUrl={d.photoDataUrl}
+          className="h-[2.35cm] w-[1.95cm] border border-white shadow-md"
+        />
         <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
           {rows.map((row) => (
-            <div key={row.label} className="grid grid-cols-[54px_6px_1fr] items-center text-[7.5px] leading-tight">
-              <span className="font-medium tracking-wide text-slate-500">{row.label}</span>
+            <div
+              key={row.label}
+              className="grid grid-cols-[54px_6px_1fr] items-center text-[7.3px] leading-tight"
+            >
+              <span className="font-medium tracking-wide text-slate-500">
+                {row.label}
+              </span>
               <span className="text-sky-400/80">|</span>
-              <span className="truncate font-bold text-slate-900">{row.value}</span>
+              <span
+                className={cn(
+                  "truncate font-bold",
+                  row.filled ? "text-slate-900" : "text-slate-400"
+                )}
+              >
+                {row.value}
+              </span>
             </div>
           ))}
         </div>
@@ -175,10 +260,9 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
 }
 
 /* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
-function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
+function CanvaOrganicWaveFront({ d }: { d: ResolvedCardDisplay }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
-      {/* Canva Layered Bottom-Right Organic SVG Waves */}
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -193,44 +277,54 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
           d="M0,164 C95,180 185,126 320,156 L320,200 L0,200 Z"
           fill="#172554"
         />
-        <path
-          d="M0,0 L115,0 C82,34 38,38 0,68 Z"
-          fill="#eff6ff"
-        />
+        <path d="M0,0 L115,0 C82,34 38,38 0,68 Z" fill="#eff6ff" />
       </svg>
 
-      {/* Top Logos */}
       <div className="relative z-10 px-4 pt-2.5">
         <LogosRow compact />
       </div>
 
-      {/* Center Portrait & Details */}
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-sky-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+        <PortraitBox
+          photoDataUrl={d.photoDataUrl}
+          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-sky-200"
+        />
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span className="w-fit bg-sky-100 px-1.5 py-0.5 text-[6.2px] font-bold tracking-wider text-sky-900 uppercase">
-            {spec.jobProfile}
+          <span
+            className={cn(
+              "w-fit bg-sky-100 px-1.5 py-0.5 text-[6px] font-bold tracking-wider uppercase",
+              d.hasJobProfile ? "text-sky-900" : "text-sky-600/70"
+            )}
+          >
+            {d.jobProfile}
           </span>
-          <h2 className="mt-1 font-heading text-[11px] leading-tight font-bold text-slate-900">
-            ABDELRAHMAN MAHMOUD
+          <h2
+            className={cn(
+              "mt-1 truncate font-heading text-[10.8px] leading-tight font-bold",
+              d.hasName ? "text-slate-900" : "text-slate-400"
+            )}
+          >
+            {d.name}
           </h2>
-          <span className="mt-0.5 truncate text-[7px] font-semibold text-slate-600">
-            abdelrahman.mahmoud.elsaeed
+          <span
+            className={cn(
+              "mt-0.5 truncate text-[6.8px] font-semibold",
+              d.hasEmail ? "text-slate-600" : "text-slate-400"
+            )}
+          >
+            {d.email}
           </span>
 
-          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.5px] text-slate-800">
-            <span className="font-bold">SPECIALIZED DIPLOMA</span>
-            <span className="font-medium text-slate-600">AI Based Software Development</span>
+          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.3px] text-slate-800">
+            <span className="truncate font-bold">{d.program}</span>
+            <span className="truncate font-medium text-slate-600">{d.track}</span>
           </div>
         </div>
       </div>
 
-      {/* Footer sitting cleanly on the Navy Wave */}
       <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-semibold tracking-wider text-white">
-        <span className="text-sky-200">CAIRO, EGYPT</span>
+        <span className="text-sky-200">{d.location.toUpperCase()}</span>
         <span>DIGILIANS • الرواد الرقميون</span>
       </div>
     </div>
@@ -238,10 +332,9 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
 }
 
 /* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
-function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
+function CanvaDiagonalRibbonFront({ d }: { d: ResolvedCardDisplay }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
-      {/* Canva Diagonal Geometric Shapes */}
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -253,32 +346,48 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
         <polygon points="193,0 205,0 155,200 143,200" fill="#bae6fd" />
       </svg>
 
-      {/* Top White Pill for Logos */}
       <div className="relative z-10 px-4 pt-2.5">
         <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
           <LogosRow compact />
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10 flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+        <PortraitBox
+          photoDataUrl={d.photoDataUrl}
+          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md"
+        />
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <div className="w-fit border border-slate-200/80 bg-white px-2.5 py-1.5 shadow-sm">
-            <h2 className="font-heading text-[10.5px] leading-tight font-bold text-slate-900">
-              ABDELRAHMAN MAHMOUD
+          <div className="w-full border border-slate-200/80 bg-white px-2.5 py-1.5 shadow-sm">
+            <h2
+              className={cn(
+                "truncate font-heading text-[10.2px] leading-tight font-bold",
+                d.hasName ? "text-slate-900" : "text-slate-400"
+              )}
+            >
+              {d.name}
             </h2>
-            <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-800 uppercase">
-              {spec.jobProfile}
+            <p
+              className={cn(
+                "mt-0.5 truncate text-[6.5px] font-bold tracking-wider uppercase",
+                d.hasJobProfile ? "text-sky-800" : "text-sky-600/60"
+              )}
+            >
+              {d.jobProfile}
             </p>
-            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.2px] text-slate-700">
-              <span className="truncate font-semibold text-slate-900">
-                abdelrahman.mahmoud.elsaeed
+            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6px] text-slate-700">
+              <span
+                className={cn(
+                  "truncate font-semibold",
+                  d.hasEmail ? "text-slate-900" : "text-slate-400"
+                )}
+              >
+                {d.email}
               </span>
-              <span>Specialized Diploma • AI Based Software Development</span>
+              <span className="truncate">
+                {d.program} • {d.track}
+              </span>
             </div>
           </div>
         </div>
@@ -293,64 +402,71 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
 }
 
 /* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
-function CanvaCurvedHeaderFront({ spec }: { spec: CardSpec }) {
+function CanvaCurvedHeaderFront({ d }: { d: ResolvedCardDisplay }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
-      {/* Top White Logo Bar + Navy Curved Banner */}
       <div className="relative z-10 bg-white px-4 pt-2 pb-1">
         <LogosRow compact />
       </div>
 
       <div className="relative z-10 -mt-0.5">
         <div className="bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] px-4 py-1 text-center text-white">
-          <span className="text-[7px] font-bold tracking-[0.16em] uppercase">
-            {spec.jobProfile}
+          <span className="block truncate text-[6.8px] font-bold tracking-[0.14em] uppercase">
+            {d.jobProfile}
           </span>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1.5">
-        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+        <PortraitBox
+          photoDataUrl={d.photoDataUrl}
+          className="h-[2.25cm] w-[1.85cm] border-2 border-white shadow-md ring-1 ring-slate-200"
+        />
 
         <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
           <div>
-            <h2 className="font-heading text-[10.8px] leading-tight font-bold text-slate-900">
-              ABDELRAHMAN MAHMOUD
+            <h2
+              className={cn(
+                "truncate font-heading text-[10.5px] leading-tight font-bold",
+                d.hasName ? "text-slate-900" : "text-slate-400"
+              )}
+            >
+              {d.name}
             </h2>
-            <p className="truncate text-[6.8px] font-semibold text-sky-800">
-              abdelrahman.mahmoud.elsaeed
+            <p
+              className={cn(
+                "truncate text-[6.6px] font-semibold",
+                d.hasEmail ? "text-sky-800" : "text-slate-400"
+              )}
+            >
+              {d.email}
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6px]">
+          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[5.9px]">
             <div className="flex items-center justify-between gap-1">
-              <span className="font-medium text-slate-600">PROGRAM</span>
-              <span className="font-bold text-slate-900">SPECIALIZED DIPLOMA</span>
+              <span className="shrink-0 font-medium text-slate-600">PROGRAM</span>
+              <span className="truncate font-bold text-slate-900">{d.program}</span>
             </div>
             <div className="flex items-center justify-between gap-1">
-              <span className="font-medium text-slate-600">TRACK</span>
-              <span className="font-bold text-slate-900">AI BASED SOFTWARE DEVELOPMENT</span>
+              <span className="shrink-0 font-medium text-slate-600">TRACK</span>
+              <span className="truncate font-bold text-slate-900">{d.track}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Navy Accent */}
       <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-semibold tracking-wider text-white">
         <span>الرواد الرقميون • DIGILIANS</span>
-        <span className="text-sky-200">CAIRO, EGYPT</span>
+        <span className="text-sky-200">{d.location.toUpperCase()}</span>
       </div>
     </div>
   );
 }
 
 /* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
-function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
+function CanvaCornerGeometryFront({ d }: { d: ResolvedCardDisplay }) {
   return (
     <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
-      {/* Canva Geometric Corner Ribbons */}
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -363,34 +479,44 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
         <polygon points="278,0 320,0 320,32" fill="#172554" />
       </svg>
 
-      {/* Top Logos */}
       <div className="relative z-10 px-4 pt-2.5 pr-8">
         <LogosRow compact />
       </div>
 
-      {/* Center Content */}
       <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
+        <PortraitBox
+          photoDataUrl={d.photoDataUrl}
+          className="h-[2.3cm] w-[1.9cm] border-2 border-white shadow-md ring-1 ring-slate-200"
+        />
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <h2 className="font-heading text-[11px] leading-tight font-bold text-slate-900">
-            ABDELRAHMAN MAHMOUD
+          <h2
+            className={cn(
+              "truncate font-heading text-[10.8px] leading-tight font-bold",
+              d.hasName ? "text-slate-900" : "text-slate-400"
+            )}
+          >
+            {d.name}
           </h2>
-          <span className="mt-1 w-fit bg-[#172554] px-2 py-0.5 text-[6.2px] font-bold tracking-wider text-white uppercase">
-            {spec.jobProfile}
+          <span className="mt-1 w-fit max-w-full truncate bg-[#172554] px-2 py-0.5 text-[6px] font-bold tracking-wider text-white uppercase">
+            {d.jobProfile}
           </span>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.3px] text-slate-700">
-            <span className="truncate font-bold text-slate-900">
-              abdelrahman.mahmoud.elsaeed
+          <div className="mt-2 flex flex-col gap-0.5 text-[6.1px] text-slate-700">
+            <span
+              className={cn(
+                "truncate font-bold",
+                d.hasEmail ? "text-slate-900" : "text-slate-400"
+              )}
+            >
+              {d.email}
             </span>
-            <span>Specialized Diploma · AI Based Software Development</span>
+            <span className="truncate">
+              {d.program} · {d.track}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Bottom Footer */}
       <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-bold tracking-wider text-slate-700">
         <span>DIGILIANS • الرواد الرقميون</span>
       </div>
@@ -399,7 +525,13 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
 }
 
 /* ---------------- UNIFIED BACK RENDERER PER THEME ---------------- */
-function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
+function CardBack({
+  d,
+  themeId,
+}: {
+  d: ResolvedCardDisplay;
+  themeId: CardThemeId;
+}) {
   return (
     <div
       className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
@@ -412,7 +544,10 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0,162 C90,180 180,136 320,160 L320,200 L0,200 Z" fill="#172554" />
+          <path
+            d="M0,162 C90,180 180,136 320,160 L320,200 L0,200 Z"
+            fill="#172554"
+          />
         </svg>
       )}
       {themeId === "3" && (
@@ -436,31 +571,40 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
         )}
       >
         <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-          <span className="border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[7px] font-bold tracking-wider text-sky-700 uppercase">
-            {spec.jobProfile}
+          <span className="max-w-full truncate border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-700 uppercase">
+            {d.jobProfile}
           </span>
-          <h2 className="mt-1.5 font-heading text-[11px] font-bold tracking-tight">
-            ABDELRAHMAN MAHMOUD
+          <h2
+            className={cn(
+              "mt-1.5 max-w-full truncate font-heading text-[10.5px] font-bold tracking-tight",
+              d.hasName ? "text-slate-900" : "text-slate-400"
+            )}
+          >
+            {d.name}
           </h2>
-          <p className="mt-0.5 text-[7.5px] font-medium text-slate-600">
-            Scan QR for CV, Projects &amp; vCard
+          <p className="mt-0.5 text-[7.2px] font-medium text-slate-600">
+            Scan QR for Profile &amp; Contact
           </p>
-          <div className="mt-2 flex flex-col gap-0.5 text-[7px] text-slate-500">
-            <span>+20 109 516 0726</span>
-            <span>Cairo, Egypt</span>
+          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px]">
+            <span className={d.hasPhone ? "text-slate-600" : "text-slate-400"}>
+              {d.phone}
+            </span>
+            <span className={d.hasLocation ? "text-slate-600" : "text-slate-400"}>
+              {d.location}
+            </span>
           </div>
         </div>
 
         <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
           <QRCodeSVG
-            value={spec.qrUrl}
-            size={84}
+            value={d.qrUrl}
+            size={82}
             level="M"
-            fgColor="#0f172a"
+            fgColor={d.hasQrUrl ? "#0f172a" : "#94a3b8"}
             bgColor="#ffffff"
           />
-          <span className="mt-1 text-[6px] font-semibold tracking-widest text-slate-400 uppercase">
-            SCAN ME
+          <span className="mt-1 text-[5.8px] font-semibold tracking-widest text-slate-400 uppercase">
+            {d.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
           </span>
         </div>
       </div>
@@ -480,18 +624,24 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
   );
 }
 
-function CardFrontByTheme({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
+function CardFrontByTheme({
+  d,
+  themeId,
+}: {
+  d: ResolvedCardDisplay;
+  themeId: CardThemeId;
+}) {
   switch (themeId) {
     case "1":
-      return <ClassicFront spec={spec} />;
+      return <ClassicFront d={d} />;
     case "2":
-      return <CanvaOrganicWaveFront spec={spec} />;
+      return <CanvaOrganicWaveFront d={d} />;
     case "3":
-      return <CanvaDiagonalRibbonFront spec={spec} />;
+      return <CanvaDiagonalRibbonFront d={d} />;
     case "4":
-      return <CanvaCurvedHeaderFront spec={spec} />;
+      return <CanvaCurvedHeaderFront d={d} />;
     case "5":
-      return <CanvaCornerGeometryFront spec={spec} />;
+      return <CanvaCornerGeometryFront d={d} />;
   }
 }
 
@@ -502,32 +652,74 @@ export function IdCardSheet({
   themeId: CardThemeId;
   onSelectTheme: (id: CardThemeId) => void;
 }) {
-  const [selected, setSelected] = useState<ProfileVariantKey | "all">("all");
-  const [downloadingKey, setDownloadingKey] = useState<string | null>(null);
-  const faceRefs = useRef<
-    Record<string, { front: HTMLDivElement | null; back: HTMLDivElement | null }>
-  >({});
+  const [form, setForm] = useState<CardFormData>(() => loadLocalCardData());
+  const [isDownloading, setIsDownloading] = useState(false);
+  const frontRef = useRef<HTMLDivElement | null>(null);
+  const backRef = useRef<HTMLDivElement | null>(null);
 
-  const activeTheme = CARD_THEMES.find((t) => t.id === themeId) ?? CARD_THEMES[0];
+  const activeTheme =
+    CARD_THEMES.find((t) => t.id === themeId) ?? CARD_THEMES[0];
+  const display = resolveDisplay(form);
+
+  const selectedProgramObj = PROGRAM_OPTIONS.find(
+    (p) => p.label.toLowerCase() === form.program.trim().toLowerCase()
+  );
+  const trackSuggestions =
+    selectedProgramObj?.tracks ?? PROGRAM_OPTIONS[0].tracks;
 
   useEffect(() => {
-    document.title = `${activeTheme.name} — ID Card (8.6 × 5.4 cm)`;
+    document.title = `${activeTheme.name} — Digilians ID Card Builder`;
   }, [activeTheme.name]);
 
-  const visibleSpecs =
-    selected === "all"
-      ? CARD_SPECS
-      : CARD_SPECS.filter((item) => item.key === selected);
+  function updateField<K extends keyof CardFormData>(
+    key: K,
+    value: CardFormData[K]
+  ) {
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+      saveLocalCardData(next);
+      return next;
+    });
+  }
 
-  async function downloadCardPdf(spec: CardSpec) {
-    const refs = faceRefs.current[spec.key];
-    if (!refs?.front || !refs?.back) return;
+  function handleProgramChange(nextProgram: string) {
+    const matched = PROGRAM_OPTIONS.find((p) => p.label === nextProgram);
+    setForm((prev) => {
+      const next: CardFormData = {
+        ...prev,
+        program: nextProgram,
+        track: matched ? matched.tracks[0] : prev.track,
+      };
+      saveLocalCardData(next);
+      return next;
+    });
+  }
 
-    setDownloadingKey(spec.key);
+  function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        updateField("photoDataUrl", reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  function handleReset() {
+    clearLocalCardData();
+    setForm(EMPTY_CARD_DATA);
+  }
+
+  async function downloadCardPdf() {
+    if (!frontRef.current || !backRef.current) return;
+    setIsDownloading(true);
     try {
       const [frontImg, backImg] = await Promise.all([
-        toPng(refs.front, { pixelRatio: 4, cacheBust: true }),
-        toPng(refs.back, { pixelRatio: 4, cacheBust: true }),
+        toPng(frontRef.current, { pixelRatio: 4, cacheBust: true }),
+        toPng(backRef.current, { pixelRatio: 4, cacheBust: true }),
       ]);
 
       const pdf = new jsPDF({
@@ -539,23 +731,31 @@ export function IdCardSheet({
       pdf.addImage(frontImg, "PNG", 0, 0, 8.6, 5.4);
       pdf.addPage([8.6, 5.4], "landscape");
       pdf.addImage(backImg, "PNG", 0, 0, 8.6, 5.4);
-      pdf.save(`Abdelrahman-Mahmoud-${spec.key}-design-${themeId}.pdf`);
+
+      const safeName = (form.name.trim() || "digilians-id-card")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
+      pdf.save(`${safeName}-design-${themeId}.pdf`);
     } finally {
-      setDownloadingKey(null);
+      setIsDownloading(false);
     }
   }
 
   return (
     <div className="min-h-dvh bg-slate-100 p-4 print:bg-white print:p-0">
-      {/* Screen-Only Controls */}
-      <div className="mx-auto mb-6 flex max-w-4xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print:hidden">
-        {/* Design Route Switcher */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+      {/* Top Bar: Design Routes */}
+      <div className="mx-auto mb-5 flex max-w-5xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print:hidden">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h1 className="font-heading text-base font-bold text-slate-900">
-              {activeTheme.name} (8.6 cm × 5.4 cm)
+              Digilians ID Card Builder (8.6 cm × 5.4 cm)
             </h1>
-            <p className="text-xs text-slate-500">{activeTheme.subtitle}</p>
+            <p className="mt-0.5 flex items-center gap-1.5 text-xs text-emerald-700">
+              <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+              <span>
+                100% Local — Your photo &amp; info are saved only in your browser (never uploaded)
+              </span>
+            </p>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
             {CARD_THEMES.map((theme) => (
@@ -578,109 +778,242 @@ export function IdCardSheet({
             ))}
           </div>
         </div>
-
-        {/* Role Filter + Print */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => setSelected("all")}
-              className={cn(
-                "cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                selected === "all"
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
-              )}
-            >
-              All 4 Cards
-            </button>
-            {CARD_SPECS.map((spec) => (
-              <button
-                key={spec.key}
-                type="button"
-                onClick={() => setSelected(spec.key)}
-                className={cn(
-                  "cursor-pointer rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
-                  selected === spec.key
-                    ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
-                )}
-              >
-                {spec.label}
-              </button>
-            ))}
-          </div>
-
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => window.print()}
-          >
-            <Printer className="h-3.5 w-3.5" />
-            <span>Print</span>
-          </Button>
-        </div>
       </div>
 
-      {/* Cards Preview / Print Pages */}
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 print:max-w-none print:gap-0">
-        {visibleSpecs.map((spec) => {
-          const isBusy = downloadingKey === spec.key;
-          return (
-            <div
-              key={spec.key}
-              className="flex flex-col items-center gap-3 print:block"
+      {/* Main Workspace: Local Form + Live 2-Sided Card Preview */}
+      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[380px_1fr] print:block">
+        {/* Form Panel (Hidden on Print) */}
+        <aside className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print:hidden">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h2 className="font-heading text-sm font-bold text-slate-900">
+              Your Card Details
+            </h2>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             >
-              <div className="flex w-full items-center justify-between gap-4 print:hidden">
-                <div>
-                  <span className="text-sm font-semibold text-slate-800">
-                    {spec.label}
-                  </span>
-                  <span className="ml-2 text-xs text-slate-400">
-                    {spec.qrUrl}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  disabled={isBusy}
-                  onClick={() => downloadCardPdf(spec)}
-                >
-                  {isBusy ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Download className="h-3.5 w-3.5" />
-                  )}
-                  <span>{isBusy ? "Generating..." : "Download PDF (2 Pages)"}</span>
-                </Button>
-              </div>
+              <RotateCcw className="h-3 w-3" />
+              <span>Reset</span>
+            </button>
+          </div>
 
-              <div className="flex flex-wrap justify-center gap-4 print:block">
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      front: el,
-                    };
-                  }}
-                >
-                  <CardFrontByTheme spec={spec} themeId={themeId} />
-                </div>
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      back: el,
-                    };
-                  }}
-                >
-                  <CardBack spec={spec} themeId={themeId} />
-                </div>
+          {/* Photo Upload */}
+          <div className="flex items-center gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100">
+              <ImagePlus className="h-4 w-4 text-sky-600" />
+              <span>{form.photoDataUrl ? "Change Photo" : "Upload Photo"}</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+            </label>
+            {form.photoDataUrl && (
+              <button
+                type="button"
+                onClick={() => updateField("photoDataUrl", "")}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>Remove</span>
+              </button>
+            )}
+          </div>
+
+          {/* Name */}
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">Full Name</span>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => updateField("name", e.target.value)}
+              placeholder="e.g. Menna Allah Reda"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            />
+          </label>
+
+          {/* Email */}
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">Email</span>
+            <input
+              type="text"
+              value={form.email}
+              onChange={(e) => updateField("email", e.target.value)}
+              placeholder="e.g. name@digilians.gov.eg"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            />
+          </label>
+
+          {/* Program */}
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">
+              Program <span className="font-normal text-slate-400">(SD = Specialized Diploma)</span>
+            </span>
+            <select
+              value={form.program}
+              onChange={(e) => handleProgramChange(e.target.value)}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            >
+              {PROGRAM_OPTIONS.map((p) => (
+                <option key={p.id} value={p.label}>
+                  {p.label} ({p.shortCode})
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* Track */}
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">Track</span>
+            <select
+              value={trackSuggestions.includes(form.track) ? form.track : "__custom__"}
+              onChange={(e) => {
+                if (e.target.value !== "__custom__") {
+                  updateField("track", e.target.value);
+                }
+              }}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            >
+              {trackSuggestions.map((track) => (
+                <option key={track} value={track}>
+                  {track}
+                </option>
+              ))}
+              {!trackSuggestions.includes(form.track) && (
+                <option value="__custom__">Custom Track</option>
+              )}
+            </select>
+          </label>
+
+          {/* Job Profile */}
+          <div className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">Job Profile</span>
+            <select
+              value={
+                JOB_PROFILE_GROUPS.some((g) => g.profiles.includes(form.jobProfile))
+                  ? form.jobProfile
+                  : ""
+              }
+              onChange={(e) => updateField("jobProfile", e.target.value)}
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            >
+              <option value="">Select Job Profile...</option>
+              {JOB_PROFILE_GROUPS.map((group) => (
+                <optgroup key={group.category} label={group.category}>
+                  {group.profiles.map((profile) => (
+                    <option key={profile} value={profile}>
+                      {profile}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <input
+              type="text"
+              value={form.jobProfile}
+              onChange={(e) => updateField("jobProfile", e.target.value)}
+              placeholder="Or type custom Job Profile..."
+              className="mt-1 rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-900 outline-none focus:border-sky-500"
+            />
+          </div>
+
+          {/* Back Side Fields */}
+          <div className="grid grid-cols-2 gap-2">
+            <label className="flex flex-col gap-1 text-left">
+              <span className="text-xs font-semibold text-slate-700">Phone (Back)</span>
+              <input
+                type="text"
+                value={form.phone}
+                onChange={(e) => updateField("phone", e.target.value)}
+                placeholder="+20 1XX XXX XXXX"
+                className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-left">
+              <span className="text-xs font-semibold text-slate-700">Location (Back)</span>
+              <input
+                type="text"
+                value={form.location}
+                onChange={(e) => updateField("location", e.target.value)}
+                placeholder="Cairo, Egypt"
+                className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+              />
+            </label>
+          </div>
+
+          <label className="flex flex-col gap-1 text-left">
+            <span className="text-xs font-semibold text-slate-700">
+              QR Code Link (Portfolio / LinkedIn / Bio)
+            </span>
+            <input
+              type="url"
+              value={form.qrUrl}
+              onChange={(e) => updateField("qrUrl", e.target.value)}
+              placeholder="https://linkedin.com/in/your-profile"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-900 outline-none focus:border-sky-500"
+            />
+          </label>
+        </aside>
+
+        {/* Live Card Preview & Export */}
+        <section className="flex flex-col items-center gap-4 print:block">
+          <div className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm print:hidden">
+            <div>
+              <h2 className="font-heading text-sm font-bold text-slate-900">
+                {activeTheme.name}
+              </h2>
+              <p className="text-xs text-slate-500">{activeTheme.subtitle}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => window.print()}
+              >
+                <Printer className="h-3.5 w-3.5" />
+                <span>Print</span>
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={isDownloading}
+                onClick={downloadCardPdf}
+              >
+                {isDownloading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Download className="h-3.5 w-3.5" />
+                )}
+                <span>
+                  {isDownloading ? "Generating..." : "Download PDF (2 Pages)"}
+                </span>
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-5 print:block">
+            <div className="flex flex-col items-center gap-1.5 print:block">
+              <span className="text-xs font-semibold text-slate-500 print:hidden">
+                Front Side (Page 1 — 8.6 × 5.4 cm)
+              </span>
+              <div ref={frontRef}>
+                <CardFrontByTheme d={display} themeId={themeId} />
               </div>
             </div>
-          );
-        })}
+
+            <div className="flex flex-col items-center gap-1.5 print:block">
+              <span className="text-xs font-semibold text-slate-500 print:hidden">
+                Back Side with QR (Page 2 — 8.6 × 5.4 cm)
+              </span>
+              <div ref={backRef}>
+                <CardBack d={display} themeId={themeId} />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
