@@ -221,7 +221,7 @@ function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
             abdelrahman.mahmoud.elsaeed
           </span>
 
-          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.8px] text-slate-800">
+          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-600 pl-2 text-[6.5px] text-slate-800">
             <span className="font-bold">SPECIALIZED DIPLOMA</span>
             <span className="font-medium text-slate-600">AI Based Software Development</span>
           </div>
@@ -274,11 +274,11 @@ function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
             <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-800 uppercase">
               {spec.jobProfile}
             </p>
-            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.5px] text-slate-700">
+            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.2px] text-slate-700">
               <span className="truncate font-semibold text-slate-900">
                 abdelrahman.mahmoud.elsaeed
               </span>
-              <span>Specialized Diploma • AI Dev Track</span>
+              <span>Specialized Diploma • AI Based Software Development</span>
             </div>
           </div>
         </div>
@@ -324,14 +324,14 @@ function CanvaCurvedHeaderFront({ spec }: { spec: CardSpec }) {
               abdelrahman.mahmoud.elsaeed
             </p>
           </div>
-          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6.6px]">
-            <div className="flex items-center justify-between">
+          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6px]">
+            <div className="flex items-center justify-between gap-1">
               <span className="font-medium text-slate-600">PROGRAM</span>
               <span className="font-bold text-slate-900">SPECIALIZED DIPLOMA</span>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-1">
               <span className="font-medium text-slate-600">TRACK</span>
-              <span className="font-bold text-slate-900">AI SOFTWARE DEV</span>
+              <span className="font-bold text-slate-900">AI BASED SOFTWARE DEVELOPMENT</span>
             </div>
           </div>
         </div>
@@ -381,11 +381,11 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
           <span className="mt-1 w-fit bg-[#172554] px-2 py-0.5 text-[6.2px] font-bold tracking-wider text-white uppercase">
             {spec.jobProfile}
           </span>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px] text-slate-700">
+          <div className="mt-2 flex flex-col gap-0.5 text-[6.3px] text-slate-700">
             <span className="truncate font-bold text-slate-900">
               abdelrahman.mahmoud.elsaeed
             </span>
-            <span>Specialized Diploma · AI Software Dev</span>
+            <span>Specialized Diploma · AI Based Software Development</span>
           </div>
         </div>
       </div>
