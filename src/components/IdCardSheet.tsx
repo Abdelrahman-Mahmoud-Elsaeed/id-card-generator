@@ -31,26 +31,26 @@ export const CARD_THEMES: CardThemeMeta[] = [
   {
     id: "2",
     route: "/2",
-    name: "2. Asymmetric Split",
-    subtitle: "Deep navy identity panel + crisp white data zone",
+    name: "2. Canva Organic Wave",
+    subtitle: "Layered navy & sky SVG waves on crisp white canvas",
   },
   {
     id: "3",
     route: "/3",
-    name: "3. Executive Obsidian",
-    subtitle: "Dark matte corporate monolith with cyan accents",
+    name: "3. Canva Diagonal Ribbon",
+    subtitle: "Geometric diagonal navy & cyan corporate ribbon",
   },
   {
     id: "4",
     route: "/4",
-    name: "4. Swiss Framed Grid",
-    subtitle: "Architectural blueprint frame with corner markers",
+    name: "4. Canva Curved Header",
+    subtitle: "Curved navy-blue wave header & clean structured details",
   },
   {
     id: "5",
     route: "/5",
-    name: "5. Minimal Typographic",
-    subtitle: "Bold Space Grotesk typography & generous whitespace",
+    name: "5. Canva Corner Geometry",
+    subtitle: "Modern dual-tone corner ribbons & tech badge style",
   },
 ];
 
@@ -91,12 +91,6 @@ const CARD_SPECS: CardSpec[] = [
 const DIAGONAL_BG = {
   backgroundImage:
     "repeating-linear-gradient(-35deg, rgba(148, 163, 184, 0.08) 0px, rgba(148, 163, 184, 0.08) 1px, transparent 1px, transparent 11px)",
-};
-
-const DOT_GRID_BG = {
-  backgroundImage:
-    "radial-gradient(rgba(100, 116, 139, 0.16) 0.75px, transparent 0.75px)",
-  backgroundSize: "8px 8px",
 };
 
 function LogosRow({ compact = false }: { compact?: boolean }) {
@@ -180,208 +174,225 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
   );
 }
 
-/* ---------------- THEME 2: ASYMMETRIC SPLIT ---------------- */
-function SplitFront({ spec }: { spec: CardSpec }) {
-  const details = [
-    { label: "EMAIL", value: "abdelrahman.mahmoud.elsaeed" },
-    { label: "PROGRAM", value: "SPECIALIZED DIPLOMA" },
-    { label: "TRACK", value: "AI BASED SOFTWARE DEV" },
-  ];
-
+/* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
+function CanvaOrganicWaveFront({ spec }: { spec: CardSpec }) {
   return (
-    <div className="id-card-face relative grid grid-cols-[2.9cm_1fr] overflow-hidden border border-slate-200 bg-white shadow-md">
-      {/* Left Brand Panel */}
-      <div className="flex flex-col items-center justify-between bg-[#172554] px-2.5 py-3 text-center text-white">
-        <div className="h-[2.1cm] w-[1.8cm] overflow-hidden rounded-lg border-2 border-white/80 bg-[#132444] shadow-sm">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="font-heading text-[8.2px] leading-tight font-bold tracking-wide uppercase">
-            Abdelrahman
-          </span>
-          <span className="font-heading text-[8.2px] leading-tight font-bold tracking-wide text-sky-300 uppercase">
-            Mahmoud
-          </span>
-          <span className="mt-1 border border-sky-400/40 bg-sky-400/15 px-1.5 py-0.5 text-[5.8px] font-semibold tracking-wider text-sky-200 uppercase">
-            {spec.jobProfile}
-          </span>
-        </div>
-        <span className="text-[5.8px] tracking-widest text-slate-300/80 uppercase">
-          DIGILIANS
-        </span>
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+      {/* Canva Layered Bottom-Right Organic SVG Waves */}
+      <svg
+        viewBox="0 0 320 200"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,152 C75,180 155,112 320,145 L320,200 L0,200 Z"
+          fill="#e0f2fe"
+        />
+        <path
+          d="M0,174 C95,188 185,132 320,164 L320,200 L0,200 Z"
+          fill="#172554"
+        />
+        <path
+          d="M0,0 L115,0 C82,34 38,38 0,68 Z"
+          fill="#eff6ff"
+        />
+      </svg>
+
+      {/* Top Logos */}
+      <div className="relative z-10 px-4 pt-2.5">
+        <LogosRow compact />
       </div>
 
-      {/* Right Data Zone */}
-      <div className="flex flex-col justify-between bg-white px-3.5 py-2.5">
-        <div className="border-b border-slate-100 pb-1.5">
-          <LogosRow compact />
+      {/* Center Portrait & Details */}
+      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
+        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-sky-200">
+          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
 
-        <div className="flex flex-col gap-1.5 text-left">
-          {details.map((item) => (
-            <div key={item.label} className="flex flex-col">
-              <span className="text-[6px] font-semibold tracking-wider text-slate-400 uppercase">
-                {item.label}
-              </span>
-              <span className="truncate text-[7.5px] font-bold text-slate-800">
-                {item.value}
-              </span>
-            </div>
-          ))}
-        </div>
+        <div className="flex min-w-0 flex-1 flex-col text-left">
+          <span className="w-fit bg-sky-100 px-1.5 py-0.5 text-[6.2px] font-bold tracking-wider text-sky-800 uppercase">
+            {spec.jobProfile}
+          </span>
+          <h2 className="mt-1 font-heading text-[11px] leading-tight font-bold text-slate-900">
+            ABDELRAHMAN MAHMOUD
+          </h2>
+          <span className="mt-0.5 truncate text-[7px] font-medium text-slate-500">
+            abdelrahman.mahmoud.elsaeed
+          </span>
 
-        <div className="flex items-center justify-between border-t border-slate-100 pt-1 text-[6px] font-medium text-slate-400">
-          <span>Cairo, Egypt</span>
-          <span>الرواد الرقميون</span>
+          <div className="mt-2 flex flex-col gap-0.5 border-l-2 border-sky-500 pl-2 text-[6.8px] text-slate-700">
+            <span className="font-semibold">SPECIALIZED DIPLOMA</span>
+            <span className="text-slate-500">AI Based Software Development</span>
+          </div>
         </div>
+      </div>
+
+      {/* Footer sitting on the Navy Wave */}
+      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6.2px] font-medium tracking-wider text-white/95">
+        <span className="text-slate-600">CAIRO, EGYPT</span>
+        <span>DIGILIANS • الرواد الرقميون</span>
       </div>
     </div>
   );
 }
 
-/* ---------------- THEME 3: EXECUTIVE OBSIDIAN ---------------- */
-function ObsidianFront({ spec }: { spec: CardSpec }) {
+/* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
+function CanvaDiagonalRibbonFront({ spec }: { spec: CardSpec }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-800 bg-gradient-to-br from-[#0B1120] via-[#111827] to-[#0F172A] text-white shadow-md">
-      {/* Crisp White Top Logo Bar */}
-      <div className="bg-white/95 px-4 py-1.5">
-        <LogosRow compact />
-      </div>
-      <div className="h-[2px] w-full bg-gradient-to-r from-sky-400 via-indigo-400 to-sky-400" />
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+      {/* Canva Diagonal Geometric Shapes */}
+      <svg
+        viewBox="0 0 320 200"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <polygon points="225,0 320,0 320,200 175,200" fill="#172554" />
+        <polygon points="205,0 228,0 178,200 155,200" fill="#0ea5e9" />
+        <polygon points="193,0 205,0 155,200 143,200" fill="#bae6fd" />
+      </svg>
 
-      {/* Center Content */}
-      <div className="flex flex-1 items-center gap-3.5 px-4 py-2">
-        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden rounded-lg border border-sky-400/50 bg-[#132444] shadow-md">
+      {/* Top White Pill for Logos */}
+      <div className="relative z-10 px-4 pt-2.5">
+        <div className="border border-slate-200/80 bg-white/95 px-2.5 py-1 shadow-sm">
+          <LogosRow compact />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-1 items-center gap-3 px-4 py-1.5">
+        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md">
           <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span className="w-fit border border-sky-400/30 bg-sky-400/10 px-1.5 py-0.5 text-[6px] font-bold tracking-widest text-sky-300 uppercase">
+          <div className="w-fit bg-white/95 px-2 py-1 shadow-sm backdrop-blur-xs">
+            <h2 className="font-heading text-[10.5px] leading-tight font-bold text-slate-900">
+              ABDELRAHMAN MAHMOUD
+            </h2>
+            <p className="mt-0.5 text-[6.8px] font-bold tracking-wider text-sky-700 uppercase">
+              {spec.jobProfile}
+            </p>
+            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.5px] text-slate-600">
+              <span className="truncate font-medium text-slate-800">
+                abdelrahman.mahmoud.elsaeed
+              </span>
+              <span>Specialized Diploma • AI Dev Track</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 flex items-center justify-between px-4 pb-1.5 text-[6px] font-semibold tracking-wider">
+        <span className="text-slate-500">MCIT • MILITARY ACADEMY</span>
+        <span className="text-white">DIGILIANS</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
+function CanvaCurvedHeaderFront({ spec }: { spec: CardSpec }) {
+  return (
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
+      {/* Top White Logo Bar + Navy Curved Banner */}
+      <div className="relative z-10 bg-white px-4 pt-2 pb-1">
+        <LogosRow compact />
+      </div>
+
+      <div className="relative z-10 -mt-0.5">
+        <div className="bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] px-4 py-1 text-center text-white">
+          <span className="text-[7px] font-bold tracking-[0.16em] uppercase">
             {spec.jobProfile}
           </span>
-          <h2 className="mt-1.5 font-heading text-[11px] leading-tight font-bold tracking-tight text-white">
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1.5">
+        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
+          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col gap-1 text-left">
+          <div>
+            <h2 className="font-heading text-[10.8px] leading-tight font-bold text-slate-900">
+              ABDELRAHMAN MAHMOUD
+            </h2>
+            <p className="truncate text-[6.8px] font-medium text-sky-700">
+              abdelrahman.mahmoud.elsaeed
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-0.5 border-t border-slate-200 pt-1 text-[6.6px]">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400">PROGRAM</span>
+              <span className="font-bold text-slate-800">SPECIALIZED DIPLOMA</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400">TRACK</span>
+              <span className="font-bold text-slate-800">AI SOFTWARE DEV</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navy Accent */}
+      <div className="flex items-center justify-between bg-[#172554] px-4 py-1 text-[6px] font-medium tracking-wider text-white/90">
+        <span>الرواد الرقميون • DIGILIANS</span>
+        <span className="text-sky-300">CAIRO, EGYPT</span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
+function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
+  return (
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+      {/* Canva Geometric Corner Ribbons */}
+      <svg
+        viewBox="0 0 320 200"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <polygon points="0,145 78,200 0,200" fill="#172554" />
+        <polygon points="0,165 50,200 0,200" fill="#0ea5e9" />
+        <polygon points="245,0 320,0 320,55" fill="#e0f2fe" />
+        <polygon points="278,0 320,0 320,32" fill="#172554" />
+      </svg>
+
+      {/* Top Logos */}
+      <div className="relative z-10 px-4 pt-2.5 pr-8">
+        <LogosRow compact />
+      </div>
+
+      {/* Center Content */}
+      <div className="relative z-10 flex flex-1 items-center gap-3.5 px-4 py-1">
+        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
+          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col text-left">
+          <h2 className="font-heading text-[11px] leading-tight font-bold text-slate-900">
             ABDELRAHMAN MAHMOUD
           </h2>
-          <span className="mt-0.5 truncate text-[7px] text-slate-300">
-            abdelrahman.mahmoud.elsaeed
+          <span className="mt-1 w-fit bg-[#172554] px-2 py-0.5 text-[6.2px] font-bold tracking-wider text-white uppercase">
+            {spec.jobProfile}
           </span>
-
-          <div className="mt-2 grid grid-cols-2 gap-2 border-t border-slate-700/80 pt-1.5 text-[6.5px]">
-            <div>
-              <span className="block text-[5.5px] tracking-wider text-slate-400 uppercase">PROGRAM</span>
-              <span className="font-semibold text-slate-100">SPECIALIZED DIPLOMA</span>
-            </div>
-            <div>
-              <span className="block text-[5.5px] tracking-wider text-slate-400 uppercase">TRACK</span>
-              <span className="font-semibold text-slate-100">AI SOFTWARE DEV</span>
-            </div>
+          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px] text-slate-600">
+            <span className="truncate font-semibold text-slate-800">
+              abdelrahman.mahmoud.elsaeed
+            </span>
+            <span>Specialized Diploma · AI Software Dev</span>
           </div>
         </div>
       </div>
 
       {/* Bottom Footer */}
-      <div className="flex items-center justify-between bg-slate-950/60 px-4 py-1 text-[6px] tracking-wider text-slate-400">
+      <div className="relative z-10 flex items-center justify-end gap-2 px-4 pb-1.5 text-[6px] font-semibold tracking-wider text-slate-500">
         <span>DIGILIANS • الرواد الرقميون</span>
-        <span className="text-sky-400">CAIRO, EGYPT</span>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- THEME 4: SWISS FRAMED GRID ---------------- */
-function SwissGridFront({ spec }: { spec: CardSpec }) {
-  return (
-    <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-300 bg-white p-2 shadow-md"
-      style={DOT_GRID_BG}
-    >
-      {/* Architectural Inner Frame */}
-      <div className="relative flex h-full w-full flex-col justify-between border border-slate-300/90 bg-white/85 px-3 py-2">
-        {/* Left Accent Stripe */}
-        <div className="absolute top-0 bottom-0 left-0 w-1 bg-sky-600" />
-
-        {/* Corner Registration Marks */}
-        <span className="absolute -top-1.5 -right-1 text-[8px] leading-none text-slate-400">+</span>
-        <span className="absolute -bottom-1.5 -right-1 text-[8px] leading-none text-slate-400">+</span>
-
-        <div className="border-b border-slate-200 pb-1.5 pl-1.5">
-          <LogosRow compact />
-        </div>
-
-        <div className="flex flex-1 items-center gap-3 py-1 pl-1.5">
-          <div className="h-[2.15cm] w-[1.8cm] shrink-0 overflow-hidden rounded-lg border border-slate-300 bg-[#132444]">
-            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-          </div>
-
-          <div className="flex min-w-0 flex-1 flex-col text-left">
-            <span className="text-[6px] font-bold tracking-widest text-sky-700 uppercase">
-              // {spec.jobProfile}
-            </span>
-            <h2 className="mt-0.5 font-heading text-[10.5px] leading-tight font-bold text-slate-900">
-              ABDELRAHMAN MAHMOUD
-            </h2>
-            <span className="mt-0.5 truncate text-[6.8px] text-slate-500">
-              abdelrahman.mahmoud.elsaeed
-            </span>
-            <div className="mt-1.5 flex flex-col gap-0.5 border-t border-slate-200 pt-1 text-[6.5px] text-slate-700">
-              <span>
-                <strong className="text-slate-400">PRG:</strong> SPECIALIZED DIPLOMA
-              </span>
-              <span>
-                <strong className="text-slate-400">TRK:</strong> AI BASED SOFTWARE DEV
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between border-t border-slate-200 pt-1 pl-1.5 text-[6px] font-semibold tracking-wider text-slate-500 uppercase">
-          <span>ID // DIGILIANS</span>
-          <span>الرواد الرقميون</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- THEME 5: MINIMAL TYPOGRAPHIC ---------------- */
-function MinimalTypographicFront({ spec }: { spec: CardSpec }) {
-  return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-gradient-to-b from-white to-slate-50 px-4 py-2.5 shadow-md">
-      <div className="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
-        <div className="w-44">
-          <LogosRow compact />
-        </div>
-        <span className="bg-slate-900 px-1.5 py-0.5 text-[6px] font-bold tracking-widest text-white uppercase">
-          AI TRACK
-        </span>
-      </div>
-
-      <div className="flex flex-1 items-center justify-between gap-3 py-1">
-        <div className="flex min-w-0 flex-1 flex-col text-left">
-          <span className="text-[6.5px] font-bold tracking-[0.14em] text-sky-600 uppercase">
-            {spec.jobProfile}
-          </span>
-          <h2 className="mt-1 font-heading text-[13px] leading-[1.08] font-bold tracking-tight text-slate-900">
-            ABDELRAHMAN
-            <br />
-            MAHMOUD
-          </h2>
-          <div className="mt-2 flex flex-col gap-0.5 text-[6.8px] text-slate-500">
-            <span className="truncate font-medium text-slate-700">
-              abdelrahman.mahmoud.elsaeed
-            </span>
-            <span>Specialized Diploma • AI Software Dev</span>
-          </div>
-        </div>
-
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-[#132444] shadow-sm">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between border-t border-slate-200/80 pt-1 text-[6px] font-medium tracking-wider text-slate-400">
-        <span>DIGILIANS • الرواد الرقميون</span>
-        <span>CAIRO, EGYPT</span>
       </div>
     </div>
   );
@@ -389,39 +400,47 @@ function MinimalTypographicFront({ spec }: { spec: CardSpec }) {
 
 /* ---------------- UNIFIED BACK RENDERER PER THEME ---------------- */
 function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
-  const isDark = themeId === "3";
-
   return (
     <div
-      className={cn(
-        "id-card-face relative flex flex-col justify-between overflow-hidden border shadow-md",
-        isDark
-          ? "border-slate-800 bg-gradient-to-br from-[#0B1120] via-[#111827] to-[#0F172A] text-white"
-          : "border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
-      )}
-      style={themeId === "1" ? DIAGONAL_BG : themeId === "4" ? DOT_GRID_BG : undefined}
+      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
+      style={themeId === "1" ? DIAGONAL_BG : undefined}
     >
-      <div className={cn("h-1.5 w-full", isDark ? "bg-sky-500" : "bg-[#172554]")} />
+      {themeId === "2" && (
+        <svg
+          viewBox="0 0 320 200"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,165 C90,185 180,140 320,168 L320,200 L0,200 Z" fill="#172554" />
+        </svg>
+      )}
+      {themeId === "3" && (
+        <svg
+          viewBox="0 0 320 200"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <polygon points="0,0 45,0 15,200 0,200" fill="#172554" />
+          <polygon points="45,0 53,0 23,200 15,200" fill="#0ea5e9" />
+        </svg>
+      )}
 
-      <div className="flex flex-1 items-center justify-between gap-3 px-5 py-2">
+      <div className="relative z-10 h-1.5 w-full bg-[#172554]" />
+
+      <div className="relative z-10 flex flex-1 items-center justify-between gap-3 px-6 py-2">
         <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-          <span
-            className={cn(
-              "border px-1.5 py-0.5 text-[7px] font-bold tracking-wider uppercase",
-              isDark
-                ? "border-sky-400/30 bg-sky-400/10 text-sky-300"
-                : "border-sky-200/80 bg-sky-50 text-sky-700"
-            )}
-          >
+          <span className="border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[7px] font-bold tracking-wider text-sky-700 uppercase">
             {spec.jobProfile}
           </span>
           <h2 className="mt-1.5 font-heading text-[11px] font-bold tracking-tight">
             ABDELRAHMAN MAHMOUD
           </h2>
-          <p className={cn("mt-0.5 text-[7.5px] font-medium", isDark ? "text-slate-300" : "text-slate-600")}>
+          <p className="mt-0.5 text-[7.5px] font-medium text-slate-600">
             Scan QR for CV, Projects &amp; vCard
           </p>
-          <div className={cn("mt-2 flex flex-col gap-0.5 text-[7px]", isDark ? "text-slate-400" : "text-slate-500")}>
+          <div className="mt-2 flex flex-col gap-0.5 text-[7px] text-slate-500">
             <span>+20 109 516 0726</span>
             <span>Cairo, Egypt</span>
           </div>
@@ -441,11 +460,16 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <div className={cn("pb-1 text-center text-[6.5px] font-medium tracking-wider", isDark ? "text-slate-400" : "text-slate-500")}>
+      <div className="relative z-10 flex flex-col">
+        <div
+          className={cn(
+            "pb-1 text-center text-[6.5px] font-medium tracking-wider",
+            themeId === "2" ? "text-white/95" : "text-slate-500"
+          )}
+        >
           DiGiLiANS • MCIT • Military Academy • NTI
         </div>
-        <div className={cn("h-1.5 w-full", isDark ? "bg-sky-500" : "bg-[#172554]")} />
+        <div className="h-1.5 w-full bg-[#172554]" />
       </div>
     </div>
   );
@@ -456,13 +480,13 @@ function CardFrontByTheme({ spec, themeId }: { spec: CardSpec; themeId: CardThem
     case "1":
       return <ClassicFront spec={spec} />;
     case "2":
-      return <SplitFront spec={spec} />;
+      return <CanvaOrganicWaveFront spec={spec} />;
     case "3":
-      return <ObsidianFront spec={spec} />;
+      return <CanvaDiagonalRibbonFront spec={spec} />;
     case "4":
-      return <SwissGridFront spec={spec} />;
+      return <CanvaCurvedHeaderFront spec={spec} />;
     case "5":
-      return <MinimalTypographicFront spec={spec} />;
+      return <CanvaCornerGeometryFront spec={spec} />;
   }
 }
 
