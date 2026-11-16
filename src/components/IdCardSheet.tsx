@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   Download,
   ImagePlus,
   Loader2,
   Move,
+  Plus,
   Printer,
   RotateCcw,
   Trash2,
@@ -88,7 +89,7 @@ interface ResolvedCardDisplay {
   hasQrUrl: boolean;
   accreditationFooter: string;
   photoDataUrl: string;
-  logos: [string, string, string];
+  logos: string[];
 }
 
 interface DragProps {
@@ -128,7 +129,7 @@ function resolveDisplay(data: CardFormData): ResolvedCardDisplay {
     accreditationFooter:
       accreditationFooter || "DiGiLiANS • MCIT • Military Academy",
     photoDataUrl: data.photoDataUrl,
-    logos: data.logos?.length === 3 ? data.logos : [...DEFAULT_LOGOS],
+    logos: Array.isArray(data.logos) ? data.logos : [...DEFAULT_LOGOS],
   };
 }
 
@@ -256,37 +257,38 @@ function LogosRow({
   logos,
   compact = false,
 }: {
-  logos: [string, string, string];
+  logos: string[];
   compact?: boolean;
 }) {
+  if (logos.length === 0) return null;
+
+  const isDense = logos.length >= 4;
+  const boxHeight = compact || isDense ? "h-5" : "h-7";
+  const imgHeight = compact || isDense ? "max-h-4" : "max-h-6";
+  const dividerHeight = compact || isDense ? "h-4" : "h-6";
+
   return (
-    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center">
-      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
-        <img
-          src={logos[0]}
-          alt="Left Institution Logo"
-          draggable={false}
-          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
-        />
-      </div>
-      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
-      <div className={cn("flex items-center justify-center px-2", compact ? "h-5" : "h-7")}>
-        <img
-          src={logos[1]}
-          alt="Center Institution Logo"
-          draggable={false}
-          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
-        />
-      </div>
-      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-6")} />
-      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
-        <img
-          src={logos[2]}
-          alt="Right Institution Logo"
-          draggable={false}
-          className={cn("max-w-full object-contain mix-blend-multiply", compact ? "max-h-4" : "max-h-6")}
-        />
-      </div>
+    <div
+      className="grid items-center"
+      style={{
+        gridTemplateColumns: logos
+          .map((_, i) => (i === 0 ? "minmax(0, 1fr)" : "auto minmax(0, 1fr)"))
+          .join(" "),
+      }}
+    >
+      {logos.map((src, index) => (
+        <Fragment key={`${index}-${src.slice(0, 24)}`}>
+          {index > 0 && <span className={cn("w-px bg-slate-300/80", dividerHeight)} />}
+          <div className={cn("flex items-center justify-center px-1.5", boxHeight)}>
+            <img
+              src={src}
+              alt={`Institution Logo ${index + 1}`}
+              draggable={false}
+              className={cn("max-w-full object-contain mix-blend-multiply", imgHeight)}
+            />
+          </div>
+        </Fragment>
+      ))}
     </div>
   );
 }
@@ -859,17 +861,13 @@ export function IdCardSheet({
     e.target.value = "";
   }
 
-  function handleLogoUpload(index: 0 | 1 | 2, e: React.ChangeEvent<HTMLInputElement>) {
+  function handleReplaceLogo(index: number, e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        const nextLogos: [string, string, string] = [...display.logos] as [
-          string,
-          string,
-          string,
-        ];
+        const nextLogos = [...display.logos];
         nextLogos[index] = reader.result;
         updateField("logos", nextLogos);
       }
@@ -878,14 +876,34 @@ export function IdCardSheet({
     e.target.value = "";
   }
 
-  function handleResetLogo(index: 0 | 1 | 2) {
-    const nextLogos: [string, string, string] = [...display.logos] as [
-      string,
-      string,
-      string,
-    ];
-    nextLogos[index] = DEFAULT_LOGOS[index];
-    updateField("logos", nextLogos);
+  function handleAddLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        updateField("logos", [...display.logos, reader.result]);
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  function handleRemoveLogo(index: number) {
+    updateField(
+      "logos",
+      display.logos.filter((_, i) => i !== index)
+    );
+  }
+
+  function handleAddPresetLogo(src: string) {
+    if (!display.logos.includes(src)) {
+      updateField("logos", [...display.logos, src]);
+    }
+  }
+
+  function handleResetAllLogos() {
+    updateField("logos", [...DEFAULT_LOGOS]);
   }
 
   function handleReset() {
@@ -1157,39 +1175,75 @@ export function IdCardSheet({
             />
           </label>
 
-          {/* Optional Custom Logos */}
-          <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-2 text-left">
-            <span className="text-xs font-semibold text-slate-700">
-              Header Logos (Optional)
-            </span>
-            <div className="grid grid-cols-3 gap-1.5">
-              {(["Left", "Center", "Right"] as const).map((slot, idx) => {
-                const i = idx as 0 | 1 | 2;
-                const isCustom = display.logos[i] !== DEFAULT_LOGOS[i];
-                return (
-                  <div key={slot} className="flex flex-col gap-1">
-                    <label className="flex cursor-pointer items-center justify-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100">
-                      <ImagePlus className="h-3 w-3 text-sky-600" />
-                      <span>{slot}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleLogoUpload(i, e)}
-                        className="hidden"
-                      />
-                    </label>
-                    {isCustom && (
-                      <button
-                        type="button"
-                        onClick={() => handleResetLogo(i)}
-                        className="cursor-pointer text-[10px] font-medium text-slate-400 hover:text-slate-700"
-                      >
-                        Reset
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
+          {/* Dynamic Header Logos */}
+          <div className="flex flex-col gap-2 border-t border-slate-100 pt-2 text-left">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-700">
+                Header Logos ({display.logos.length})
+              </span>
+              <button
+                type="button"
+                onClick={handleResetAllLogos}
+                className="cursor-pointer text-[11px] font-medium text-slate-400 hover:text-slate-700"
+              >
+                Reset
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {display.logos.map((src, index) => (
+                <div
+                  key={`${index}-${src.slice(0, 20)}`}
+                  className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1"
+                >
+                  <label
+                    title="Replace logo"
+                    className="flex h-7 w-10 cursor-pointer items-center justify-center rounded bg-white p-0.5 hover:bg-slate-100"
+                  >
+                    <img
+                      src={src}
+                      alt={`Logo ${index + 1}`}
+                      className="max-h-full max-w-full object-contain mix-blend-multiply"
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleReplaceLogo(index, e)}
+                      className="hidden"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveLogo(index)}
+                    title="Remove logo"
+                    className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-rose-50 hover:text-rose-600"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+
+              <label className="flex h-9 cursor-pointer items-center gap-1 rounded-lg border border-dashed border-sky-300 bg-sky-50/50 px-2.5 text-[11px] font-semibold text-sky-700 hover:bg-sky-50">
+                <Plus className="h-3.5 w-3.5" />
+                <span>Add Logo</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAddLogo}
+                  className="hidden"
+                />
+              </label>
+
+              {!display.logos.includes("/logos/nti.png") && (
+                <button
+                  type="button"
+                  onClick={() => handleAddPresetLogo("/logos/nti.png")}
+                  className="flex h-9 cursor-pointer items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  <Plus className="h-3 w-3" />
+                  <span>NTI</span>
+                </button>
+              )}
             </div>
           </div>
         </aside>

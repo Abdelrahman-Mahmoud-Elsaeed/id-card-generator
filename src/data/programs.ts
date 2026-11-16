@@ -92,7 +92,7 @@ export interface ElementOffset {
   y: number;
 }
 
-export const DEFAULT_LOGOS: [string, string, string] = [
+export const DEFAULT_LOGOS: string[] = [
   "/logos/military-academy.png",
   "/logos/digilians.png",
   "/logos/mcit.png",
@@ -109,7 +109,7 @@ export interface CardFormData {
   qrUrl: string;
   accreditationFooter: string;
   photoDataUrl: string;
-  logos: [string, string, string];
+  logos: string[];
   elementOffsets: Record<string, ElementOffset>;
 }
 
