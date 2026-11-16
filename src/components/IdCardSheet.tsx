@@ -192,7 +192,7 @@ function SplitFront({ spec }: { spec: CardSpec }) {
     <div className="id-card-face relative grid grid-cols-[2.9cm_1fr] overflow-hidden border border-slate-200 bg-white shadow-md">
       {/* Left Brand Panel */}
       <div className="flex flex-col items-center justify-between bg-[#172554] px-2.5 py-3 text-center text-white">
-        <div className="h-[2.1cm] w-[1.8cm] overflow-hidden border-2 border-white/80 bg-[#132444] shadow-sm">
+        <div className="h-[2.1cm] w-[1.8cm] overflow-hidden rounded-lg border-2 border-white/80 bg-[#132444] shadow-sm">
           <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
         <div className="flex flex-col items-center">
@@ -251,7 +251,7 @@ function ObsidianFront({ spec }: { spec: CardSpec }) {
 
       {/* Center Content */}
       <div className="flex flex-1 items-center gap-3.5 px-4 py-2">
-        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden border border-sky-400/50 bg-[#132444] shadow-md">
+        <div className="h-[2.25cm] w-[1.85cm] shrink-0 overflow-hidden rounded-lg border border-sky-400/50 bg-[#132444] shadow-md">
           <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
 
@@ -309,7 +309,7 @@ function SwissGridFront({ spec }: { spec: CardSpec }) {
         </div>
 
         <div className="flex flex-1 items-center gap-3 py-1 pl-1.5">
-          <div className="h-[2.15cm] w-[1.8cm] shrink-0 overflow-hidden border border-slate-300 bg-[#132444]">
+          <div className="h-[2.15cm] w-[1.8cm] shrink-0 overflow-hidden rounded-lg border border-slate-300 bg-[#132444]">
             <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
           </div>
 
@@ -374,7 +374,7 @@ function MinimalTypographicFront({ spec }: { spec: CardSpec }) {
           </div>
         </div>
 
-        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden border border-slate-200 bg-[#132444] shadow-sm">
+        <div className="h-[2.3cm] w-[1.9cm] shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-[#132444] shadow-sm">
           <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
         </div>
       </div>
