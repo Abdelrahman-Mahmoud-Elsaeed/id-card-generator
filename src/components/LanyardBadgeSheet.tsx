@@ -77,7 +77,7 @@ function BadgeFront({
       <div>
         <div className="h-2 w-full bg-[#172554]" />
         <div className="flex justify-center pt-2 pb-1">
-          <div className="h-1.5 w-10 rounded-full border border-slate-300/80 bg-slate-100/80" />
+          <div className="h-2.5 w-2.5 rounded-full border border-slate-300/80 bg-slate-100/80" />
         </div>
         <div className="px-4 pt-1">
           <BadgeLogosRow />
@@ -155,7 +155,7 @@ function BadgeBack() {
       <div>
         <div className="h-2 w-full bg-[#172554]" />
         <div className="flex justify-center pt-2 pb-1">
-          <div className="h-1.5 w-10 rounded-full border border-slate-300/80 bg-slate-100/80" />
+          <div className="h-2.5 w-2.5 rounded-full border border-slate-300/80 bg-slate-100/80" />
         </div>
       </div>
 
@@ -185,11 +185,8 @@ function BadgeBack() {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <div className="pb-1.5 text-center text-[7pt] font-semibold tracking-wider text-slate-600">
-          DIGILIANS • MCIT • Military Academy • NTI
-        </div>
-        <div className="h-2 w-full bg-[#172554]" />
+      <div className="bg-[#172554] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+        DiGiLiANS • MCIT • Military Academy • NTI
       </div>
     </div>
   );

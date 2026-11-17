@@ -149,9 +149,9 @@ function LanyardSlot() {
     <View style={{ alignItems: "center", paddingTop: 6, paddingBottom: 3 }}>
       <View
         style={{
-          width: 28,
-          height: 4.5,
-          borderRadius: 2.25,
+          width: 7,
+          height: 7,
+          borderRadius: 3.5,
           borderWidth: 0.75,
           borderColor: "#cbd5e1",
           backgroundColor: "#f1f5f9",
@@ -490,20 +490,24 @@ export function LanyardBadgePdfDocument({
             </View>
           </View>
 
-          <View style={{ flexDirection: "column" }}>
+          <View
+            style={{
+              backgroundColor: "#172554",
+              paddingVertical: 5,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Text
               style={{
-                paddingBottom: 4.5,
-                textAlign: "center",
                 fontSize: 7,
                 fontWeight: 600,
                 letterSpacing: 0.5,
-                color: "#475569",
+                color: "#ffffff",
               }}
             >
-              DIGILIANS • MCIT • Military Academy • NTI
+              DiGiLiANS • MCIT • Military Academy • NTI
             </Text>
-            <View style={styles.navyBar} />
           </View>
         </View>
       </Page>
