@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Download, Loader2, Printer } from "lucide-react";
-import { toPng } from "html-to-image";
-import { jsPDF } from "jspdf";
+import { pdf } from "@react-pdf/renderer";
 import { QRCodeSVG } from "qrcode.react";
 
+import { PersonalCardPdfDocument } from "@/components/pdf/PersonalCardPdfDocument";
 import { Button } from "@/components/ui/button";
+import { downloadPdfBlob } from "@/lib/pdfUtils";
 import {
   BASE_PUBLIC_URL,
   VARIANT_CODES,
@@ -500,9 +501,6 @@ export function IdCardSheet({
   const [selected, setSelected] = useState<ProfileVariantKey | "all">("all");
   const [showPhoto, setShowPhoto] = useState(false);
   const [downloadingKey, setDownloadingKey] = useState<string | null>(null);
-  const faceRefs = useRef<
-    Record<string, { front: HTMLDivElement | null; back: HTMLDivElement | null }>
-  >({});
 
   const activeTheme = CARD_THEMES.find((t) => t.id === themeId) ?? CARD_THEMES[0];
 
@@ -516,27 +514,19 @@ export function IdCardSheet({
       : CARD_SPECS.filter((item) => item.key === selected);
 
   async function downloadCardPdf(spec: CardSpec) {
-    const refs = faceRefs.current[spec.key];
-    if (!refs?.front || !refs?.back) return;
-
     setDownloadingKey(spec.key);
     try {
-      await document.fonts.ready;
-      const [frontImg, backImg] = await Promise.all([
-        toPng(refs.front, { pixelRatio: 6, cacheBust: true }),
-        toPng(refs.back, { pixelRatio: 6, cacheBust: true }),
-      ]);
-
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "cm",
-        format: [8.6, 5.4],
-      });
-
-      pdf.addImage(frontImg, "PNG", 0, 0, 8.6, 5.4);
-      pdf.addPage([8.6, 5.4], "landscape");
-      pdf.addImage(backImg, "PNG", 0, 0, 8.6, 5.4);
-      pdf.save(`Abdelrahman-Mahmoud-${spec.key}-design-${themeId}.pdf`);
+      const blob = await pdf(
+        <PersonalCardPdfDocument
+          spec={spec}
+          themeId={themeId}
+          showPhoto={showPhoto}
+        />
+      ).toBlob();
+      downloadPdfBlob(
+        blob,
+        `Abdelrahman-Mahmoud-${spec.key}-design-${themeId}.pdf`
+      );
     } finally {
       setDownloadingKey(null);
     }
@@ -669,28 +659,10 @@ export function IdCardSheet({
 
               <div className="flex flex-wrap justify-center gap-4 print:block">
                 <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-                  <div
-                    ref={(el) => {
-                      faceRefs.current[spec.key] = {
-                        ...faceRefs.current[spec.key],
-                        front: el,
-                      };
-                    }}
-                  >
-                    <CardFrontByTheme spec={spec} themeId={themeId} showPhoto={showPhoto} />
-                  </div>
+                  <CardFrontByTheme spec={spec} themeId={themeId} showPhoto={showPhoto} />
                 </div>
                 <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-                  <div
-                    ref={(el) => {
-                      faceRefs.current[spec.key] = {
-                        ...faceRefs.current[spec.key],
-                        back: el,
-                      };
-                    }}
-                  >
-                    <CardBack spec={spec} themeId={themeId} />
-                  </div>
+                  <CardBack spec={spec} themeId={themeId} />
                 </div>
               </div>
             </div>
