@@ -236,9 +236,9 @@ function ArabicDigiliansFooter({ color = "#475569" }: { color?: string }) {
       </Text>
       <Text
         style={{
-          fontFamily: "Cairo",
-          fontSize: 5.8,
-          fontWeight: 600,
+          fontFamily: "Amiri",
+          fontSize: 6.2,
+          fontWeight: 700,
           color,
         }}
       >
