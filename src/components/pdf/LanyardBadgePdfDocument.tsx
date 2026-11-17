@@ -420,19 +420,19 @@ function BadgeThemeBackground({
         style={styles.fillAbsolute}
       >
         <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
-        {/* Main 45-deg capsule wrapping concentrically around portrait (127.5, 114, r=50) */}
+        {/* Main dark capsule wrapping concentrically around portrait (127.5, 98, r=50) and containing punch hole (127.5, 16) */}
         <Path
-          d="M0,0 L84.2,0 L162.85,78.65 A50,50 0 1,1 92.15,149.35 L0,57.2 Z"
+          d="M0,0 L142,0 Q158,38 174.5,80.9 A50,50 0 1,1 92,133 L0,41 Z"
           fill="#0b1120"
         />
-        {/* Top-right triangle with parallel 45-deg edge & rounded corners */}
+        {/* Top-right triangle starting at x≈158, ending at y≈98 on right edge */}
         <Path
-          d="M111,0 L255,0 L255,144 Q255,152 247,144 L106,4 Q102,0 111,0 Z"
+          d="M162,0 L255,0 L255,95 Q255,101 249,95 L159,5 Q155,0 162,0 Z"
           fill="#0b1120"
         />
         {/* Bottom-left accent with parallel 45-deg white gap */}
         <Path
-          d="M0,74.2 L42,116.2 Q48,122 44,132 C34,162 20,192 0,218 Z"
+          d="M0,58 L42,100 Q48,106 44,116 C34,146 20,176 0,204 Z"
           fill="#0b1120"
         />
         {/* Bottom-left lower dark wave */}
@@ -680,22 +680,36 @@ function FrontPage({
         >
           <View style={{ position: "relative" }}>
             <LanyardPunchHole light />
-            <View
+            <Image
+              src="/logos/digilians-white.png"
               style={{
                 position: "absolute",
                 top: 8,
                 left: 8,
-                borderRadius: 4,
-                backgroundColor: "#ffffff",
-                paddingHorizontal: 4,
-                paddingVertical: 2,
+                maxHeight: 24,
+                maxWidth: 40,
+                objectFit: "contain",
               }}
-            >
-              <Image
-                src="/logos/digilians-full.png"
-                style={{ maxHeight: 18, maxWidth: 32, objectFit: "contain" }}
-              />
-            </View>
+            />
+          </View>
+
+          {/* Portrait locked to exact SVG arc center (127.5, 98) with diameter 87 */}
+          <View
+            style={{
+              position: "absolute",
+              top: 54.5,
+              left: 84,
+              width: 87,
+              height: 87,
+              borderRadius: 43.5,
+              backgroundColor: "#ffffff",
+              overflow: "hidden",
+            }}
+          >
+            <Image
+              src="/me.png"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </View>
 
           <View
@@ -703,36 +717,11 @@ function FrontPage({
               flex: 1,
               flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               paddingHorizontal: 14,
-              paddingTop: 6,
+              paddingBottom: 6,
             }}
           >
-            {/* Dark thick outer ring + white inner portrait circle */}
-            <View
-              style={{
-                width: 82,
-                height: 82,
-                borderRadius: 41,
-                backgroundColor: "#0b1120",
-                padding: 4,
-              }}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 37,
-                  backgroundColor: "#ffffff",
-                  overflow: "hidden",
-                }}
-              >
-                <Image
-                  src="/me.png"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </View>
-            </View>
 
             <Text
               style={{
@@ -963,20 +952,15 @@ function BackPage({
         >
           <View style={{ alignItems: "center" }}>
             <LanyardPunchHole light />
-            <View
+            <Image
+              src="/logos/digilians-white.png"
               style={{
                 marginTop: 4,
-                borderRadius: 6,
-                backgroundColor: "#ffffff",
-                paddingHorizontal: 8,
-                paddingVertical: 3,
+                maxHeight: 50,
+                maxWidth: 88,
+                objectFit: "contain",
               }}
-            >
-              <Image
-                src="/logos/digilians-full.png"
-                style={{ maxHeight: 44, maxWidth: 80, objectFit: "contain" }}
-              />
-            </View>
+            />
           </View>
 
           <View

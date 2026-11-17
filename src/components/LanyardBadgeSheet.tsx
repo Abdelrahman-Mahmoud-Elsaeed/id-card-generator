@@ -336,19 +336,19 @@ function BadgeFrontByTheme({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Main 45-deg capsule wrapping concentrically around portrait (127.5, 114, r=50) */}
+          {/* Main dark capsule wrapping concentrically around portrait (127.5, 98, r=50) and containing punch hole (127.5, 16) */}
           <path
-            d="M0,0 L84.2,0 L162.85,78.65 A50,50 0 1,1 92.15,149.35 L0,57.2 Z"
+            d="M0,0 L142,0 Q158,38 174.5,80.9 A50,50 0 1,1 92,133 L0,41 Z"
             fill="#0b1120"
           />
-          {/* Top-right triangle with parallel 45-deg edge & rounded corners */}
+          {/* Top-right triangle starting at x≈158, ending at y≈98 on right edge */}
           <path
-            d="M111,0 L255,0 L255,144 Q255,152 247,144 L106,4 Q102,0 111,0 Z"
+            d="M162,0 L255,0 L255,95 Q255,101 249,95 L159,5 Q155,0 162,0 Z"
             fill="#0b1120"
           />
           {/* Bottom-left accent with parallel 45-deg white gap */}
           <path
-            d="M0,74.2 L42,116.2 Q48,122 44,132 C34,162 20,192 0,218 Z"
+            d="M0,58 L42,100 Q48,106 44,116 C34,146 20,176 0,204 Z"
             fill="#0b1120"
           />
           {/* Bottom-left lower dark wave */}
@@ -361,35 +361,36 @@ function BadgeFrontByTheme({
           <circle cx="244" cy="256" r="24" fill="#1d4ed8" fillOpacity="0.45" />
         </svg>
 
+        {/* Punch hole + DiGiLiANS transparent white-text logo */}
         <div className="relative z-10">
           <PunchHole light />
-          <div className="absolute top-2.5 left-2.5 rounded-md bg-white/95 px-1.5 py-0.5 shadow-xs">
-            <img
-              src="/logos/digilians-full.png"
-              alt="DiGiLiANS"
-              className="h-6 w-auto object-contain"
-            />
-          </div>
+          <img
+            src="/logos/digilians-white.png"
+            alt="DiGiLiANS"
+            className="absolute top-2.5 left-3 h-8 w-auto object-contain"
+          />
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-3 text-center">
-          <div className="relative h-[2.85cm] w-[2.85cm] rounded-full bg-[#0b1120] p-[4px] shadow-md">
-            <div className="relative h-full w-full overflow-hidden rounded-full bg-white">
-              <img
-                src="/logos/digilians-full.png"
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 m-auto h-4/5 w-4/5 object-contain opacity-15"
-              />
-              <img
-                src="/me.png"
-                alt="Abdelrahman Mahmoud"
-                className="relative z-10 h-full w-full object-cover object-[50%_22%]"
-              />
-            </div>
-          </div>
+        {/* Portrait locked to exact SVG arc center (127.5, 98) with diameter 87/255 = 34.12% */}
+        <div
+          className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden rounded-full bg-white"
+          style={{ top: "16.03%", width: "34.12%", height: "25.59%" }}
+        >
+          <img
+            src="/logos/digilians-full.png"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 m-auto h-4/5 w-4/5 object-contain opacity-15"
+          />
+          <img
+            src="/me.png"
+            alt="Abdelrahman Mahmoud"
+            className="relative z-10 h-full w-full object-cover object-[50%_22%]"
+          />
+        </div>
 
-          <h2 className="mt-2.5 font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-2 text-center">
+          <h2 className="font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
             {BADGE_INFO.name}
           </h2>
           <span className="mt-1 text-[7.5pt] font-bold tracking-wide text-slate-800 uppercase">
@@ -477,13 +478,11 @@ function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
 
         <div className="relative z-10 flex flex-col items-center">
           <PunchHole light />
-          <div className="mt-1 rounded-lg bg-white/95 px-3 py-1 shadow-xs">
-            <img
-              src="/logos/digilians-full.png"
-              alt="DiGiLiANS"
-              className="h-14 w-auto object-contain"
-            />
-          </div>
+          <img
+            src="/logos/digilians-white.png"
+            alt="DiGiLiANS"
+            className="mt-1 h-16 w-auto object-contain"
+          />
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 text-center">
