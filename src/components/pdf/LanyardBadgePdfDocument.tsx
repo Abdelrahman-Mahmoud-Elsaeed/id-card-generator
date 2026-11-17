@@ -399,9 +399,9 @@ export function LanyardBadgePdfDocument({
             </Text>
             <Text
               style={{
-                fontFamily: "Cairo",
-                fontSize: 7.2,
-                fontWeight: 600,
+                fontFamily: "Amiri",
+                fontSize: 7.5,
+                fontWeight: 700,
                 color: "#ffffff",
               }}
             >
