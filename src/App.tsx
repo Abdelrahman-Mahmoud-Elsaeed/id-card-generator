@@ -7,7 +7,7 @@ import {
 
 function resolveBadgeThemeFromPath(): BadgeThemeId {
   const seg = window.location.pathname.replace(/^\/+|\/+$/g, "");
-  if (seg === "1" || seg === "2" || seg === "3" || seg === "4") {
+  if (seg === "1" || seg === "2" || seg === "3" || seg === "4" || seg === "5") {
     return seg;
   }
   return "1";
