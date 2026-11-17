@@ -420,20 +420,23 @@ function BadgeThemeBackground({
         style={styles.fillAbsolute}
       >
         <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
-        {/* Top diagonal dark split */}
-        <Path d="M0,0 L255,0 L255,152 C185,112 72,174 0,104 Z" fill="#0b1120" />
-        {/* Thin white diagonal highlight line */}
+        {/* Main top-left dark capsule wrapping around the circular portrait */}
         <Path
-          d="M150,0 L255,96"
-          stroke="#ffffff"
-          strokeWidth={2.5}
-          strokeOpacity={0.9}
+          d="M0,0 L114,0 L162,84 A48,48 0 1,1 92,152 L0,62 Z"
+          fill="#0b1120"
         />
-        {/* Bottom-left dark curve */}
-        <Path d="M0,225 C42,248 56,296 76,340 L0,340 Z" fill="#0b1120" />
+        {/* Top-right separate triangle with rounded inner corner & white gap */}
+        <Path
+          d="M128,0 L255,0 L255,134 Q248,132 242,126 L132,12 Q127,6 128,0 Z"
+          fill="#0b1120"
+        />
+        {/* Bottom-left dark curve with white diagonal gap */}
+        <Path d="M0,78 L36,114 C48,148 36,210 0,256 Z" fill="#0b1120" />
+        {/* Bottom-left lower dark wave */}
+        <Path d="M0,248 C34,268 48,304 62,340 L0,340 Z" fill="#0b1120" />
         {/* Right-edge cobalt/navy orb accent */}
-        <Circle cx={245} cy={258} r={38} fill="#172554" />
-        <Circle cx={245} cy={258} r={24} fill="#1d4ed8" fillOpacity={0.45} />
+        <Circle cx={244} cy={256} r={38} fill="#172554" />
+        <Circle cx={244} cy={256} r={24} fill="#1d4ed8" fillOpacity={0.45} />
       </Svg>
     );
   }
@@ -677,18 +680,39 @@ function FrontPage({
             <View
               style={{
                 position: "absolute",
-                top: 10,
-                left: 12,
-                borderRadius: 4,
-                backgroundColor: "#ffffff",
-                paddingHorizontal: 5,
-                paddingVertical: 2.5,
+                top: 8,
+                left: 10,
+                alignItems: "center",
               }}
             >
-              <Image
-                src="/logos/digilians.png"
-                style={{ maxHeight: 15, maxWidth: 46, objectFit: "contain" }}
-              />
+              <Svg width={20} height={20} viewBox="0 0 100 100">
+                <Path
+                  d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z"
+                  stroke="#38bdf8"
+                  strokeWidth={8}
+                  fill="none"
+                />
+                <Path
+                  d="M50 26 L72 39 L72 61 L50 74 L28 61 L28 39 Z"
+                  stroke="#0ea5e9"
+                  strokeWidth={7}
+                  fill="none"
+                />
+                <Circle cx={50} cy={46} r={5} fill="#38bdf8" />
+                <Path d="M50 51 L50 66" stroke="#38bdf8" strokeWidth={5} />
+              </Svg>
+              <Text
+                style={{
+                  marginTop: 1.5,
+                  fontFamily: "SpaceGrotesk",
+                  fontSize: 4.5,
+                  fontWeight: 700,
+                  letterSpacing: 0.7,
+                  color: "#f8fafc",
+                }}
+              >
+                DiGiLiANS
+              </Text>
             </View>
           </View>
 

@@ -336,26 +336,58 @@ function BadgeFrontByTheme({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path d="M0,0 L255,0 L255,152 C185,112 72,174 0,104 Z" fill="#0b1120" />
-          <path d="M150,0 L255,96" stroke="#ffffff" strokeWidth="2.5" strokeOpacity="0.9" />
-          <path d="M0,225 C42,248 56,296 76,340 L0,340 Z" fill="#0b1120" />
-          <circle cx="245" cy="258" r="38" fill="#172554" />
-          <circle cx="245" cy="258" r="24" fill="#1d4ed8" fillOpacity="0.45" />
+          {/* Main top-left dark capsule wrapping around the circular portrait */}
+          <path
+            d="M0,0 L114,0 L162,84 A48,48 0 1,1 92,152 L0,62 Z"
+            fill="#0b1120"
+          />
+          {/* Top-right separate triangle with rounded inner corner & white gap */}
+          <path
+            d="M128,0 L255,0 L255,134 Q248,132 242,126 L132,12 Q127,6 128,0 Z"
+            fill="#0b1120"
+          />
+          {/* Bottom-left dark curve with white diagonal gap */}
+          <path
+            d="M0,78 L36,114 C48,148 36,210 0,256 Z"
+            fill="#0b1120"
+          />
+          {/* Bottom-left lower dark wave */}
+          <path
+            d="M0,248 C34,268 48,304 62,340 L0,340 Z"
+            fill="#0b1120"
+          />
+          {/* Right-edge cobalt/navy orb accent */}
+          <circle cx="244" cy="256" r="38" fill="#172554" />
+          <circle cx="244" cy="256" r="24" fill="#1d4ed8" fillOpacity="0.45" />
         </svg>
 
         <div className="relative z-10">
           <PunchHole light />
-          <div className="absolute top-2.5 left-3 rounded bg-white/95 px-1.5 py-0.5 shadow-xs">
-            <img
-              src="/logos/digilians.png"
-              alt="DiGiLiANS"
-              className="h-4 w-auto object-contain"
-            />
+          <div className="absolute top-2.5 left-3 flex flex-col items-center">
+            <svg viewBox="0 0 100 100" className="h-6 w-6" aria-hidden="true">
+              <path
+                d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z"
+                stroke="#38bdf8"
+                strokeWidth="8"
+                fill="none"
+              />
+              <path
+                d="M50 26 L72 39 L72 61 L50 74 L28 61 L28 39 Z"
+                stroke="#0ea5e9"
+                strokeWidth="7"
+                fill="none"
+              />
+              <circle cx="50" cy="46" r="5" fill="#38bdf8" />
+              <path d="M50 51 L50 66" stroke="#38bdf8" strokeWidth="5" />
+            </svg>
+            <span className="mt-0.5 text-[4.5pt] font-bold tracking-[0.14em] text-white/90">
+              DiGiLiANS
+            </span>
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-2 text-center">
-          <div className="relative h-[2.8cm] w-[2.8cm] rounded-full bg-[#0b1120] p-[4px] shadow-md">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-3 text-center">
+          <div className="relative h-[2.85cm] w-[2.85cm] rounded-full bg-[#0b1120] p-[4px] shadow-md">
             <div className="relative h-full w-full overflow-hidden rounded-full bg-white">
               <svg
                 viewBox="0 0 100 100"
