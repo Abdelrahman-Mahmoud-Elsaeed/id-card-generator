@@ -437,27 +437,42 @@ function BadgeFrontByTheme({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Top-right sweeping navy + cobalt ribbon */}
-          <path d="M150,0 L255,0 L255,102 C228,74 196,24 150,0 Z" fill="#0b152c" />
-          <path d="M168,0 C206,24 232,64 255,86 L255,66 C236,46 214,18 192,0 Z" fill="#1e3a8a" />
-          <path d="M150,0 C196,24 228,74 255,102" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+          <defs>
+            <linearGradient id="ribbonCobalt" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#0f2862" />
+              <stop offset="55%" stopColor="#1e40af" />
+              <stop offset="100%" stopColor="#2563eb" />
+            </linearGradient>
+          </defs>
 
-          {/* Left-side vertical-curved dark navy ribbon */}
-          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192 Z" fill="#0b152c" />
-          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192" stroke="#c8a45d" strokeWidth="1.2" fill="none" />
+          {/* Subtle watermark pattern in upper-right white area */}
+          <g opacity="0.045" stroke="#64748b" strokeWidth="1" fill="none">
+            <path d="M180 40 L200 52 L200 76 L180 88 L160 76 L160 52 Z" />
+            <path d="M220 64 L240 76 L240 100 L220 112 L200 100 L200 76 Z" />
+            <path d="M180 88 L200 100 L200 124 L180 136 L160 124 L160 100 Z" />
+          </g>
+
+          {/* Top-right sweeping navy + cobalt ribbon */}
+          <path d="M148,0 L255,0 L255,112 C226,80 194,26 148,0 Z" fill="#0b152c" />
+          <path d="M170,0 C206,24 232,66 255,92 L255,70 C235,48 214,18 192,0 Z" fill="url(#ribbonCobalt)" />
+          <path d="M148,0 C194,26 226,80 255,112" stroke="#c8a45d" strokeWidth="1.4" fill="none" />
+
+          {/* Left-side curved dark navy ribbon with inner gold contour */}
+          <path d="M0,40 C26,66 44,96 38,128 C34,148 16,170 0,192 Z" fill="#0b152c" />
+          <path d="M0,54 C18,74 30,98 25,124 C21,140 10,156 0,170" stroke="#c8a45d" strokeWidth="1.1" fill="none" />
+          <path d="M0,40 C26,66 44,96 38,128 C34,148 16,170 0,192" stroke="#c8a45d" strokeWidth="1.2" fill="none" />
 
           {/* Main sweeping S-wave ribbon across middle */}
           <path
-            d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74 L255,142 C214,192 162,202 108,186 C64,174 28,196 0,240 Z"
+            d="M0,168 C48,124 102,168 158,148 C202,132 234,98 255,58 L255,134 C214,184 162,196 108,180 C64,168 28,190 0,234 Z"
             fill="#0b152c"
           />
           <path
-            d="M0,192 C48,154 98,178 156,162 C202,150 232,126 255,94 L255,114 C228,148 192,168 148,172 C96,176 48,164 0,206 Z"
-            fill="#1d4ed8"
-            fillOpacity="0.72"
+            d="M0,186 C48,148 100,172 158,154 C202,140 232,114 255,78 L255,100 C228,136 192,160 148,164 C96,168 48,156 0,198 Z"
+            fill="url(#ribbonCobalt)"
           />
-          <path d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
-          <path d="M0,240 C28,196 64,174 108,186 C162,202 214,192 255,142" stroke="#c8a45d" strokeWidth="1.4" fill="none" />
+          <path d="M0,168 C48,124 102,168 158,148 C202,132 234,98 255,58" stroke="#c8a45d" strokeWidth="1.4" fill="none" />
+          <path d="M0,234 C28,190 64,168 108,180 C162,196 214,184 255,134" stroke="#c8a45d" strokeWidth="1.5" fill="none" />
 
           {/* Right-edge double-ring cobalt/navy orb */}
           <circle cx="240" cy="246" r="34" fill="#0f1e42" />
@@ -465,8 +480,8 @@ function BadgeFrontByTheme({
 
           {/* Bottom-left navy & gold wave */}
           <path d="M0,264 C28,278 52,306 72,340 L0,340 Z" fill="#0b152c" />
-          <path d="M0,276 C22,290 40,314 54,340 L34,340 C22,318 10,302 0,292 Z" fill="#1d4ed8" fillOpacity="0.75" />
-          <path d="M0,264 C28,278 52,306 72,340" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+          <path d="M0,276 C22,290 40,314 54,340 L34,340 C22,318 10,302 0,292 Z" fill="url(#ribbonCobalt)" />
+          <path d="M0,264 C28,278 52,306 72,340" stroke="#c8a45d" strokeWidth="1.4" fill="none" />
         </svg>
 
         {/* Gold-rimmed punch hole + Top-left DiGiLiANS & Arabic */}
@@ -486,17 +501,17 @@ function BadgeFrontByTheme({
           </div>
         </div>
 
-        {/* Luxury Navy + Concentric Double Gold Rings around Portrait */}
+        {/* Luxury Navy + Concentric Double Gold Rings around Portrait (slightly lower, kissing ribbon) */}
         <div
-          className="absolute left-1/2 z-10 -translate-x-1/2 rounded-full border border-[#c8a45d] bg-[#0b152c] p-[4px] shadow-md"
-          style={{ top: "10%", width: "38.4%", height: "28.8%" }}
+          className="absolute left-1/2 z-10 -translate-x-1/2 rounded-full border-[1.5px] border-[#c8a45d] bg-[#0b152c] p-[5px] shadow-md"
+          style={{ top: "12.5%", width: "39%", height: "29.25%" }}
         >
-          <div className="h-full w-full rounded-full border border-[#c8a45d] bg-[#0b152c] p-[4px]">
+          <div className="h-full w-full rounded-full border-[1.5px] border-[#c8a45d] bg-[#0b152c] p-[5px]">
             <div className="h-full w-full overflow-hidden rounded-full border border-[#d4af37] bg-[#132444]">
               <img
                 src="/me.png"
                 alt="Abdelrahman Mahmoud"
-                className="h-full w-full object-cover object-[50%_22%]"
+                className="h-full w-full scale-105 object-cover object-[50%_20%]"
               />
             </div>
           </div>

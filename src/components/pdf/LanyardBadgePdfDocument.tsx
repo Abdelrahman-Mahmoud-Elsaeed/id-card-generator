@@ -456,27 +456,33 @@ function BadgeThemeBackground({
         <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
         {/* Top-right sweeping navy + cobalt ribbon */}
         <Path
-          d="M150,0 L255,0 L255,102 C228,74 196,24 150,0 Z"
+          d="M148,0 L255,0 L255,112 C226,80 194,26 148,0 Z"
           fill="#0b152c"
         />
         <Path
-          d="M168,0 C206,24 232,64 255,86 L255,66 C236,46 214,18 192,0 Z"
-          fill="#1e3a8a"
+          d="M170,0 C206,24 232,66 255,92 L255,70 C235,48 214,18 192,0 Z"
+          fill="#1e40af"
         />
         <Path
-          d="M150,0 C196,24 228,74 255,102"
+          d="M148,0 C194,26 226,80 255,112"
           stroke="#c8a45d"
-          strokeWidth={1.3}
+          strokeWidth={1.4}
           fill="none"
         />
 
-        {/* Left-side vertical-curved dark navy ribbon */}
+        {/* Left-side curved dark navy ribbon with inner gold contour */}
         <Path
-          d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192 Z"
+          d="M0,40 C26,66 44,96 38,128 C34,148 16,170 0,192 Z"
           fill="#0b152c"
         />
         <Path
-          d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192"
+          d="M0,54 C18,74 30,98 25,124 C21,140 10,156 0,170"
+          stroke="#c8a45d"
+          strokeWidth={1.1}
+          fill="none"
+        />
+        <Path
+          d="M0,40 C26,66 44,96 38,128 C34,148 16,170 0,192"
           stroke="#c8a45d"
           strokeWidth={1.2}
           fill="none"
@@ -486,24 +492,24 @@ function BadgeThemeBackground({
         {!isBack && (
           <>
             <Path
-              d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74 L255,142 C214,192 162,202 108,186 C64,174 28,196 0,240 Z"
+              d="M0,168 C48,124 102,168 158,148 C202,132 234,98 255,58 L255,134 C214,184 162,196 108,180 C64,168 28,190 0,234 Z"
               fill="#0b152c"
             />
             <Path
-              d="M0,192 C48,154 98,178 156,162 C202,150 232,126 255,94 L255,114 C228,148 192,168 148,172 C96,176 48,164 0,206 Z"
-              fill="#1d4ed8"
-              fillOpacity={0.72}
+              d="M0,186 C48,148 100,172 158,154 C202,140 232,114 255,78 L255,100 C228,136 192,160 148,164 C96,168 48,156 0,198 Z"
+              fill="#1e40af"
+              fillOpacity={0.85}
             />
             <Path
-              d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74"
+              d="M0,168 C48,124 102,168 158,148 C202,132 234,98 255,58"
               stroke="#c8a45d"
-              strokeWidth={1.3}
+              strokeWidth={1.4}
               fill="none"
             />
             <Path
-              d="M0,240 C28,196 64,174 108,186 C162,202 214,192 255,142"
+              d="M0,234 C28,190 64,168 108,180 C162,196 214,184 255,134"
               stroke="#c8a45d"
-              strokeWidth={1.4}
+              strokeWidth={1.5}
               fill="none"
             />
             {/* Right-edge double-ring cobalt/navy orb */}
@@ -943,14 +949,14 @@ function FrontPage({
           <View
             style={{
               position: "absolute",
-              top: 34,
-              left: 78.5,
-              width: 98,
-              height: 98,
-              borderRadius: 49,
+              top: 42.5,
+              left: 77.75,
+              width: 99.5,
+              height: 99.5,
+              borderRadius: 49.75,
               backgroundColor: "#0b152c",
-              padding: 4,
-              borderWidth: 1.2,
+              padding: 5,
+              borderWidth: 1.4,
               borderColor: "#c8a45d",
             }}
           >
@@ -958,10 +964,10 @@ function FrontPage({
               style={{
                 width: "100%",
                 height: "100%",
-                borderRadius: 45,
-                borderWidth: 1.2,
+                borderRadius: 44.75,
+                borderWidth: 1.4,
                 borderColor: "#c8a45d",
-                padding: 4,
+                padding: 5,
                 backgroundColor: "#0b152c",
               }}
             >
