@@ -153,7 +153,7 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
 
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
       style={DIAGONAL_BG}
     >
       <div className="h-1.5 w-full bg-[#172554]" />
@@ -167,11 +167,13 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
 
       <div className="flex flex-col px-4">
         <div className="flex items-center gap-3.5 py-1">
-          <div className="h-[1.9cm] w-[1.58cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
-            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          <div className="h-[1.9cm] w-[1.58cm] shrink-0 rounded-lg bg-white p-[1.5px] shadow-[0_2px_6px_rgba(15,23,42,0.12)]">
+            <div className="h-full w-full overflow-hidden rounded-[6.5px] bg-[#132444]">
+              <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+            </div>
           </div>
           <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-            <span className="rounded-md border border-sky-200/90 bg-sky-50/90 px-2 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-800 uppercase">
+            <span className="rounded-md border border-sky-200 bg-sky-50 px-2 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-800 uppercase">
               {spec.jobProfile}
             </span>
             <h2 className="mt-1 font-heading text-[10.5px] font-bold leading-tight tracking-tight text-slate-900 uppercase">
@@ -181,20 +183,20 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
               <span className="text-[6.5px] font-bold tracking-wide text-slate-800 uppercase">
                 SPECIALIZED DIPLOMA
               </span>
-              <span className="text-[6px] font-medium tracking-wide text-slate-600 uppercase">
+              <span className="text-[6.2px] font-semibold tracking-wide text-slate-600 uppercase">
                 AI BASED SOFTWARE DEVELOPMENT
               </span>
             </div>
           </div>
         </div>
 
-        <div className="my-1 h-px w-full bg-slate-200/90" />
+        <div className="my-1 h-px w-full bg-slate-200" />
 
         <div className="flex flex-col gap-0.5 text-left">
           {contacts.map((row) => (
             <div key={row.label} className="grid grid-cols-[34px_8px_1fr] items-center text-[7px] leading-tight">
-              <span className="font-medium tracking-wide text-slate-500 uppercase">{row.label}</span>
-              <span className="text-sky-400/80">|</span>
+              <span className="font-semibold tracking-wide text-slate-500 uppercase">{row.label}</span>
+              <span className="text-sky-400">|</span>
               <span className="truncate font-bold text-slate-900">{row.value}</span>
             </div>
           ))}
@@ -202,7 +204,7 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center justify-center gap-2 pb-1 text-[6.5px] font-medium tracking-wide text-slate-600">
+        <div className="flex items-center justify-center gap-2 pb-1 text-[6.5px] font-semibold tracking-wide text-slate-600">
           <span className="h-1 w-1 rounded-full bg-[#172554]" />
           <span>DIGILIANS • الرواد الرقميون</span>
           <span className="h-1 w-1 rounded-full bg-[#172554]" />
@@ -441,7 +443,7 @@ function CanvaCornerGeometryFront({ spec }: { spec: CardSpec }) {
 function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
       style={themeId === "1" ? DIAGONAL_BG : undefined}
     >
       {themeId === "2" && (
@@ -486,18 +488,19 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col items-center rounded-lg border border-slate-200/90 bg-white p-2 shadow-sm">
+        <div className="flex shrink-0 flex-col items-center rounded-lg border border-slate-200 bg-white p-2 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
           <QRCodeSVG
             value={spec.qrUrl}
             size={82}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
+            shapeRendering="crispEdges"
           />
           <span className="mt-1.5 text-[6.5px] font-bold tracking-[0.18em] text-slate-800 uppercase">
             SCAN ME
           </span>
-          <span className="text-[6px] font-medium text-slate-400">
+          <span className="text-[6.2px] font-semibold text-slate-400">
             CV &amp; Projects
           </span>
         </div>
@@ -563,9 +566,10 @@ export function IdCardSheet({
 
     setDownloadingKey(spec.key);
     try {
+      await document.fonts.ready;
       const [frontImg, backImg] = await Promise.all([
-        toPng(refs.front, { pixelRatio: 4, cacheBust: true }),
-        toPng(refs.back, { pixelRatio: 4, cacheBust: true }),
+        toPng(refs.front, { pixelRatio: 6, cacheBust: true }),
+        toPng(refs.back, { pixelRatio: 6, cacheBust: true }),
       ]);
 
       const pdf = new jsPDF({
@@ -695,25 +699,29 @@ export function IdCardSheet({
               </div>
 
               <div className="flex flex-wrap justify-center gap-4 print:block">
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      front: el,
-                    };
-                  }}
-                >
-                  <CardFrontByTheme spec={spec} themeId={themeId} />
+                <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                  <div
+                    ref={(el) => {
+                      faceRefs.current[spec.key] = {
+                        ...faceRefs.current[spec.key],
+                        front: el,
+                      };
+                    }}
+                  >
+                    <CardFrontByTheme spec={spec} themeId={themeId} />
+                  </div>
                 </div>
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      back: el,
-                    };
-                  }}
-                >
-                  <CardBack spec={spec} themeId={themeId} />
+                <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                  <div
+                    ref={(el) => {
+                      faceRefs.current[spec.key] = {
+                        ...faceRefs.current[spec.key],
+                        back: el,
+                      };
+                    }}
+                  >
+                    <CardBack spec={spec} themeId={themeId} />
+                  </div>
                 </div>
               </div>
             </div>
