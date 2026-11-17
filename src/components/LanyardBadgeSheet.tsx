@@ -9,7 +9,7 @@ import { downloadPdfBlob } from "@/lib/pdfUtils";
 import { cn } from "@/lib/utils";
 import { BASE_PUBLIC_URL, VARIANT_CODES } from "@/lib/variant";
 
-export type BadgeThemeId = "1" | "2" | "3" | "4" | "5";
+export type BadgeThemeId = "1" | "2" | "3" | "4" | "5" | "6";
 
 export interface BadgeThemeMeta {
   id: BadgeThemeId;
@@ -48,6 +48,12 @@ export const BADGE_THEMES: BadgeThemeMeta[] = [
     route: "/5",
     name: "5. Digilians Dark Split",
     subtitle: "High-contrast dark diagonal split, watermarked portrait & dark brand back",
+  },
+  {
+    id: "6",
+    route: "/6",
+    name: "6. Royal Navy & Gold Ribbon",
+    subtitle: "Sweeping navy & gold-trimmed ribbons with concentric gold portrait rings",
   },
 ];
 
@@ -422,6 +428,113 @@ function BadgeFrontByTheme({
     );
   }
 
+  if (themeId === "6") {
+    return (
+      <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-white">
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* Top-right sweeping navy + cobalt ribbon */}
+          <path d="M150,0 L255,0 L255,102 C228,74 196,24 150,0 Z" fill="#0b152c" />
+          <path d="M168,0 C206,24 232,64 255,86 L255,66 C236,46 214,18 192,0 Z" fill="#1e3a8a" />
+          <path d="M150,0 C196,24 228,74 255,102" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+
+          {/* Left-side vertical-curved dark navy ribbon */}
+          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192 Z" fill="#0b152c" />
+          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192" stroke="#c8a45d" strokeWidth="1.2" fill="none" />
+
+          {/* Main sweeping S-wave ribbon across middle */}
+          <path
+            d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74 L255,142 C214,192 162,202 108,186 C64,174 28,196 0,240 Z"
+            fill="#0b152c"
+          />
+          <path
+            d="M0,192 C48,154 98,178 156,162 C202,150 232,126 255,94 L255,114 C228,148 192,168 148,172 C96,176 48,164 0,206 Z"
+            fill="#1d4ed8"
+            fillOpacity="0.72"
+          />
+          <path d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+          <path d="M0,240 C28,196 64,174 108,186 C162,202 214,192 255,142" stroke="#c8a45d" strokeWidth="1.4" fill="none" />
+
+          {/* Right-edge double-ring cobalt/navy orb */}
+          <circle cx="240" cy="246" r="34" fill="#0f1e42" />
+          <circle cx="240" cy="246" r="21" fill="#1e3a8a" />
+
+          {/* Bottom-left navy & gold wave */}
+          <path d="M0,264 C28,278 52,306 72,340 L0,340 Z" fill="#0b152c" />
+          <path d="M0,276 C22,290 40,314 54,340 L34,340 C22,318 10,302 0,292 Z" fill="#1d4ed8" fillOpacity="0.75" />
+          <path d="M0,264 C28,278 52,306 72,340" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+        </svg>
+
+        {/* Gold-rimmed punch hole + Top-left DiGiLiANS & Arabic */}
+        <div className="relative z-10">
+          <div className="flex justify-center pt-2 pb-1">
+            <div className="h-3 w-3 rounded-full border-[1.5px] border-[#c8a45d] bg-slate-50 shadow-inner" />
+          </div>
+          <div className="absolute top-2 left-3 flex items-center gap-1.5">
+            <img
+              src="/logos/digilians.png"
+              alt="DiGiLiANS"
+              className="h-6 w-auto object-contain"
+            />
+            <span className="text-[7.5pt] font-bold text-slate-900">
+              الرواد الرقميون
+            </span>
+          </div>
+        </div>
+
+        {/* Luxury Navy + Concentric Double Gold Rings around Portrait */}
+        <div
+          className="absolute left-1/2 z-10 -translate-x-1/2 rounded-full border border-[#c8a45d] bg-[#0b152c] p-[4px] shadow-md"
+          style={{ top: "10%", width: "38.4%", height: "28.8%" }}
+        >
+          <div className="h-full w-full rounded-full border border-[#c8a45d] bg-[#0b152c] p-[4px]">
+            <div className="h-full w-full overflow-hidden rounded-full border border-[#d4af37] bg-[#132444]">
+              <img
+                src="/me.png"
+                alt="Abdelrahman Mahmoud"
+                className="h-full w-full object-cover object-[50%_22%]"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-2 text-center">
+          <h2 className="font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
+            {BADGE_INFO.name}
+          </h2>
+          <span className="mt-1 text-[7.5pt] font-bold tracking-wide text-[#0b152c] uppercase">
+            {BADGE_INFO.track}
+          </span>
+          <span className="mt-0.5 text-[7pt] font-semibold text-[#b08a42]">
+            {BADGE_INFO.program}
+          </span>
+
+          <div className="mt-2.5">
+            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+          </div>
+        </div>
+
+        <div className="relative z-10 flex items-center justify-center gap-2.5 pb-2.5">
+          <img
+            src="/logos/military-academy.png"
+            alt="Egyptian Military Academy"
+            className="h-5 w-auto object-contain"
+          />
+          <span className="h-3.5 w-px bg-slate-300" />
+          <img
+            src="/logos/mcit.png"
+            alt="MCIT"
+            className="h-4 w-auto object-contain mix-blend-multiply"
+          />
+        </div>
+      </div>
+    );
+  }
+
   // Theme 1: Digilians Classic
   return (
     <div
@@ -462,6 +575,61 @@ function BadgeFrontByTheme({
 }
 
 function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
+  if (themeId === "6") {
+    return (
+      <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-white text-slate-900">
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M150,0 L255,0 L255,102 C228,74 196,24 150,0 Z" fill="#0b152c" />
+          <path d="M168,0 C206,24 232,64 255,86 L255,66 C236,46 214,18 192,0 Z" fill="#1e3a8a" />
+          <path d="M150,0 C196,24 228,74 255,102" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192 Z" fill="#0b152c" />
+          <path d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192" stroke="#c8a45d" strokeWidth="1.2" fill="none" />
+          <path d="M0,264 C28,278 52,306 72,340 L0,340 Z" fill="#0b152c" />
+          <path d="M0,264 C28,278 52,306 72,340" stroke="#c8a45d" strokeWidth="1.3" fill="none" />
+        </svg>
+
+        <div className="relative z-10 flex justify-center pt-2 pb-1">
+          <div className="h-3 w-3 rounded-full border-[1.5px] border-[#c8a45d] bg-slate-50 shadow-inner" />
+        </div>
+
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 text-center">
+          <div className="flex flex-col items-center rounded-xl border border-[#c8a45d] bg-white p-3.5 shadow-[0_2px_8px_rgba(11,21,44,0.08)]">
+            <QRCodeSVG
+              value={BADGE_INFO.qrUrl}
+              size={136}
+              level="M"
+              fgColor="#0b152c"
+              bgColor="#ffffff"
+              shapeRendering="crispEdges"
+            />
+            <span className="mt-2.5 text-[7.5pt] font-bold tracking-widest text-[#0b152c] uppercase">
+              SCAN ME
+            </span>
+            <span className="text-[7pt] font-semibold text-[#b08a42]">
+              CV, Projects &amp; vCard
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-1 text-[7.5pt] font-medium text-slate-600">
+            <span className="font-semibold text-slate-800">
+              {BADGE_INFO.phone} • {BADGE_INFO.location}
+            </span>
+            <span className="break-all text-slate-700">{BADGE_INFO.email}</span>
+          </div>
+        </div>
+
+        <div className="relative z-10 border-t border-[#c8a45d] bg-[#0b152c] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+          DiGiLiANS • MCIT • Military Academy • NTI
+        </div>
+      </div>
+    );
+  }
+
   if (themeId === "5") {
     return (
       <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-[#0b1120] text-white">

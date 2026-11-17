@@ -19,7 +19,7 @@ import {
   shapeArabicText,
 } from "@/lib/pdfUtils";
 
-export type BadgePdfThemeId = "1" | "2" | "3" | "4" | "5";
+export type BadgePdfThemeId = "1" | "2" | "3" | "4" | "5" | "6";
 
 export interface BadgePdfInfo {
   name: string;
@@ -445,6 +445,93 @@ function BadgeThemeBackground({
     );
   }
 
+  if (themeId === "6") {
+    return (
+      <Svg
+        width={BADGE_PAGE_SIZE[0]}
+        height={BADGE_PAGE_SIZE[1]}
+        viewBox="0 0 255 340"
+        style={styles.fillAbsolute}
+      >
+        <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
+        {/* Top-right sweeping navy + cobalt ribbon */}
+        <Path
+          d="M150,0 L255,0 L255,102 C228,74 196,24 150,0 Z"
+          fill="#0b152c"
+        />
+        <Path
+          d="M168,0 C206,24 232,64 255,86 L255,66 C236,46 214,18 192,0 Z"
+          fill="#1e3a8a"
+        />
+        <Path
+          d="M150,0 C196,24 228,74 255,102"
+          stroke="#c8a45d"
+          strokeWidth={1.3}
+          fill="none"
+        />
+
+        {/* Left-side vertical-curved dark navy ribbon */}
+        <Path
+          d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192 Z"
+          fill="#0b152c"
+        />
+        <Path
+          d="M0,44 C24,68 42,96 36,128 C32,148 16,170 0,192"
+          stroke="#c8a45d"
+          strokeWidth={1.2}
+          fill="none"
+        />
+
+        {/* Main sweeping S-wave ribbon across middle */}
+        {!isBack && (
+          <>
+            <Path
+              d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74 L255,142 C214,192 162,202 108,186 C64,174 28,196 0,240 Z"
+              fill="#0b152c"
+            />
+            <Path
+              d="M0,192 C48,154 98,178 156,162 C202,150 232,126 255,94 L255,114 C228,148 192,168 148,172 C96,176 48,164 0,206 Z"
+              fill="#1d4ed8"
+              fillOpacity={0.72}
+            />
+            <Path
+              d="M0,176 C46,128 96,176 156,158 C200,144 234,114 255,74"
+              stroke="#c8a45d"
+              strokeWidth={1.3}
+              fill="none"
+            />
+            <Path
+              d="M0,240 C28,196 64,174 108,186 C162,202 214,192 255,142"
+              stroke="#c8a45d"
+              strokeWidth={1.4}
+              fill="none"
+            />
+            {/* Right-edge double-ring cobalt/navy orb */}
+            <Circle cx={240} cy={246} r={34} fill="#0f1e42" />
+            <Circle cx={240} cy={246} r={21} fill="#1e3a8a" />
+          </>
+        )}
+
+        {/* Bottom-left navy & gold wave */}
+        <Path
+          d="M0,264 C28,278 52,306 72,340 L0,340 Z"
+          fill="#0b152c"
+        />
+        <Path
+          d="M0,276 C22,290 40,314 54,340 L34,340 C22,318 10,302 0,292 Z"
+          fill="#1d4ed8"
+          fillOpacity={0.75}
+        />
+        <Path
+          d="M0,264 C28,278 52,306 72,340"
+          stroke="#c8a45d"
+          strokeWidth={1.3}
+          fill="none"
+        />
+      </Svg>
+    );
+  }
+
   // Theme 4: Curved Dark Event Pass Header
   return (
     <Svg
@@ -794,6 +881,191 @@ function FrontPage({
     );
   }
 
+  if (themeId === "6") {
+    return (
+      <Page size={BADGE_PAGE_SIZE} style={styles.page}>
+        <BadgeThemeBackground themeId="6" />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* Top-left DiGiLiANS + Arabic + Gold-rimmed punch hole */}
+          <View style={{ position: "relative" }}>
+            <View
+              style={{
+                alignItems: "center",
+                paddingTop: 6,
+                paddingBottom: 3,
+              }}
+            >
+              <View
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: 4.5,
+                  borderWidth: 1.4,
+                  borderColor: "#c8a45d",
+                  backgroundColor: "#f8fafc",
+                }}
+              />
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                top: 7,
+                left: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              <Image
+                src="/logos/digilians.png"
+                style={{ maxHeight: 20, maxWidth: 42, objectFit: "contain" }}
+              />
+              <Text
+                style={{
+                  fontFamily: "Amiri",
+                  fontSize: 7.5,
+                  fontWeight: 700,
+                  color: "#0f172a",
+                }}
+              >
+                {shapeArabicText("الرواد الرقميون")}
+              </Text>
+            </View>
+          </View>
+
+          {/* Luxury Navy + Concentric Double Gold Rings around Portrait */}
+          <View
+            style={{
+              position: "absolute",
+              top: 34,
+              left: 78.5,
+              width: 98,
+              height: 98,
+              borderRadius: 49,
+              backgroundColor: "#0b152c",
+              padding: 4,
+              borderWidth: 1.2,
+              borderColor: "#c8a45d",
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 45,
+                borderWidth: 1.2,
+                borderColor: "#c8a45d",
+                padding: 4,
+                backgroundColor: "#0b152c",
+              }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 40,
+                  borderWidth: 1,
+                  borderColor: "#d4af37",
+                  overflow: "hidden",
+                  backgroundColor: "#132444",
+                }}
+              >
+                <Image
+                  src="/me.png"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              paddingHorizontal: 14,
+              paddingBottom: 6,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "SpaceGrotesk",
+                fontSize: 13,
+                fontWeight: 700,
+                color: "#0f172a",
+                textAlign: "center",
+              }}
+            >
+              {info.name}
+            </Text>
+
+            <Text
+              style={{
+                marginTop: 3,
+                fontSize: 7.6,
+                fontWeight: 700,
+                letterSpacing: 0.4,
+                color: "#0b152c",
+                textAlign: "center",
+              }}
+            >
+              {info.track}
+            </Text>
+
+            <Text
+              style={{
+                marginTop: 2,
+                fontSize: 7.2,
+                fontWeight: 600,
+                color: "#b08a42",
+                textAlign: "center",
+              }}
+            >
+              {info.program}
+            </Text>
+
+            <View style={{ marginTop: 9 }}>
+              <ForumQrBox
+                platformCode={platformCode}
+                displayId={displayId}
+                compact
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              paddingBottom: 10,
+            }}
+          >
+            <Image
+              src="/logos/military-academy.png"
+              style={{ maxHeight: 19, maxWidth: 38, objectFit: "contain" }}
+            />
+            <View
+              style={{ width: 0.75, height: 14, backgroundColor: "#cbd5e1" }}
+            />
+            <Image
+              src="/logos/mcit.png"
+              style={{ maxHeight: 15, maxWidth: 52, objectFit: "contain" }}
+            />
+          </View>
+        </View>
+      </Page>
+    );
+  }
+
   // Theme 1 (Classic) & Theme 2 (Organic Wave)
   return (
     <Page size={BADGE_PAGE_SIZE} style={styles.page}>
@@ -940,6 +1212,120 @@ function BackPage({
   themeId: BadgePdfThemeId;
   info: BadgePdfInfo;
 }) {
+  if (themeId === "6") {
+    return (
+      <Page size={BADGE_PAGE_SIZE} style={styles.page}>
+        <BadgeThemeBackground themeId="6" isBack />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ alignItems: "center", paddingTop: 6 }}>
+            <View
+              style={{
+                width: 9,
+                height: 9,
+                borderRadius: 4.5,
+                borderWidth: 1.4,
+                borderColor: "#c8a45d",
+                backgroundColor: "#f8fafc",
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 14,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: 8,
+                borderWidth: 1.1,
+                borderColor: "#c8a45d",
+                backgroundColor: "#ffffff",
+                padding: 10,
+              }}
+            >
+              <PdfQrCode value={info.qrUrl} size={105} />
+              <Text
+                style={{
+                  marginTop: 7,
+                  fontSize: 7.5,
+                  fontWeight: 700,
+                  letterSpacing: 1.2,
+                  color: "#0b152c",
+                }}
+              >
+                SCAN ME
+              </Text>
+              <Text
+                style={{
+                  marginTop: 1.5,
+                  fontSize: 7,
+                  fontWeight: 600,
+                  color: "#b08a42",
+                }}
+              >
+                CV, Projects & vCard
+              </Text>
+            </View>
+
+            <View
+              style={{
+                marginTop: 14,
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 3,
+              }}
+            >
+              <Text style={{ fontSize: 7.5, fontWeight: 600, color: "#0f172a" }}>
+                {info.phone}
+              </Text>
+              <Text style={{ fontSize: 7.5, fontWeight: 500, color: "#475569" }}>
+                {info.email}
+              </Text>
+              <Text style={{ fontSize: 7.5, fontWeight: 500, color: "#475569" }}>
+                {info.location}
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: "#0b152c",
+              borderTopWidth: 1.2,
+              borderTopColor: "#c8a45d",
+              paddingVertical: 5,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 7,
+                fontWeight: 600,
+                letterSpacing: 0.5,
+                color: "#f8fafc",
+              }}
+            >
+              DiGiLiANS • MCIT • Military Academy • NTI
+            </Text>
+          </View>
+        </View>
+      </Page>
+    );
+  }
+
   if (themeId === "5") {
     return (
       <Page size={BADGE_PAGE_SIZE} style={styles.page}>
