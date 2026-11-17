@@ -58,6 +58,7 @@ interface CardSpec {
   key: ProfileVariantKey;
   label: string;
   jobProfile: string;
+  techStack: [string, string][];
   qrUrl: string;
 }
 
@@ -66,24 +67,44 @@ const CARD_SPECS: CardSpec[] = [
     key: "software",
     label: "Software Engineer",
     jobProfile: "SOFTWARE ENGINEER",
+    techStack: [
+      ["System Design", "REST APIs"],
+      ["TypeScript", "Databases"],
+      ["CI/CD", "Cloud"],
+    ],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.software}`,
   },
   {
     key: "fullstack",
     label: "Full-Stack Developer",
     jobProfile: "FULL-STACK DEVELOPER",
+    techStack: [
+      ["Next.js", "React"],
+      ["Node.js", "Express"],
+      ["PostgreSQL", "Docker"],
+    ],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.fullstack}`,
   },
   {
     key: "backend",
     label: "Back-End Engineer",
     jobProfile: "BACKEND & CLOUD ENGINEER",
+    techStack: [
+      ["Node.js", "Express"],
+      ["PostgreSQL", "Redis"],
+      ["AWS", "Terraform"],
+    ],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.backend}`,
   },
   {
     key: "frontend",
     label: "Front-End Engineer",
     jobProfile: "FRONT-END ENGINEER",
+    techStack: [
+      ["React 19", "Next.js"],
+      ["TypeScript", "Tailwind CSS"],
+      ["UI Systems", "Web Perf"],
+    ],
     qrUrl: `${BASE_PUBLIC_URL}/${VARIANT_CODES.frontend}`,
   },
 ];
@@ -125,12 +146,9 @@ function LogosRow({ compact = false }: { compact?: boolean }) {
 
 /* ---------------- THEME 1: DIGILIANS CLASSIC ---------------- */
 function ClassicFront({ spec }: { spec: CardSpec }) {
-  const rows = [
-    { label: "NAME", value: "ABDELRAHMAN MAHMOUD" },
-    { label: "EMAIL", value: "abdelrahman.mahmoud.elsaeed" },
-    { label: "PROGRAM", value: "SPECIALIZED DIPLOMA" },
-    { label: "TRACK", value: "AI BASED SOFTWARE DEVELOPMENT" },
-    { label: "JOB PROFILE", value: spec.jobProfile },
+  const contacts = [
+    { label: "PHONE", value: "+20 109 516 0726" },
+    { label: "EMAIL", value: "abdelrahman.mahmoud.elsaeed@gmail.com" },
   ];
 
   return (
@@ -147,14 +165,35 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
         </div>
       </div>
 
-      <div className="flex flex-1 items-center gap-3 px-4 py-1.5">
-        <div className="h-[2.35cm] w-[1.95cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
-          <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+      <div className="flex flex-col px-4">
+        <div className="flex items-center gap-3.5 py-1">
+          <div className="h-[1.9cm] w-[1.58cm] shrink-0 overflow-hidden rounded-lg border border-white bg-[#132444] shadow-md">
+            <img src="/me.png" alt="Abdelrahman Mahmoud" className="h-full w-full object-cover object-[50%_22%]" />
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col items-start text-left">
+            <span className="rounded-md border border-sky-200/90 bg-sky-50/90 px-2 py-0.5 text-[6.5px] font-bold tracking-wider text-sky-800 uppercase">
+              {spec.jobProfile}
+            </span>
+            <h2 className="mt-1 font-heading text-[10.5px] font-bold leading-tight tracking-tight text-slate-900 uppercase">
+              ABDELRAHMAN MAHMOUD
+            </h2>
+            <div className="mt-1 flex flex-col border-l-[1.5px] border-[#172554] pl-2 leading-tight">
+              <span className="text-[6.5px] font-bold tracking-wide text-slate-800 uppercase">
+                SPECIALIZED DIPLOMA
+              </span>
+              <span className="text-[6px] font-medium tracking-wide text-slate-600 uppercase">
+                AI BASED SOFTWARE DEVELOPMENT
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="flex min-w-0 flex-1 flex-col gap-1.5 text-left">
-          {rows.map((row) => (
-            <div key={row.label} className="grid grid-cols-[54px_6px_1fr] items-center text-[7.5px] leading-tight">
-              <span className="font-medium tracking-wide text-slate-500">{row.label}</span>
+
+        <div className="my-1 h-px w-full bg-slate-200/90" />
+
+        <div className="flex flex-col gap-0.5 text-left">
+          {contacts.map((row) => (
+            <div key={row.label} className="grid grid-cols-[34px_8px_1fr] items-center text-[7px] leading-tight">
+              <span className="font-medium tracking-wide text-slate-500 uppercase">{row.label}</span>
               <span className="text-sky-400/80">|</span>
               <span className="truncate font-bold text-slate-900">{row.value}</span>
             </div>
@@ -163,7 +202,7 @@ function ClassicFront({ spec }: { spec: CardSpec }) {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center justify-center gap-2 pb-1 text-[6.8px] font-medium tracking-wide text-slate-600">
+        <div className="flex items-center justify-center gap-2 pb-1 text-[6.5px] font-medium tracking-wide text-slate-600">
           <span className="h-1 w-1 rounded-full bg-[#172554]" />
           <span>DIGILIANS • الرواد الرقميون</span>
           <span className="h-1 w-1 rounded-full bg-[#172554]" />
@@ -435,32 +474,31 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           themeId === "3" ? "pr-5 pl-9" : "px-6"
         )}
       >
-        <div className="flex min-w-0 flex-1 flex-col items-start text-left">
-          <span className="border border-sky-200/80 bg-sky-50 px-1.5 py-0.5 text-[7px] font-bold tracking-wider text-sky-700 uppercase">
-            {spec.jobProfile}
-          </span>
-          <h2 className="mt-1.5 font-heading text-[11px] font-bold tracking-tight">
-            ABDELRAHMAN MAHMOUD
-          </h2>
-          <p className="mt-0.5 text-[7.5px] font-medium text-slate-600">
-            Scan QR for CV, Projects &amp; vCard
-          </p>
-          <div className="mt-2 flex flex-col gap-0.5 text-[7px] text-slate-500">
-            <span>+20 109 516 0726</span>
-            <span>Cairo, Egypt</span>
+        <div className="flex min-w-0 flex-1 flex-col items-start border-l-2 border-[#172554] pl-3 text-left">
+          <div className="flex flex-col gap-2">
+            {spec.techStack.map(([left, right]) => (
+              <div key={left} className="flex items-center gap-2 text-[8.5px] font-semibold text-slate-800">
+                <span>{left}</span>
+                <span className="h-1 w-1 rounded-full bg-slate-300" />
+                <span>{right}</span>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
+        <div className="flex shrink-0 flex-col items-center rounded-lg border border-slate-200/90 bg-white p-2 shadow-sm">
           <QRCodeSVG
             value={spec.qrUrl}
-            size={84}
+            size={82}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
           />
-          <span className="mt-1 text-[6px] font-semibold tracking-widest text-slate-400 uppercase">
+          <span className="mt-1.5 text-[6.5px] font-bold tracking-[0.18em] text-slate-800 uppercase">
             SCAN ME
+          </span>
+          <span className="text-[6px] font-medium text-slate-400">
+            CV &amp; Projects
           </span>
         </div>
       </div>
