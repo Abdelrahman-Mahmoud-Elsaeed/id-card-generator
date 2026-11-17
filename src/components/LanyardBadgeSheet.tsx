@@ -69,7 +69,7 @@ function BadgeFront({
       : "Platform Code");
   return (
     <div
-      className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 shadow-md"
+      className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
       style={DIAGONAL_BG}
     >
       {/* Top Navy Bar + Lanyard Punch Safe Zone */}
@@ -89,12 +89,14 @@ function BadgeFront({
 
       {/* Center Portrait, Name & Program Details (Clean White Space, No Email) */}
       <div className="flex flex-1 flex-col items-center justify-center px-5 py-2 text-center">
-        <div className="h-[3cm] w-[2.45cm] overflow-hidden rounded-xl border-2 border-white bg-[#132444] shadow-md ring-1 ring-slate-200">
-          <img
-            src="/me.png"
-            alt="Abdelrahman Mahmoud"
-            className="h-full w-full object-cover object-[50%_22%]"
-          />
+        <div className="h-[3cm] w-[2.45cm] rounded-xl bg-white p-[2px] shadow-[0_2px_6px_rgba(15,23,42,0.12)] ring-1 ring-slate-200">
+          <div className="h-full w-full overflow-hidden rounded-[10px] bg-[#132444]">
+            <img
+              src="/me.png"
+              alt="Abdelrahman Mahmoud"
+              className="h-full w-full object-cover object-[50%_22%]"
+            />
+          </div>
         </div>
 
         <h2 className="mt-3 font-heading text-[13.5pt] leading-tight font-bold tracking-tight text-slate-900">
@@ -107,7 +109,7 @@ function BadgeFront({
         </div>
 
         {/* Front QR Code Reserved for Event Platform Code */}
-        <div className="mt-3 flex items-center gap-2.5 rounded-lg border border-slate-200/90 bg-white px-3 py-1.5 shadow-2xs">
+        <div className="mt-3 flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
           {platformCode.trim() ? (
             <QRCodeSVG
               value={platformCode.trim()}
@@ -115,6 +117,7 @@ function BadgeFront({
               level="M"
               fgColor="#0f172a"
               bgColor="#ffffff"
+              shapeRendering="crispEdges"
             />
           ) : (
             <div className="flex h-[54px] w-[54px] items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-center text-[7pt] leading-tight font-semibold text-slate-400">
@@ -145,7 +148,7 @@ function BadgeFront({
 function BadgeBack() {
   return (
     <div
-      className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
+      className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
       style={DIAGONAL_BG}
     >
       <div>
@@ -156,13 +159,14 @@ function BadgeBack() {
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
-        <div className="flex flex-col items-center rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-sm">
+        <div className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
           <QRCodeSVG
             value={BADGE_INFO.qrUrl}
             size={140}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
+            shapeRendering="crispEdges"
           />
           <span className="mt-2.5 text-[7.5pt] font-bold tracking-widest text-slate-700 uppercase">
             SCAN ME
@@ -206,9 +210,10 @@ export function LanyardBadgeSheet() {
 
     setIsDownloading(true);
     try {
+      await document.fonts.ready;
       const [frontImg, backImg] = await Promise.all([
-        toPng(frontRef.current, { pixelRatio: 4, cacheBust: true }),
-        toPng(backRef.current, { pixelRatio: 4, cacheBust: true }),
+        toPng(frontRef.current, { pixelRatio: 6, cacheBust: true }),
+        toPng(backRef.current, { pixelRatio: 6, cacheBust: true }),
       ]);
 
       const pdf = new jsPDF({
@@ -297,11 +302,15 @@ export function LanyardBadgeSheet() {
 
       {/* Badge Preview / Print Pages */}
       <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-6 print:block print:max-w-none">
-        <div ref={frontRef}>
-          <BadgeFront platformCode={platformCode} platformIdText={platformIdText} />
+        <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+          <div ref={frontRef}>
+            <BadgeFront platformCode={platformCode} platformIdText={platformIdText} />
+          </div>
         </div>
-        <div ref={backRef}>
-          <BadgeBack />
+        <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+          <div ref={backRef}>
+            <BadgeBack />
+          </div>
         </div>
       </div>
     </div>

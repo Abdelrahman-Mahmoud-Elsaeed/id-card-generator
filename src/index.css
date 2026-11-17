@@ -79,7 +79,6 @@
 @layer base {
   body {
     -webkit-tap-highlight-color: transparent;
-    text-rendering: optimizeLegibility;
   }
 }
 
