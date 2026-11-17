@@ -6,10 +6,6 @@ import { QRCodeSVG } from "qrcode.react";
 
 import { Button } from "@/components/ui/button";
 import {
-  CARD_THEMES,
-  type CardThemeId,
-} from "@/components/IdCardSheet";
-import {
   BASE_PUBLIC_URL,
   VARIANT_CODES,
 } from "@/lib/variant";
@@ -194,13 +190,7 @@ function BadgeBack() {
   );
 }
 
-export function LanyardBadgeSheet({
-  onSelectTheme,
-  onSelectBadge,
-}: {
-  onSelectTheme: (id: CardThemeId) => void;
-  onSelectBadge: () => void;
-}) {
+export function LanyardBadgeSheet() {
   const [platformCode, setPlatformCode] = useState("");
   const [platformIdText, setPlatformIdText] = useState("");
   const [isDownloading, setIsDownloading] = useState(false);
@@ -250,29 +240,9 @@ export function LanyardBadgeSheet({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
-            {CARD_THEMES.map((theme) => (
-              <a
-                key={theme.id}
-                href={theme.route}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onSelectTheme(theme.id);
-                }}
-                className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100"
-              >
-                {theme.route} · {theme.name.replace(/^\d+\.\s*/, "")}
-              </a>
-            ))}
-            <a
-              href="/badge"
-              onClick={(e) => {
-                e.preventDefault();
-                onSelectBadge();
-              }}
-              className="rounded-lg border border-sky-600 bg-sky-600 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors"
-            >
+            <span className="rounded-lg border border-sky-600 bg-sky-600 px-2.5 py-1.5 text-xs font-semibold text-white">
               /badge · Lanyard 9×12
-            </a>
+            </span>
           </div>
         </div>
 
