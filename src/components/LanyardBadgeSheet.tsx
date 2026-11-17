@@ -1205,7 +1205,7 @@ export function LanyardBadgeSheet({
         </section>
 
         {/* Badge Preview / Print Pages */}
-        <section className="flex flex-wrap justify-center gap-6 print:block print:max-w-none">
+        <section className="flex flex-wrap items-start justify-center gap-6 print:block print:max-w-none">
           <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-md print:rounded-none print:border-0 print:shadow-none">
             <BadgeFrontByTheme
               themeId={themeId}
