@@ -6,10 +6,44 @@ import { QRCodeSVG } from "qrcode.react";
 import { LanyardBadgePdfDocument } from "@/components/pdf/LanyardBadgePdfDocument";
 import { Button } from "@/components/ui/button";
 import { downloadPdfBlob } from "@/lib/pdfUtils";
-import {
-  BASE_PUBLIC_URL,
-  VARIANT_CODES,
-} from "@/lib/variant";
+import { cn } from "@/lib/utils";
+import { BASE_PUBLIC_URL, VARIANT_CODES } from "@/lib/variant";
+
+export type BadgeThemeId = "1" | "2" | "3" | "4";
+
+export interface BadgeThemeMeta {
+  id: BadgeThemeId;
+  route: string;
+  name: string;
+  subtitle: string;
+}
+
+export const BADGE_THEMES: BadgeThemeMeta[] = [
+  {
+    id: "1",
+    route: "/1",
+    name: "1. Digilians Classic",
+    subtitle: "Official structured lanyard badge with diagonal lines",
+  },
+  {
+    id: "2",
+    route: "/2",
+    name: "2. Canva Organic Wave",
+    subtitle: "Layered navy & sky-blue SVG waves with circular avatar",
+  },
+  {
+    id: "3",
+    route: "/3",
+    name: "3. Canva Split Ribbon",
+    subtitle: "Vertical-diagonal side ribbon with editorial left alignment",
+  },
+  {
+    id: "4",
+    route: "/4",
+    name: "4. Canva Dark Event Pass",
+    subtitle: "Curved navy event-pass header with floating logo bar & pill badge",
+  },
+];
 
 const BADGE_INFO = {
   name: "ABDELRAHMAN MAHMOUD",
@@ -26,59 +60,276 @@ const DIAGONAL_BG = {
     "repeating-linear-gradient(-35deg, rgba(148, 163, 184, 0.08) 0px, rgba(148, 163, 184, 0.08) 1px, transparent 1px, transparent 11px)",
 };
 
-function BadgeLogosRow() {
+function BadgeLogosRow({ compact = false }: { compact?: boolean }) {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center">
-      <div className="flex h-7 items-center justify-center">
+      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
         <img
           src="/logos/military-academy.png"
           alt="Egyptian Military Academy"
-          className="max-h-7 max-w-full object-contain"
+          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
         />
       </div>
-      <span className="h-5 w-px bg-slate-300/80" />
-      <div className="flex h-7 items-center justify-center px-2">
+      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-5")} />
+      <div className={cn("flex items-center justify-center px-2", compact ? "h-5" : "h-7")}>
         <img
           src="/logos/digilians.png"
           alt="DiGiLiANS"
-          className="max-h-7 max-w-full object-contain"
+          className={cn("max-w-full object-contain", compact ? "max-h-5" : "max-h-7")}
         />
       </div>
-      <span className="h-5 w-px bg-slate-300/80" />
-      <div className="flex h-7 items-center justify-center">
+      <span className={cn("w-px bg-slate-300/80", compact ? "h-4" : "h-5")} />
+      <div className={cn("flex items-center justify-center", compact ? "h-5" : "h-7")}>
         <img
           src="/logos/mcit.png"
           alt="MCIT"
-          className="max-h-6 max-w-full object-contain mix-blend-multiply"
+          className={cn("max-w-full object-contain mix-blend-multiply", compact ? "max-h-4" : "max-h-6")}
         />
       </div>
     </div>
   );
 }
 
-function BadgeFront({
+function PunchHole({ light = false }: { light?: boolean }) {
+  return (
+    <div className="relative z-10 flex justify-center pt-2 pb-1">
+      <div
+        className={cn(
+          "h-2.5 w-2.5 rounded-full border",
+          light
+            ? "border-sky-200 bg-white"
+            : "border-slate-300/80 bg-slate-100/80"
+        )}
+      />
+    </div>
+  );
+}
+
+function ForumQrCard({
   platformCode,
-  platformIdText,
+  displayId,
+  compact = false,
 }: {
   platformCode: string;
-  platformIdText: string;
+  displayId: string;
+  compact?: boolean;
 }) {
-  const displayId =
-    platformIdText.trim() ||
-    (platformCode.trim() && !platformCode.trim().startsWith("http")
-      ? platformCode.trim()
-      : "Platform Code");
+  const qrSize = compact ? 44 : 54;
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.05)]",
+        compact ? "px-2.5 py-1" : "px-3 py-1.5"
+      )}
+    >
+      {platformCode.trim() ? (
+        <QRCodeSVG
+          value={platformCode.trim()}
+          size={qrSize}
+          level="M"
+          fgColor="#0f172a"
+          bgColor="#ffffff"
+          shapeRendering="crispEdges"
+        />
+      ) : (
+        <div
+          style={{ width: qrSize, height: qrSize }}
+          className="flex items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-center text-[6.5pt] leading-tight font-semibold text-slate-400"
+        >
+          EVENT
+          <br />
+          QR
+        </div>
+      )}
+      <div className="flex flex-col text-left">
+        <span className="text-[7pt] font-bold tracking-wider text-slate-800 uppercase">
+          FORUM ID
+        </span>
+        <span className="font-mono text-[7pt] font-semibold text-slate-600">
+          {displayId}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function PortraitAvatar({ circular = false }: { circular?: boolean }) {
+  return (
+    <div
+      className={cn(
+        "bg-white p-[2px] shadow-[0_2px_6px_rgba(15,23,42,0.12)] ring-1 ring-slate-200",
+        circular ? "h-[2.6cm] w-[2.6cm] rounded-full" : "h-[3cm] w-[2.45cm] rounded-xl"
+      )}
+    >
+      <div
+        className={cn(
+          "h-full w-full overflow-hidden bg-[#132444]",
+          circular ? "rounded-full" : "rounded-[10px]"
+        )}
+      >
+        <img
+          src="/me.png"
+          alt="Abdelrahman Mahmoud"
+          className="h-full w-full object-cover object-[50%_22%]"
+        />
+      </div>
+    </div>
+  );
+}
+
+function BadgeFrontByTheme({
+  themeId,
+  platformCode,
+  displayId,
+}: {
+  themeId: BadgeThemeId;
+  platformCode: string;
+  displayId: string;
+}) {
+  if (themeId === "2") {
+    return (
+      <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-white">
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,0 L255,0 L255,66 C185,90 85,48 0,76 Z" fill="#eff6ff" />
+          <path d="M0,0 L255,0 L255,44 C170,66 75,32 0,54 Z" fill="#e0f2fe" />
+          <path d="M0,285 C75,264 165,305 255,278 L255,340 L0,340 Z" fill="#bae6fd" />
+          <path d="M0,302 C85,284 175,318 255,296 L255,340 L0,340 Z" fill="#172554" />
+        </svg>
+
+        <div className="relative z-10">
+          <PunchHole />
+          <div className="px-4 pt-1">
+            <BadgeLogosRow compact />
+          </div>
+        </div>
+
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 py-1 text-center">
+          <PortraitAvatar circular />
+          <h2 className="mt-2.5 font-heading text-[13pt] leading-tight font-bold tracking-tight text-slate-900">
+            {BADGE_INFO.name}
+          </h2>
+          <div className="mt-1.5 flex flex-col gap-0.5 text-[7.8pt] leading-snug">
+            <span className="font-bold text-slate-800">{BADGE_INFO.program}</span>
+            <span className="font-semibold text-sky-800">{BADGE_INFO.track}</span>
+          </div>
+          <div className="mt-2.5">
+            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+          </div>
+        </div>
+
+        <div className="relative z-10 pb-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+          DIGILIANS • الرواد الرقميون
+        </div>
+      </div>
+    );
+  }
+
+  if (themeId === "3") {
+    return (
+      <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-white">
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <polygon points="0,0 24,0 14,340 0,340" fill="#172554" />
+          <polygon points="24,0 30,0 20,340 14,340" fill="#0ea5e9" />
+          <polygon points="195,0 255,0 255,58" fill="#e0f2fe" />
+        </svg>
+
+        <div className="relative z-10">
+          <PunchHole />
+          <div className="pr-3.5 pl-9 pt-1">
+            <div className="rounded-md border border-slate-200/80 bg-white/95 px-2 py-1 shadow-2xs">
+              <BadgeLogosRow compact />
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex flex-1 flex-col justify-center gap-2.5 pr-4 pl-9 text-left">
+          <PortraitAvatar />
+          <div>
+            <h2 className="font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
+              {BADGE_INFO.name}
+            </h2>
+            <div className="mt-1.5 flex flex-col border-l-2 border-sky-600 pl-2 text-[7.5pt] leading-snug">
+              <span className="font-bold text-slate-800">{BADGE_INFO.program}</span>
+              <span className="font-semibold text-sky-800">{BADGE_INFO.track}</span>
+            </div>
+          </div>
+          <div className="w-fit">
+            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+          </div>
+        </div>
+
+        <div className="relative z-10 bg-[#172554] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+          DIGILIANS • الرواد الرقميون
+        </div>
+      </div>
+    );
+  }
+
+  if (themeId === "4") {
+    return (
+      <div className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-slate-50/40">
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,0 L255,0 L255,104 Q127.5,134 0,104 Z" fill="#172554" />
+          <path d="M0,98 Q127.5,128 255,98 L255,106 Q127.5,136 0,106 Z" fill="#0ea5e9" />
+          <polygon points="205,340 255,340 255,294" fill="#e0f2fe" />
+        </svg>
+
+        <div className="relative z-10">
+          <PunchHole light />
+          <div className="px-3.5 pt-1">
+            <div className="rounded-md bg-white px-2.5 py-1 shadow-xs">
+              <BadgeLogosRow compact />
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 text-center">
+          <PortraitAvatar circular />
+          <h2 className="mt-2.5 font-heading text-[13pt] leading-tight font-bold tracking-tight text-slate-900">
+            {BADGE_INFO.name}
+          </h2>
+          <span className="mt-1.5 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 text-[7pt] font-bold tracking-wide text-sky-900">
+            {BADGE_INFO.program}
+          </span>
+          <span className="mt-1 text-[7.5pt] font-semibold text-sky-800">
+            {BADGE_INFO.track}
+          </span>
+          <div className="mt-2.5">
+            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+          </div>
+        </div>
+
+        <div className="relative z-10 bg-[#172554] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+          DIGILIANS • الرواد الرقميون
+        </div>
+      </div>
+    );
+  }
+
+  // Theme 1: Digilians Classic
   return (
     <div
       className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
       style={DIAGONAL_BG}
     >
-      {/* Top Navy Bar + Lanyard Punch Safe Zone */}
       <div>
         <div className="h-2 w-full bg-[#172554]" />
-        <div className="flex justify-center pt-2 pb-1">
-          <div className="h-2.5 w-2.5 rounded-full border border-slate-300/80 bg-slate-100/80" />
-        </div>
+        <PunchHole />
         <div className="px-4 pt-1">
           <BadgeLogosRow />
           <div className="relative mt-2 flex items-center justify-center">
@@ -88,57 +339,20 @@ function BadgeFront({
         </div>
       </div>
 
-      {/* Center Portrait, Name & Program Details (Clean White Space, No Email) */}
       <div className="flex flex-1 flex-col items-center justify-center px-5 py-2 text-center">
-        <div className="h-[3cm] w-[2.45cm] rounded-xl bg-white p-[2px] shadow-[0_2px_6px_rgba(15,23,42,0.12)] ring-1 ring-slate-200">
-          <div className="h-full w-full overflow-hidden rounded-[10px] bg-[#132444]">
-            <img
-              src="/me.png"
-              alt="Abdelrahman Mahmoud"
-              className="h-full w-full object-cover object-[50%_22%]"
-            />
-          </div>
-        </div>
-
+        <PortraitAvatar />
         <h2 className="mt-3 font-heading text-[13.5pt] leading-tight font-bold tracking-tight text-slate-900">
           {BADGE_INFO.name}
         </h2>
-
         <div className="mt-2 flex flex-col gap-0.5 text-[8pt] leading-snug">
           <span className="font-bold text-slate-800">{BADGE_INFO.program}</span>
           <span className="font-semibold text-sky-800">{BADGE_INFO.track}</span>
         </div>
-
-        {/* Front QR Code Reserved for Event Platform Code */}
-        <div className="mt-3 flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
-          {platformCode.trim() ? (
-            <QRCodeSVG
-              value={platformCode.trim()}
-              size={54}
-              level="M"
-              fgColor="#0f172a"
-              bgColor="#ffffff"
-              shapeRendering="crispEdges"
-            />
-          ) : (
-            <div className="flex h-[54px] w-[54px] items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-center text-[7pt] leading-tight font-semibold text-slate-400">
-              EVENT
-              <br />
-              QR
-            </div>
-          )}
-          <div className="flex flex-col text-left">
-            <span className="text-[7.5pt] font-bold tracking-wider text-slate-800 uppercase">
-              FORUM ID
-            </span>
-            <span className="font-mono text-[7.5pt] font-semibold text-slate-600">
-              {displayId}
-            </span>
-          </div>
+        <div className="mt-3">
+          <ForumQrCard platformCode={platformCode} displayId={displayId} />
         </div>
       </div>
 
-      {/* Bottom Footer */}
       <div className="bg-[#172554] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
         DIGILIANS • الرواد الرقميون
       </div>
@@ -146,20 +360,64 @@ function BadgeFront({
   );
 }
 
-function BadgeBack() {
+function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
   return (
     <div
-      className="lanyard-badge-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
-      style={DIAGONAL_BG}
+      className={cn(
+        "lanyard-badge-face relative flex flex-col justify-between overflow-hidden text-slate-900",
+        themeId === "1"
+          ? "bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
+          : "bg-white"
+      )}
+      style={themeId === "1" ? DIAGONAL_BG : undefined}
     >
-      <div>
-        <div className="h-2 w-full bg-[#172554]" />
-        <div className="flex justify-center pt-2 pb-1">
-          <div className="h-2.5 w-2.5 rounded-full border border-slate-300/80 bg-slate-100/80" />
-        </div>
+      {themeId === "2" && (
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,0 L255,0 L255,66 C185,90 85,48 0,76 Z" fill="#eff6ff" />
+          <path d="M0,0 L255,0 L255,44 C170,66 75,32 0,54 Z" fill="#e0f2fe" />
+          <path d="M0,285 C75,264 165,305 255,278 L255,340 L0,340 Z" fill="#bae6fd" />
+          <path d="M0,302 C85,284 175,318 255,296 L255,340 L0,340 Z" fill="#172554" />
+        </svg>
+      )}
+      {themeId === "3" && (
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <polygon points="0,0 24,0 14,340 0,340" fill="#172554" />
+          <polygon points="24,0 30,0 20,340 14,340" fill="#0ea5e9" />
+        </svg>
+      )}
+      {themeId === "4" && (
+        <svg
+          viewBox="0 0 255 340"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0,0 L255,0 L255,48 Q127.5,68 0,48 Z" fill="#172554" />
+          <polygon points="205,340 255,340 255,294" fill="#e0f2fe" />
+        </svg>
+      )}
+
+      <div className="relative z-10">
+        {themeId === "1" && <div className="h-2 w-full bg-[#172554]" />}
+        <PunchHole light={themeId === "4"} />
       </div>
 
-      <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
+      <div
+        className={cn(
+          "relative z-10 flex flex-1 flex-col items-center justify-center text-center",
+          themeId === "3" ? "pr-4 pl-9" : "px-5"
+        )}
+      >
         <div className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
           <QRCodeSVG
             value={BADGE_INFO.qrUrl}
@@ -185,33 +443,57 @@ function BadgeBack() {
         </div>
       </div>
 
-      <div className="bg-[#172554] px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white">
+      <div
+        className={cn(
+          "relative z-10 px-4 py-1.5 text-center text-[7pt] font-semibold tracking-wider text-white",
+          themeId === "2" ? "bg-transparent" : "bg-[#172554]"
+        )}
+      >
         DiGiLiANS • MCIT • Military Academy • NTI
       </div>
     </div>
   );
 }
 
-export function LanyardBadgeSheet() {
+export function LanyardBadgeSheet({
+  themeId,
+  onSelectTheme,
+}: {
+  themeId: BadgeThemeId;
+  onSelectTheme: (id: BadgeThemeId) => void;
+}) {
   const [platformCode, setPlatformCode] = useState("");
   const [platformIdText, setPlatformIdText] = useState("");
   const [isDownloading, setIsDownloading] = useState(false);
 
+  const activeTheme =
+    BADGE_THEMES.find((t) => t.id === themeId) ?? BADGE_THEMES[0];
+
+  const displayId =
+    platformIdText.trim() ||
+    (platformCode.trim() && !platformCode.trim().startsWith("http")
+      ? platformCode.trim()
+      : "Platform Code");
+
   useEffect(() => {
-    document.title = "Lanyard Badge (9 × 12 cm) — Portrait";
-  }, []);
+    document.title = `${activeTheme.name} — Lanyard Badge (9 × 12 cm)`;
+  }, [activeTheme.name]);
 
   async function downloadBadgePdf() {
     setIsDownloading(true);
     try {
       const blob = await pdf(
         <LanyardBadgePdfDocument
+          themeId={themeId}
           info={BADGE_INFO}
           platformCode={platformCode}
           platformIdText={platformIdText}
         />
       ).toBlob();
-      downloadPdfBlob(blob, "Abdelrahman-Mahmoud-badge-9x12.pdf");
+      downloadPdfBlob(
+        blob,
+        `Abdelrahman-Mahmoud-badge-9x12-design-${themeId}.pdf`
+      );
     } finally {
       setIsDownloading(false);
     }
@@ -224,16 +506,29 @@ export function LanyardBadgeSheet() {
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
           <div>
             <h1 className="font-heading text-base font-bold text-slate-900">
-              Hanging Lanyard Badge (9 cm × 12 cm)
+              {activeTheme.name} (9 cm × 12 cm)
             </h1>
-            <p className="text-xs text-slate-500">
-              Portrait event badge linking to {BADGE_INFO.qrUrl}
-            </p>
+            <p className="text-xs text-slate-500">{activeTheme.subtitle}</p>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="rounded-lg border border-sky-600 bg-sky-600 px-2.5 py-1.5 text-xs font-semibold text-white">
-              /badge · Lanyard 9×12
-            </span>
+            {BADGE_THEMES.map((theme) => (
+              <a
+                key={theme.id}
+                href={theme.route}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelectTheme(theme.id);
+                }}
+                className={cn(
+                  "rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors",
+                  theme.id === themeId
+                    ? "border-sky-600 bg-sky-600 text-white"
+                    : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+                )}
+              >
+                {theme.route} · {theme.name.replace(/^\d+\.\s*/, "")}
+              </a>
+            ))}
           </div>
         </div>
 
@@ -289,10 +584,14 @@ export function LanyardBadgeSheet() {
       {/* Badge Preview / Print Pages */}
       <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-6 print:block print:max-w-none">
         <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-          <BadgeFront platformCode={platformCode} platformIdText={platformIdText} />
+          <BadgeFrontByTheme
+            themeId={themeId}
+            platformCode={platformCode}
+            displayId={displayId}
+          />
         </div>
         <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-          <BadgeBack />
+          <BadgeBackByTheme themeId={themeId} />
         </div>
       </div>
     </div>
