@@ -468,7 +468,7 @@ function BadgeFrontByTheme({
             <img
               src="/logos/digilians.png"
               alt="DiGiLiANS"
-              className="h-6 w-auto object-contain"
+              className="h-9 w-auto object-contain"
             />
           </div>
         </div>
@@ -505,17 +505,17 @@ function BadgeFrontByTheme({
           </div>
         </div>
 
-        <div className="relative z-10 flex items-center justify-center gap-2.5 pb-2.5">
+        <div className="relative z-10 flex items-center justify-center gap-3 pb-2.5">
           <img
             src="/logos/military-academy.png"
             alt="Egyptian Military Academy"
-            className="h-5 w-auto object-contain"
+            className="h-7 w-auto object-contain"
           />
-          <span className="h-3.5 w-px bg-slate-300" />
+          <span className="h-5 w-px bg-slate-300" />
           <img
             src="/logos/mcit.png"
             alt="MCIT"
-            className="h-4 w-auto object-contain mix-blend-multiply"
+            className="h-6 w-auto object-contain mix-blend-multiply"
           />
         </div>
       </div>

@@ -871,7 +871,7 @@ function FrontPage({
             >
               <Image
                 src="/logos/digilians.png"
-                style={{ maxHeight: 20, maxWidth: 42, objectFit: "contain" }}
+                style={{ maxHeight: 28, maxWidth: 62, objectFit: "contain" }}
               />
             </View>
           </View>
@@ -972,20 +972,20 @@ function FrontPage({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-              gap: 10,
-              paddingBottom: 10,
+              gap: 11,
+              paddingBottom: 9,
             }}
           >
             <Image
               src="/logos/military-academy.png"
-              style={{ maxHeight: 19, maxWidth: 38, objectFit: "contain" }}
+              style={{ maxHeight: 26, maxWidth: 52, objectFit: "contain" }}
             />
             <View
-              style={{ width: 0.75, height: 14, backgroundColor: "#cbd5e1" }}
+              style={{ width: 0.75, height: 18, backgroundColor: "#cbd5e1" }}
             />
             <Image
               src="/logos/mcit.png"
-              style={{ maxHeight: 15, maxWidth: 52, objectFit: "contain" }}
+              style={{ maxHeight: 21, maxWidth: 68, objectFit: "contain" }}
             />
           </View>
         </View>
