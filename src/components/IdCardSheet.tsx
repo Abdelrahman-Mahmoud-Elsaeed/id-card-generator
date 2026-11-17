@@ -10,11 +10,12 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import { toPng } from "html-to-image";
-import { jsPDF } from "jspdf";
+import { pdf } from "@react-pdf/renderer";
 import { QRCodeSVG } from "qrcode.react";
 
+import { LocalCardPdfDocument } from "@/components/pdf/LocalCardPdfDocument";
 import { Button } from "@/components/ui/button";
+import { downloadPdfBlob } from "@/lib/pdfUtils";
 import {
   clearLocalCardData,
   DEFAULT_LOGOS,
@@ -800,8 +801,6 @@ export function IdCardSheet({
   const [form, setForm] = useState<CardFormData>(() => loadLocalCardData());
   const [isDownloading, setIsDownloading] = useState(false);
   const [dragEnabled, setDragEnabled] = useState(false);
-  const frontRef = useRef<HTMLDivElement | null>(null);
-  const backRef = useRef<HTMLDivElement | null>(null);
 
   const activeTheme =
     CARD_THEMES.find((t) => t.id === themeId) ?? CARD_THEMES[0];
@@ -923,35 +922,22 @@ export function IdCardSheet({
   }
 
   async function downloadCardPdf() {
-    if (!frontRef.current || !backRef.current) return;
-    const wasDragOn = dragEnabled;
-    setDragEnabled(false);
     setIsDownloading(true);
     try {
-      await document.fonts.ready;
-      await new Promise((r) => setTimeout(r, 40));
-      const [frontImg, backImg] = await Promise.all([
-        toPng(frontRef.current, { pixelRatio: 6, cacheBust: true }),
-        toPng(backRef.current, { pixelRatio: 6, cacheBust: true }),
-      ]);
-
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "cm",
-        format: [8.6, 5.4],
-      });
-
-      pdf.addImage(frontImg, "PNG", 0, 0, 8.6, 5.4);
-      pdf.addPage([8.6, 5.4], "landscape");
-      pdf.addImage(backImg, "PNG", 0, 0, 8.6, 5.4);
+      const blob = await pdf(
+        <LocalCardPdfDocument
+          d={display}
+          themeId={themeId}
+          offsets={form.elementOffsets ?? {}}
+        />
+      ).toBlob();
 
       const safeName = (form.name.trim() || "digilians-id-card")
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-");
-      pdf.save(`${safeName}-design-${themeId}.pdf`);
+      downloadPdfBlob(blob, `${safeName}-design-${themeId}.pdf`);
     } finally {
       setIsDownloading(false);
-      if (wasDragOn) setDragEnabled(true);
     }
   }
 
@@ -1327,9 +1313,7 @@ export function IdCardSheet({
                 Front Side (Page 1 — 8.6 × 5.4 cm)
               </span>
               <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-                <div ref={frontRef}>
-                  <CardFrontByTheme d={display} themeId={themeId} drag={dragProps} />
-                </div>
+                <CardFrontByTheme d={display} themeId={themeId} drag={dragProps} />
               </div>
             </div>
 
@@ -1338,9 +1322,7 @@ export function IdCardSheet({
                 Back Side with QR (Page 2 — 8.6 × 5.4 cm)
               </span>
               <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-                <div ref={backRef}>
-                  <CardBack d={display} themeId={themeId} drag={dragProps} />
-                </div>
+                <CardBack d={display} themeId={themeId} drag={dragProps} />
               </div>
             </div>
           </div>
