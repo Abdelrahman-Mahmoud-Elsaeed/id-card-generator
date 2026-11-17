@@ -450,8 +450,8 @@ function BadgeFrontByTheme({
           <path d="M0,234 C28,190 64,168 108,180 C162,196 214,184 255,134" stroke="#c8a45d" strokeWidth="1.5" fill="none" />
 
           {/* Right-edge double-ring cobalt/navy orb */}
-          <circle cx="240" cy="246" r="34" fill="#0f1e42" />
-          <circle cx="240" cy="246" r="21" fill="#1e3a8a" />
+          <circle cx="250" cy="246" r="32" fill="#0f1e42" />
+          <circle cx="250" cy="246" r="19" fill="#1e3a8a" />
 
           {/* Bottom-left navy & gold wave */}
           <path d="M0,264 C28,278 52,306 72,340 L0,340 Z" fill="#0b152c" />
@@ -489,23 +489,23 @@ function BadgeFrontByTheme({
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-2 text-center">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-3 text-center">
           <h2 className="font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
             {BADGE_INFO.name}
           </h2>
-          <span className="mt-1 text-[7.5pt] font-bold tracking-wide text-[#0b152c] uppercase">
+          <span className="mt-1.5 text-[7.5pt] font-bold tracking-wide text-[#0b152c] uppercase">
             {BADGE_INFO.track}
           </span>
-          <span className="mt-0.5 text-[7pt] font-semibold text-[#b08a42]">
+          <span className="mt-1 text-[7pt] font-semibold text-[#b08a42]">
             {BADGE_INFO.program}
           </span>
 
-          <div className="mt-2.5">
+          <div className="mt-3.5">
             <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
-        <div className="relative z-10 flex items-center justify-center gap-3 pb-2.5">
+        <div className="relative z-10 flex items-center justify-center gap-4 pt-1 pb-3">
           <img
             src="/logos/military-academy.png"
             alt="Egyptian Military Academy"

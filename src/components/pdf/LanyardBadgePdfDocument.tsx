@@ -471,8 +471,8 @@ function BadgeThemeBackground({
               fill="none"
             />
             {/* Right-edge double-ring cobalt/navy orb */}
-            <Circle cx={240} cy={246} r={34} fill="#0f1e42" />
-            <Circle cx={240} cy={246} r={21} fill="#1e3a8a" />
+            <Circle cx={250} cy={246} r={32} fill="#0f1e42" />
+            <Circle cx={250} cy={246} r={19} fill="#1e3a8a" />
           </>
         )}
 
@@ -922,7 +922,7 @@ function FrontPage({
               alignItems: "center",
               justifyContent: "flex-end",
               paddingHorizontal: 14,
-              paddingBottom: 6,
+              paddingBottom: 10,
             }}
           >
             <Text
@@ -939,7 +939,7 @@ function FrontPage({
 
             <Text
               style={{
-                marginTop: 3,
+                marginTop: 4,
                 fontSize: 7.6,
                 fontWeight: 700,
                 letterSpacing: 0.4,
@@ -952,7 +952,7 @@ function FrontPage({
 
             <Text
               style={{
-                marginTop: 2,
+                marginTop: 2.5,
                 fontSize: 7.2,
                 fontWeight: 600,
                 color: "#b08a42",
@@ -962,7 +962,7 @@ function FrontPage({
               {info.program}
             </Text>
 
-            <View style={{ marginTop: 9 }}>
+            <View style={{ marginTop: 11 }}>
               <ForumQrBox displayId={displayId} compact />
             </View>
           </View>
@@ -972,8 +972,9 @@ function FrontPage({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-              gap: 11,
-              paddingBottom: 9,
+              gap: 12,
+              paddingTop: 2,
+              paddingBottom: 10,
             }}
           >
             <Image
