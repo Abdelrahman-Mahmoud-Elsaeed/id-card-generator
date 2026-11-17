@@ -28,8 +28,8 @@ export function ensurePdfFontsRegistered() {
   });
 
   Font.register({
-    family: "Cairo",
-    fonts: [{ src: "/fonts/Cairo-SemiBold.ttf", fontWeight: 600 }],
+    family: "Amiri",
+    fonts: [{ src: "/fonts/Amiri-Bold.ttf", fontWeight: 700 }],
   });
 
   // Prevent hyphenation artifacts on names, emails, and job titles
@@ -37,8 +37,7 @@ export function ensurePdfFontsRegistered() {
 }
 
 export function shapeArabicText(text: string): string {
-  const shaped = ArabicShaper.convertArabic(text);
-  return [...shaped].reverse().join("");
+  return ArabicShaper.convertArabic(text);
 }
 
 export function buildQrSvgPath(value: string): { size: number; path: string } {
