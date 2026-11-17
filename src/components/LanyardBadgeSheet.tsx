@@ -468,7 +468,7 @@ function BadgeFrontByTheme({
             <img
               src="/logos/digilians.png"
               alt="DiGiLiANS"
-              className="h-9 w-auto object-contain"
+              className="h-11 w-auto object-contain"
             />
           </div>
         </div>
@@ -509,13 +509,13 @@ function BadgeFrontByTheme({
           <img
             src="/logos/military-academy.png"
             alt="Egyptian Military Academy"
-            className="h-6 w-auto object-contain"
+            className="h-8 w-auto object-contain"
           />
-          <span className="h-4 w-px bg-slate-300" />
+          <span className="h-6 w-px bg-slate-300" />
           <img
             src="/logos/mcit.png"
             alt="MCIT"
-            className="h-5 w-auto object-contain mix-blend-multiply"
+            className="h-7 w-auto object-contain mix-blend-multiply"
           />
         </div>
       </div>
