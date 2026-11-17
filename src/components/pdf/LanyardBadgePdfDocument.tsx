@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import {
   Circle,
   Document,
@@ -16,6 +17,8 @@ import {
   BADGE_PAGE_SIZE,
   buildQrSvgPath,
   ensurePdfFontsRegistered,
+  formatPdfText,
+  hasArabicText,
   shapeArabicText,
 } from "@/lib/pdfUtils";
 
@@ -23,12 +26,20 @@ export type BadgePdfThemeId = "1" | "2" | "3" | "4" | "5" | "6";
 
 export interface BadgePdfInfo {
   name: string;
+  hasName: boolean;
   email: string;
+  hasEmail: boolean;
   phone: string;
+  hasPhone: boolean;
   location: string;
+  hasLocation: boolean;
   program: string;
   track: string;
   qrUrl: string;
+  hasQrUrl: boolean;
+  footerText: string;
+  photoDataUrl: string;
+  logos: string[];
 }
 
 const styles = StyleSheet.create({
@@ -83,7 +94,14 @@ function PdfDiagonalBackground() {
   );
 }
 
-function BadgeLogosRow({ compact = false }: { compact?: boolean }) {
+function BadgeLogosRow({
+  logos,
+  compact = false,
+}: {
+  logos: string[];
+  compact?: boolean;
+}) {
+  if (logos.length === 0) return null;
   const h = compact ? 16 : 20;
   const sep = compact ? 12 : 15;
   return (
@@ -94,62 +112,47 @@ function BadgeLogosRow({ compact = false }: { compact?: boolean }) {
         justifyContent: "space-between",
       }}
     >
-      <View
-        style={{
-          flex: 1,
-          height: h,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          src="/logos/military-academy.png"
-          style={{ maxHeight: h, maxWidth: 48, objectFit: "contain" }}
-        />
-      </View>
-      <View style={{ width: 0.75, height: sep, backgroundColor: "#cbd5e1" }} />
-      <View
-        style={{
-          flex: 1,
-          height: h,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingHorizontal: 4,
-        }}
-      >
-        <Image
-          src="/logos/digilians.png"
-          style={{ maxHeight: h, maxWidth: 52, objectFit: "contain" }}
-        />
-      </View>
-      <View style={{ width: 0.75, height: sep, backgroundColor: "#cbd5e1" }} />
-      <View
-        style={{
-          flex: 1,
-          height: h,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          src="/logos/mcit.png"
-          style={{
-            maxHeight: compact ? 13 : 17,
-            maxWidth: 48,
-            objectFit: "contain",
-          }}
-        />
-      </View>
+      {logos.map((src, index) => (
+        <Fragment key={`${src.slice(0, 32)}-${index}`}>
+          {index > 0 && (
+            <View
+              style={{ width: 0.75, height: sep, backgroundColor: "#cbd5e1" }}
+            />
+          )}
+          <View
+            style={{
+              flex: 1,
+              height: h,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 3,
+            }}
+          >
+            <Image
+              src={src}
+              style={{ maxHeight: h, maxWidth: 48, objectFit: "contain" }}
+            />
+          </View>
+        </Fragment>
+      ))}
     </View>
   );
 }
 
-function PdfQrCode({ value, size }: { value: string; size: number }) {
+function PdfQrCode({
+  value,
+  size,
+  color = "#0f172a",
+}: {
+  value: string;
+  size: number;
+  color?: string;
+}) {
   const { size: modules, path } = buildQrSvgPath(value);
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${modules} ${modules}`}>
       <Rect x={0} y={0} width={modules} height={modules} fill="#ffffff" />
-      <Path d={path} fill="#0f172a" />
+      <Path d={path} fill={color} />
     </Svg>
   );
 }
@@ -172,10 +175,12 @@ function LanyardPunchHole({ light = false }: { light?: boolean }) {
 }
 
 function PortraitFrame({
+  photoDataUrl,
   circular = false,
-  size = 70,
-  height = 85,
+  size = 62,
+  height = 74,
 }: {
+  photoDataUrl: string;
   circular?: boolean;
   size?: number;
   height?: number;
@@ -200,14 +205,22 @@ function PortraitFrame({
           width: "100%",
           height: "100%",
           borderRadius: circular ? r : 6,
-          backgroundColor: "#132444",
+          backgroundColor: photoDataUrl ? "#132444" : "#f1f5f9",
           overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Image
-          src="/me.png"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+        {photoDataUrl ? (
+          <Image
+            src={photoDataUrl}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <Text style={{ fontSize: 6.5, fontWeight: 600, color: "#94a3b8" }}>
+            PHOTO
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -517,6 +530,27 @@ function BadgeThemeBackground({
   );
 }
 
+function PdfSmartText({
+  text,
+  style,
+  defaultFont = "Inter",
+}: {
+  text: string;
+  style?: Record<string, string | number>;
+  defaultFont?: "Inter" | "SpaceGrotesk";
+}) {
+  return (
+    <Text
+      style={{
+        ...style,
+        fontFamily: hasArabicText(text) ? "Amiri" : defaultFont,
+      }}
+    >
+      {formatPdfText(text)}
+    </Text>
+  );
+}
+
 function FrontPage({
   themeId,
   info,
@@ -540,17 +574,19 @@ function FrontPage({
           <View>
             <LanyardPunchHole />
             <View style={{ paddingLeft: 32, paddingRight: 14, paddingTop: 4 }}>
-              <View
-                style={{
-                  borderRadius: 5,
-                  borderWidth: 0.75,
-                  borderColor: "#e2e8f0",
-                  backgroundColor: "#ffffff",
-                  padding: 5,
-                }}
-              >
-                <BadgeLogosRow compact />
-              </View>
+              {info.logos.length > 0 && (
+                <View
+                  style={{
+                    borderRadius: 5,
+                    borderWidth: 0.75,
+                    borderColor: "#e2e8f0",
+                    backgroundColor: "#ffffff",
+                    padding: 5,
+                  }}
+                >
+                  <BadgeLogosRow logos={info.logos} compact />
+                </View>
+              )}
             </View>
           </View>
 
@@ -564,19 +600,22 @@ function FrontPage({
               gap: 8,
             }}
           >
-            <PortraitFrame size={68} height={82} />
+            <PortraitFrame
+              photoDataUrl={info.photoDataUrl}
+              size={60}
+              height={72}
+            />
 
             <View style={{ flexDirection: "column" }}>
-              <Text
+              <PdfSmartText
+                text={info.name}
+                defaultFont="SpaceGrotesk"
                 style={{
-                  fontFamily: "SpaceGrotesk",
                   fontSize: 13,
                   fontWeight: 700,
                   color: "#0f172a",
                 }}
-              >
-                {info.name}
-              </Text>
+              />
               <View
                 style={{
                   marginTop: 4,
@@ -626,16 +665,18 @@ function FrontPage({
           <View>
             <LanyardPunchHole light />
             <View style={{ paddingHorizontal: 14, paddingTop: 4 }}>
-              <View
-                style={{
-                  borderRadius: 6,
-                  backgroundColor: "#ffffff",
-                  paddingHorizontal: 8,
-                  paddingVertical: 5,
-                }}
-              >
-                <BadgeLogosRow compact />
-              </View>
+              {info.logos.length > 0 && (
+                <View
+                  style={{
+                    borderRadius: 6,
+                    backgroundColor: "#ffffff",
+                    paddingHorizontal: 8,
+                    paddingVertical: 5,
+                  }}
+                >
+                  <BadgeLogosRow logos={info.logos} compact />
+                </View>
+              )}
             </View>
           </View>
 
@@ -648,20 +689,23 @@ function FrontPage({
               paddingHorizontal: 14,
             }}
           >
-            <PortraitFrame circular size={76} />
+            <PortraitFrame
+              photoDataUrl={info.photoDataUrl}
+              circular
+              size={66}
+            />
 
-            <Text
+            <PdfSmartText
+              text={info.name}
+              defaultFont="SpaceGrotesk"
               style={{
                 marginTop: 10,
-                fontFamily: "SpaceGrotesk",
                 fontSize: 13.5,
                 fontWeight: 700,
                 color: "#0f172a",
                 textAlign: "center",
               }}
-            >
-              {info.name}
-            </Text>
+            />
 
             <View
               style={{
@@ -744,14 +788,22 @@ function FrontPage({
               width: 76.7,
               height: 76.7,
               borderRadius: 38.35,
-              backgroundColor: "#ffffff",
+              backgroundColor: info.photoDataUrl ? "#ffffff" : "#f1f5f9",
               overflow: "hidden",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Image
-              src="/me.png"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+            {info.photoDataUrl ? (
+              <Image
+                src={info.photoDataUrl}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              <Text style={{ fontSize: 7, fontWeight: 600, color: "#94a3b8" }}>
+                PHOTO
+              </Text>
+            )}
           </View>
 
           <View
@@ -904,13 +956,23 @@ function FrontPage({
                   height: "100%",
                   borderRadius: 35.5,
                   overflow: "hidden",
-                  backgroundColor: "#132444",
+                  backgroundColor: info.photoDataUrl ? "#132444" : "#f1f5f9",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Image
-                  src="/me.png"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+                {info.photoDataUrl ? (
+                  <Image
+                    src={info.photoDataUrl}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <Text
+                    style={{ fontSize: 7, fontWeight: 600, color: "#94a3b8" }}
+                  >
+                    PHOTO
+                  </Text>
+                )}
               </View>
             </View>
           </View>
@@ -925,17 +987,16 @@ function FrontPage({
               paddingBottom: 8,
             }}
           >
-            <Text
+            <PdfSmartText
+              text={info.name}
+              defaultFont="SpaceGrotesk"
               style={{
-                fontFamily: "SpaceGrotesk",
                 fontSize: 11,
                 fontWeight: 700,
                 color: "#0f172a",
                 textAlign: "center",
               }}
-            >
-              {info.name}
-            </Text>
+            />
 
             <Text
               style={{
@@ -1009,7 +1070,7 @@ function FrontPage({
           {themeId === "1" && <View style={styles.navyBar} />}
           <LanyardPunchHole />
           <View style={{ paddingHorizontal: 14, paddingTop: 4 }}>
-            <BadgeLogosRow />
+            <BadgeLogosRow logos={info.logos} />
             {themeId === "1" && (
               <View
                 style={{
@@ -1051,20 +1112,24 @@ function FrontPage({
             paddingVertical: 6,
           }}
         >
-          <PortraitFrame circular={themeId === "2"} size={70} height={85} />
+          <PortraitFrame
+            photoDataUrl={info.photoDataUrl}
+            circular={themeId === "2"}
+            size={62}
+            height={74}
+          />
 
-          <Text
+          <PdfSmartText
+            text={info.name}
+            defaultFont="SpaceGrotesk"
             style={{
               marginTop: 9,
-              fontFamily: "SpaceGrotesk",
               fontSize: 13.5,
               fontWeight: 700,
               color: "#0f172a",
               textAlign: "center",
             }}
-          >
-            {info.name}
-          </Text>
+          />
 
           <View style={{ marginTop: 5, alignItems: "center", gap: 2 }}>
             <Text
@@ -1184,7 +1249,11 @@ function BackPage({
                 padding: 10,
               }}
             >
-              <PdfQrCode value={info.qrUrl} size={88} />
+              <PdfQrCode
+                value={info.qrUrl}
+                size={88}
+                color={info.hasQrUrl ? "#0f172a" : "#94a3b8"}
+              />
               <Text
                 style={{
                   marginTop: 7,
@@ -1194,7 +1263,7 @@ function BackPage({
                   color: "#0b152c",
                 }}
               >
-                SCAN ME
+                {info.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
               </Text>
               <Text
                 style={{
@@ -1296,7 +1365,11 @@ function BackPage({
                 padding: 9,
               }}
             >
-              <PdfQrCode value={info.qrUrl} size={90} />
+              <PdfQrCode
+                value={info.qrUrl}
+                size={88}
+                color={info.hasQrUrl ? "#0f172a" : "#94a3b8"}
+              />
               <Text
                 style={{
                   marginTop: 5,
@@ -1306,7 +1379,7 @@ function BackPage({
                   color: "#0f172a",
                 }}
               >
-                SCAN ME
+                {info.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
               </Text>
               <Text
                 style={{
@@ -1407,7 +1480,11 @@ function BackPage({
               padding: 10,
             }}
           >
-            <PdfQrCode value={info.qrUrl} size={105} />
+            <PdfQrCode
+              value={info.qrUrl}
+              size={88}
+              color={info.hasQrUrl ? "#0f172a" : "#94a3b8"}
+            />
             <Text
               style={{
                 marginTop: 7,
@@ -1417,7 +1494,7 @@ function BackPage({
                 color: "#334155",
               }}
             >
-              SCAN ME
+              {info.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
             </Text>
             <Text
               style={{
