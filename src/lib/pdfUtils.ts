@@ -36,8 +36,18 @@ export function ensurePdfFontsRegistered() {
   Font.registerHyphenationCallback((word) => [word]);
 }
 
+const ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
+
+export function hasArabicText(text: string): boolean {
+  return ARABIC_REGEX.test(text);
+}
+
 export function shapeArabicText(text: string): string {
   return ArabicShaper.convertArabic(text);
+}
+
+export function formatPdfText(text: string): string {
+  return hasArabicText(text) ? shapeArabicText(text) : text;
 }
 
 export function buildQrSvgPath(value: string): { size: number; path: string } {

@@ -15,25 +15,29 @@ import {
   buildQrSvgPath,
   CARD_PAGE_SIZE,
   ensurePdfFontsRegistered,
+  formatPdfText,
+  hasArabicText,
 } from "@/lib/pdfUtils";
 
-export interface PersonalCardSpec {
-  key: string;
-  label: string;
+export interface PersonalCardPdfDisplay {
+  name: string;
+  hasName: boolean;
   jobProfile: string;
+  hasJobProfile: boolean;
+  email: string;
+  hasEmail: boolean;
+  phone: string;
+  hasPhone: boolean;
+  location: string;
+  hasLocation: boolean;
+  initiative: string;
   techStack: string[];
   qrUrl: string;
+  hasQrUrl: boolean;
+  photoDataUrl: string;
 }
 
 export type PersonalCardThemeId = "1" | "2" | "3" | "4" | "5";
-
-const PERSONAL_INFO = {
-  name: "ABDELRAHMAN MAHMOUD",
-  email: "abdelrahman.mahmoud.elsaeed@gmail.com",
-  phone: "+20 109 516 0726",
-  location: "Cairo",
-  initiative: "DIGILIANS · MCIT",
-};
 
 const styles = StyleSheet.create({
   page: {
@@ -87,20 +91,30 @@ function PdfDiagonalBackground() {
   );
 }
 
-function PdfQrCode({ value, size = 56 }: { value: string; size?: number }) {
+function PdfQrCode({
+  value,
+  size = 56,
+  color = "#0f172a",
+}: {
+  value: string;
+  size?: number;
+  color?: string;
+}) {
   const { size: modules, path } = buildQrSvgPath(value);
   return (
     <Svg width={size} height={size} viewBox={`0 0 ${modules} ${modules}`}>
       <Rect x={0} y={0} width={modules} height={modules} fill="#ffffff" />
-      <Path d={path} fill="#0f172a" />
+      <Path d={path} fill={color} />
     </Svg>
   );
 }
 
 function CircularPortrait({
+  photoDataUrl,
   size = 48,
   borderColor = "#ffffff",
 }: {
+  photoDataUrl: string;
   size?: number;
   borderColor?: string;
 }) {
@@ -121,25 +135,33 @@ function CircularPortrait({
           width: "100%",
           height: "100%",
           borderRadius: size / 2,
-          backgroundColor: "#132444",
+          backgroundColor: photoDataUrl ? "#132444" : "#f1f5f9",
           overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Image
-          src="/me.png"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
+        {photoDataUrl ? (
+          <Image
+            src={photoDataUrl}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <Text style={{ fontSize: 5.5, fontWeight: 600, color: "#94a3b8" }}>
+            PHOTO
+          </Text>
+        )}
       </View>
     </View>
   );
 }
 
 function FrontPage({
-  spec,
+  d,
   themeId,
   showPhoto,
 }: {
-  spec: PersonalCardSpec;
+  d: PersonalCardPdfDisplay;
   themeId: PersonalCardThemeId;
   showPhoto: boolean;
 }) {
@@ -214,13 +236,14 @@ function FrontPage({
           <View style={{ paddingHorizontal: 14, paddingTop: 7 }}>
             <Text
               style={{
+                fontFamily: hasArabicText(d.initiative) ? "Amiri" : "Inter",
                 fontSize: 6.5,
                 fontWeight: 700,
                 letterSpacing: 1.1,
                 color: "#bae6fd",
               }}
             >
-              {PERSONAL_INFO.initiative}
+              {formatPdfText(d.initiative)}
             </Text>
           </View>
         ) : (
@@ -236,7 +259,9 @@ function FrontPage({
             paddingHorizontal: showPhoto ? 14 : 18,
           }}
         >
-          {showPhoto && <CircularPortrait size={50} />}
+          {showPhoto && (
+            <CircularPortrait photoDataUrl={d.photoDataUrl} size={50} />
+          )}
 
           <View
             style={{
@@ -250,13 +275,13 @@ function FrontPage({
           >
             <Text
               style={{
-                fontFamily: "SpaceGrotesk",
+                fontFamily: hasArabicText(d.name) ? "Amiri" : "SpaceGrotesk",
                 fontSize: showPhoto ? 10 : 11.5,
                 fontWeight: 700,
-                color: "#0f172a",
+                color: d.hasName ? "#0f172a" : "#94a3b8",
               }}
             >
-              {PERSONAL_INFO.name}
+              {formatPdfText(d.name)}
             </Text>
 
             <View
@@ -273,13 +298,14 @@ function FrontPage({
             >
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.jobProfile) ? "Amiri" : "Inter",
                   fontSize: 6.2,
                   fontWeight: 700,
                   letterSpacing: 0.5,
-                  color: "#075985",
+                  color: d.hasJobProfile ? "#075985" : "#94a3b8",
                 }}
               >
-                {spec.jobProfile}
+                {formatPdfText(d.jobProfile)}
               </Text>
             </View>
 
@@ -293,11 +319,25 @@ function FrontPage({
                 gap: 2,
               }}
             >
-              <Text style={{ fontSize: 6.5, fontWeight: 600, color: "#1e293b" }}>
-                {PERSONAL_INFO.phone}
+              <Text
+                style={{
+                  fontFamily: hasArabicText(d.phone) ? "Amiri" : "Inter",
+                  fontSize: 6.5,
+                  fontWeight: 600,
+                  color: d.hasPhone ? "#1e293b" : "#94a3b8",
+                }}
+              >
+                {formatPdfText(d.phone)}
               </Text>
-              <Text style={{ fontSize: 6.5, fontWeight: 500, color: "#475569" }}>
-                {PERSONAL_INFO.email}
+              <Text
+                style={{
+                  fontFamily: hasArabicText(d.email) ? "Amiri" : "Inter",
+                  fontSize: 6.5,
+                  fontWeight: 500,
+                  color: d.hasEmail ? "#475569" : "#94a3b8",
+                }}
+              >
+                {formatPdfText(d.email)}
               </Text>
             </View>
           </View>
@@ -306,7 +346,8 @@ function FrontPage({
         <View
           style={{
             flexDirection: "row",
-            justifyContent: themeId === "2" || themeId === "3" ? "space-between" : "flex-end",
+            justifyContent:
+              themeId === "2" || themeId === "3" ? "space-between" : "flex-end",
             alignItems: "center",
             paddingHorizontal: showPhoto ? 14 : 18,
             paddingBottom: themeId === "1" ? 4 : 6,
@@ -315,23 +356,25 @@ function FrontPage({
           {(themeId === "2" || themeId === "3") && (
             <Text
               style={{
+                fontFamily: hasArabicText(d.location) ? "Amiri" : "Inter",
                 fontSize: 6.2,
                 fontWeight: 600,
                 color: themeId === "2" ? "#bae6fd" : "#64748b",
               }}
             >
-              {PERSONAL_INFO.location}
+              {formatPdfText(d.location)}
             </Text>
           )}
           <Text
             style={{
+              fontFamily: hasArabicText(d.initiative) ? "Amiri" : "Inter",
               fontSize: 6.2,
               fontWeight: 600,
               letterSpacing: 0.9,
               color: themeId === "2" ? "#ffffff" : "#64748b",
             }}
           >
-            {PERSONAL_INFO.initiative}
+            {formatPdfText(d.initiative)}
           </Text>
         </View>
 
@@ -342,15 +385,15 @@ function FrontPage({
 }
 
 function BackPage({
-  spec,
+  d,
   themeId,
 }: {
-  spec: PersonalCardSpec;
+  d: PersonalCardPdfDisplay;
   themeId: PersonalCardThemeId;
 }) {
   const rows: [string, string | undefined][] = [];
-  for (let i = 0; i < spec.techStack.length; i += 2) {
-    rows.push([spec.techStack[i], spec.techStack[i + 1]]);
+  for (let i = 0; i < d.techStack.length; i += 2) {
+    rows.push([d.techStack[i], d.techStack[i + 1]]);
   }
 
   return (
@@ -417,21 +460,27 @@ function BackPage({
                 style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
               >
                 <Text
-                  style={{ fontSize: 7.2, fontWeight: 600, color: "#1e293b" }}
+                  style={{
+                    fontFamily: hasArabicText(left) ? "Amiri" : "Inter",
+                    fontSize: 7.2,
+                    fontWeight: 600,
+                    color: "#1e293b",
+                  }}
                 >
-                  {left}
+                  {formatPdfText(left)}
                 </Text>
                 {right && (
                   <>
                     <Text style={{ fontSize: 7, color: "#94a3b8" }}>•</Text>
                     <Text
                       style={{
+                        fontFamily: hasArabicText(right) ? "Amiri" : "Inter",
                         fontSize: 7.2,
                         fontWeight: 600,
                         color: "#1e293b",
                       }}
                     >
-                      {right}
+                      {formatPdfText(right)}
                     </Text>
                   </>
                 )}
@@ -450,7 +499,11 @@ function BackPage({
               padding: 5,
             }}
           >
-            <PdfQrCode value={spec.qrUrl} size={56} />
+            <PdfQrCode
+              value={d.qrUrl}
+              size={56}
+              color={d.hasQrUrl ? "#0f172a" : "#94a3b8"}
+            />
             <Text
               style={{
                 marginTop: 3,
@@ -460,7 +513,7 @@ function BackPage({
                 color: "#334155",
               }}
             >
-              SCAN ME
+              {d.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
             </Text>
             <Text
               style={{
@@ -482,19 +535,19 @@ function BackPage({
 }
 
 export function PersonalCardPdfDocument({
-  spec,
+  d,
   themeId,
   showPhoto,
 }: {
-  spec: PersonalCardSpec;
+  d: PersonalCardPdfDisplay;
   themeId: PersonalCardThemeId;
   showPhoto: boolean;
 }) {
   ensurePdfFontsRegistered();
   return (
-    <Document title={`Personal Card — ${spec.label}`}>
-      <FrontPage spec={spec} themeId={themeId} showPhoto={showPhoto} />
-      <BackPage spec={spec} themeId={themeId} />
+    <Document title={`Personal Card — ${d.name}`}>
+      <FrontPage d={d} themeId={themeId} showPhoto={showPhoto} />
+      <BackPage d={d} themeId={themeId} />
     </Document>
   );
 }
