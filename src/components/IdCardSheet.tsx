@@ -305,7 +305,7 @@ function ClassicFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) 
 
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
       style={DIAGONAL_BG}
     >
       <div className="h-1.5 w-full bg-[#172554]" />
@@ -368,7 +368,7 @@ function ClassicFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) 
 /* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
 function CanvaOrganicWaveFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -448,7 +448,7 @@ function CanvaOrganicWaveFront({ d, drag }: { d: ResolvedCardDisplay; drag: Drag
 /* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
 function CanvaDiagonalRibbonFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -524,7 +524,7 @@ function CanvaDiagonalRibbonFront({ d, drag }: { d: ResolvedCardDisplay; drag: D
 /* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
 function CanvaCurvedHeaderFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-slate-50/40">
       {d.logos.length > 0 && (
         <div className="relative z-10 bg-white px-4 pt-2 pb-1">
           <DraggableBox id="front-logos" drag={drag}>
@@ -594,7 +594,7 @@ function CanvaCurvedHeaderFront({ d, drag }: { d: ResolvedCardDisplay; drag: Dra
 /* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
 function CanvaCornerGeometryFront({ d, drag }: { d: ResolvedCardDisplay; drag: DragProps }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       <svg
         viewBox="0 0 320 200"
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -672,7 +672,7 @@ function CardBack({
 }) {
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
       style={themeId === "1" ? DIAGONAL_BG : undefined}
     >
       {themeId === "2" && (
@@ -736,13 +736,14 @@ function CardBack({
         </DraggableBox>
 
         <DraggableBox id="back-qr" drag={drag}>
-          <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-2 shadow-sm">
+          <div className="flex shrink-0 flex-col items-center border border-slate-200 bg-white p-2 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
             <QRCodeSVG
               value={d.qrUrl}
               size={82}
               level="M"
               fgColor={d.hasQrUrl ? "#0f172a" : "#94a3b8"}
               bgColor="#ffffff"
+              shapeRendering="crispEdges"
             />
             <span className="mt-1 text-[5.8px] font-semibold tracking-widest text-slate-400 uppercase">
               {d.hasQrUrl ? "SCAN ME" : "ADD QR URL"}
@@ -927,10 +928,11 @@ export function IdCardSheet({
     setDragEnabled(false);
     setIsDownloading(true);
     try {
+      await document.fonts.ready;
       await new Promise((r) => setTimeout(r, 40));
       const [frontImg, backImg] = await Promise.all([
-        toPng(frontRef.current, { pixelRatio: 4, cacheBust: true }),
-        toPng(backRef.current, { pixelRatio: 4, cacheBust: true }),
+        toPng(frontRef.current, { pixelRatio: 6, cacheBust: true }),
+        toPng(backRef.current, { pixelRatio: 6, cacheBust: true }),
       ]);
 
       const pdf = new jsPDF({
@@ -1324,8 +1326,10 @@ export function IdCardSheet({
               <span className="text-xs font-semibold text-slate-500 print:hidden">
                 Front Side (Page 1 — 8.6 × 5.4 cm)
               </span>
-              <div ref={frontRef}>
-                <CardFrontByTheme d={display} themeId={themeId} drag={dragProps} />
+              <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                <div ref={frontRef}>
+                  <CardFrontByTheme d={display} themeId={themeId} drag={dragProps} />
+                </div>
               </div>
             </div>
 
@@ -1333,8 +1337,10 @@ export function IdCardSheet({
               <span className="text-xs font-semibold text-slate-500 print:hidden">
                 Back Side with QR (Page 2 — 8.6 × 5.4 cm)
               </span>
-              <div ref={backRef}>
-                <CardBack d={display} themeId={themeId} drag={dragProps} />
+              <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                <div ref={backRef}>
+                  <CardBack d={display} themeId={themeId} drag={dragProps} />
+                </div>
               </div>
             </div>
           </div>
