@@ -233,6 +233,7 @@ function ForumQrBox({
   displayId: string;
   compact?: boolean;
 }) {
+  if (!displayId.trim()) return null;
   return (
     <View
       style={{
@@ -1562,7 +1563,7 @@ export function LanyardBadgePdfDocument({
   platformIdText: string;
 }) {
   ensurePdfFontsRegistered();
-  const displayId = platformIdText.trim() || "DIGI-2026-1098";
+  const displayId = platformIdText.trim();
 
   return (
     <Document title={`Lanyard Badge — Design ${themeId}`}>

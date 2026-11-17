@@ -173,6 +173,7 @@ function ForumQrCard({
   displayId: string;
   compact?: boolean;
 }) {
+  if (!displayId.trim()) return null;
   return (
     <div
       className={cn(
@@ -876,7 +877,7 @@ export function LanyardBadgeSheet({
   const activeTheme =
     BADGE_THEMES.find((t) => t.id === themeId) ?? BADGE_THEMES[0];
   const display = resolveBadgeDisplay(form);
-  const displayId = form.forumId.trim() || "DIGI-2026-0000";
+  const displayId = form.forumId.trim();
 
   useEffect(() => {
     document.title = `${activeTheme.name} — Lanyard Badge Builder (7.5 × 10.5 cm)`;
@@ -1033,12 +1034,12 @@ export function LanyardBadgeSheet({
               />
             </label>
             <label className="flex flex-col gap-1 text-xs font-semibold text-slate-700">
-              Forum / Event ID
+              Forum / Event ID (optional)
               <input
                 type="text"
                 value={form.forumId}
                 onChange={(e) => updateField("forumId", e.target.value)}
-                placeholder="e.g. DIGI-2026-1098"
+                placeholder="Leave empty to hide, e.g. DIGI-2026-1098"
                 className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-normal text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none"
               />
             </label>
