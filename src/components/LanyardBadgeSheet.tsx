@@ -118,49 +118,26 @@ function PunchHole({ light = false }: { light?: boolean }) {
 }
 
 function ForumQrCard({
-  platformCode,
   displayId,
   compact = false,
 }: {
-  platformCode: string;
   displayId: string;
   compact?: boolean;
 }) {
-  const qrSize = compact ? 44 : 54;
   return (
     <div
       className={cn(
-        "flex items-center gap-2.5 rounded-lg border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.05)]",
-        compact ? "px-2.5 py-1" : "px-3 py-1.5"
+        "flex items-center gap-2 rounded-lg border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.05)]",
+        compact ? "px-3.5 py-1.5" : "px-4 py-2"
       )}
     >
-      {platformCode.trim() ? (
-        <QRCodeSVG
-          value={platformCode.trim()}
-          size={qrSize}
-          level="M"
-          fgColor="#0f172a"
-          bgColor="#ffffff"
-          shapeRendering="crispEdges"
-        />
-      ) : (
-        <div
-          style={{ width: qrSize, height: qrSize }}
-          className="flex items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-center text-[6.5pt] leading-tight font-semibold text-slate-400"
-        >
-          EVENT
-          <br />
-          QR
-        </div>
-      )}
-      <div className="flex flex-col text-left">
-        <span className="text-[7pt] font-bold tracking-wider text-slate-800 uppercase">
-          FORUM ID
-        </span>
-        <span className="font-mono text-[7pt] font-semibold text-slate-600">
-          {displayId}
-        </span>
-      </div>
+      <span className="text-[7pt] font-bold tracking-wider text-slate-500 uppercase">
+        FORUM ID
+      </span>
+      <span className="h-3 w-px bg-slate-200" />
+      <span className="font-mono text-[8pt] font-bold tracking-wide text-slate-900">
+        {displayId}
+      </span>
     </div>
   );
 }
@@ -191,11 +168,9 @@ function PortraitAvatar({ circular = false }: { circular?: boolean }) {
 
 function BadgeFrontByTheme({
   themeId,
-  platformCode,
   displayId,
 }: {
   themeId: BadgeThemeId;
-  platformCode: string;
   displayId: string;
 }) {
   if (themeId === "2") {
@@ -230,7 +205,7 @@ function BadgeFrontByTheme({
             <span className="font-semibold text-sky-800">{BADGE_INFO.track}</span>
           </div>
           <div className="mt-2.5">
-            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+            <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
@@ -276,7 +251,7 @@ function BadgeFrontByTheme({
             </div>
           </div>
           <div className="w-fit">
-            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+            <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
@@ -322,7 +297,7 @@ function BadgeFrontByTheme({
             {BADGE_INFO.track}
           </span>
           <div className="mt-2.5">
-            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+            <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
@@ -408,7 +383,7 @@ function BadgeFrontByTheme({
           </span>
 
           <div className="mt-2.5">
-            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+            <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
@@ -529,7 +504,7 @@ function BadgeFrontByTheme({
           </span>
 
           <div className="mt-2.5">
-            <ForumQrCard platformCode={platformCode} displayId={displayId} compact />
+            <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
@@ -578,7 +553,7 @@ function BadgeFrontByTheme({
           <span className="font-semibold text-sky-800">{BADGE_INFO.track}</span>
         </div>
         <div className="mt-3">
-          <ForumQrCard platformCode={platformCode} displayId={displayId} />
+          <ForumQrCard displayId={displayId} />
         </div>
       </div>
 
@@ -814,18 +789,13 @@ export function LanyardBadgeSheet({
   themeId: BadgeThemeId;
   onSelectTheme: (id: BadgeThemeId) => void;
 }) {
-  const [platformCode, setPlatformCode] = useState("");
-  const [platformIdText, setPlatformIdText] = useState("");
+  const [platformIdText, setPlatformIdText] = useState("DIGI-2026-1098");
   const [isDownloading, setIsDownloading] = useState(false);
 
   const activeTheme =
     BADGE_THEMES.find((t) => t.id === themeId) ?? BADGE_THEMES[0];
 
-  const displayId =
-    platformIdText.trim() ||
-    (platformCode.trim() && !platformCode.trim().startsWith("http")
-      ? platformCode.trim()
-      : "Platform Code");
+  const displayId = platformIdText.trim() || "DIGI-2026-1098";
 
   useEffect(() => {
     document.title = `${activeTheme.name} — Lanyard Badge (9 × 12 cm)`;
@@ -838,8 +808,7 @@ export function LanyardBadgeSheet({
         <LanyardBadgePdfDocument
           themeId={themeId}
           info={BADGE_INFO}
-          platformCode={platformCode}
-          platformIdText={platformIdText}
+          platformIdText={displayId}
         />
       ).toBlob();
       downloadPdfBlob(
@@ -887,22 +856,13 @@ export function LanyardBadgeSheet({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-1 flex-wrap items-center gap-2">
             <input
-              id="forum-platform-code"
-              type="text"
-              value={platformCode}
-              onChange={(e) => setPlatformCode(e.target.value)}
-              placeholder="Forum QR URL or Code..."
-              aria-label="Forum QR URL or Code"
-              className="w-full max-w-[200px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:outline-none"
-            />
-            <input
               id="forum-platform-id-text"
               type="text"
               value={platformIdText}
               onChange={(e) => setPlatformIdText(e.target.value)}
-              placeholder="Manual ID Number (e.g. #1042)..."
-              aria-label="Manual ID Number"
-              className="w-full max-w-[200px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:outline-none"
+              placeholder="Forum ID (e.g. DIGI-2026-1098)..."
+              aria-label="Forum ID"
+              className="w-full max-w-[220px] rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -938,7 +898,6 @@ export function LanyardBadgeSheet({
         <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
           <BadgeFrontByTheme
             themeId={themeId}
-            platformCode={platformCode}
             displayId={displayId}
           />
         </div>

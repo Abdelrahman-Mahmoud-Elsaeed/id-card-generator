@@ -214,11 +214,9 @@ function PortraitFrame({
 }
 
 function ForumQrBox({
-  platformCode,
   displayId,
   compact = false,
 }: {
-  platformCode: string;
   displayId: string;
   compact?: boolean;
 }) {
@@ -227,76 +225,36 @@ function ForumQrBox({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: 6,
         borderRadius: 6,
         borderWidth: 0.75,
         borderColor: "#cbd5e1",
         backgroundColor: "#ffffff",
-        paddingHorizontal: compact ? 7 : 9,
-        paddingVertical: compact ? 4 : 5,
+        paddingHorizontal: compact ? 10 : 12,
+        paddingVertical: compact ? 4.5 : 5.5,
       }}
     >
-      {platformCode.trim() ? (
-        <PdfQrCode value={platformCode.trim()} size={compact ? 34 : 40} />
-      ) : (
-        <View
-          style={{
-            width: compact ? 34 : 40,
-            height: compact ? 34 : 40,
-            borderRadius: 3,
-            borderWidth: 0.75,
-            borderColor: "#cbd5e1",
-            borderStyle: "dashed",
-            backgroundColor: "#f8fafc",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 6,
-              fontWeight: 600,
-              color: "#94a3b8",
-              textAlign: "center",
-            }}
-          >
-            EVENT
-          </Text>
-          <Text
-            style={{
-              fontSize: 6,
-              fontWeight: 600,
-              color: "#94a3b8",
-              textAlign: "center",
-            }}
-          >
-            QR
-          </Text>
-        </View>
-      )}
-
-      <View style={{ flexDirection: "column" }}>
-        <Text
-          style={{
-            fontSize: 7,
-            fontWeight: 700,
-            letterSpacing: 0.5,
-            color: "#1e293b",
-          }}
-        >
-          FORUM ID
-        </Text>
-        <Text
-          style={{
-            marginTop: 1.5,
-            fontSize: 7,
-            fontWeight: 600,
-            color: "#475569",
-          }}
-        >
-          {displayId}
-        </Text>
-      </View>
+      <Text
+        style={{
+          fontSize: 7,
+          fontWeight: 700,
+          letterSpacing: 0.5,
+          color: "#64748b",
+        }}
+      >
+        FORUM ID
+      </Text>
+      <View style={{ width: 0.75, height: 9, backgroundColor: "#cbd5e1" }} />
+      <Text
+        style={{
+          fontSize: 7.8,
+          fontWeight: 700,
+          letterSpacing: 0.4,
+          color: "#0f172a",
+        }}
+      >
+        {displayId}
+      </Text>
     </View>
   );
 }
@@ -562,12 +520,10 @@ function BadgeThemeBackground({
 function FrontPage({
   themeId,
   info,
-  platformCode,
   displayId,
 }: {
   themeId: BadgePdfThemeId;
   info: BadgePdfInfo;
-  platformCode: string;
   displayId: string;
 }) {
   if (themeId === "3") {
@@ -647,11 +603,7 @@ function FrontPage({
               </View>
             </View>
 
-            <ForumQrBox
-              platformCode={platformCode}
-              displayId={displayId}
-              compact
-            />
+            <ForumQrBox displayId={displayId} compact />
           </View>
 
           <FrontFooterBar />
@@ -747,11 +699,7 @@ function FrontPage({
             </Text>
 
             <View style={{ marginTop: 9 }}>
-              <ForumQrBox
-                platformCode={platformCode}
-                displayId={displayId}
-                compact
-              />
+              <ForumQrBox displayId={displayId} compact />
             </View>
           </View>
 
@@ -856,11 +804,7 @@ function FrontPage({
             </Text>
 
             <View style={{ marginTop: 9 }}>
-              <ForumQrBox
-                platformCode={platformCode}
-                displayId={displayId}
-                compact
-              />
+              <ForumQrBox displayId={displayId} compact />
             </View>
           </View>
 
@@ -1038,11 +982,7 @@ function FrontPage({
             </Text>
 
             <View style={{ marginTop: 9 }}>
-              <ForumQrBox
-                platformCode={platformCode}
-                displayId={displayId}
-                compact
-              />
+              <ForumQrBox displayId={displayId} compact />
             </View>
           </View>
 
@@ -1168,7 +1108,7 @@ function FrontPage({
           </View>
 
           <View style={{ marginTop: 9 }}>
-            <ForumQrBox platformCode={platformCode} displayId={displayId} />
+            <ForumQrBox displayId={displayId} />
           </View>
         </View>
 
@@ -1556,29 +1496,18 @@ function BackPage({
 export function LanyardBadgePdfDocument({
   themeId,
   info,
-  platformCode,
   platformIdText,
 }: {
   themeId: BadgePdfThemeId;
   info: BadgePdfInfo;
-  platformCode: string;
   platformIdText: string;
 }) {
   ensurePdfFontsRegistered();
-  const displayId =
-    platformIdText.trim() ||
-    (platformCode.trim() && !platformCode.trim().startsWith("http")
-      ? platformCode.trim()
-      : "#______");
+  const displayId = platformIdText.trim() || "DIGI-2026-1098";
 
   return (
     <Document title={`Lanyard Badge — Design ${themeId}`}>
-      <FrontPage
-        themeId={themeId}
-        info={info}
-        platformCode={platformCode}
-        displayId={displayId}
-      />
+      <FrontPage themeId={themeId} info={info} displayId={displayId} />
       <BackPage themeId={themeId} info={info} />
     </Document>
   );
