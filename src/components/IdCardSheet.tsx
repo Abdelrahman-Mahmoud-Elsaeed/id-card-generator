@@ -123,7 +123,7 @@ function InitiativeText({ light = false }: { light?: boolean }) {
 function ClassicFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50"
       style={DIAGONAL_BG}
     >
       <div className="h-1.5 w-full bg-[#172554]" />
@@ -172,7 +172,7 @@ function ClassicFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean 
 /* ---------------- THEME 2: CANVA ORGANIC WAVE ---------------- */
 function CanvaOrganicWaveFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       {/* Canva Layered Bottom-Right Organic SVG Waves */}
       <svg
         viewBox="0 0 320 200"
@@ -232,7 +232,7 @@ function CanvaOrganicWaveFront({ spec, showPhoto }: { spec: CardSpec; showPhoto:
 /* ---------------- THEME 3: CANVA DIAGONAL RIBBON ---------------- */
 function CanvaDiagonalRibbonFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       {/* Canva Diagonal Geometric Shapes */}
       <svg
         viewBox="0 0 320 200"
@@ -286,7 +286,7 @@ function CanvaDiagonalRibbonFront({ spec, showPhoto }: { spec: CardSpec; showPho
 /* ---------------- THEME 4: CANVA CURVED HEADER ---------------- */
 function CanvaCurvedHeaderFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-slate-50/40 shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-slate-50/40">
       {/* Navy Header Banner */}
       <div className={cn("relative z-10 bg-gradient-to-r from-[#172554] via-[#1e3a8a] to-[#0284c7] py-2 text-white", showPhoto ? "px-4" : "px-6")}>
         <div className="flex items-center justify-between gap-2">
@@ -332,7 +332,7 @@ function CanvaCurvedHeaderFront({ spec, showPhoto }: { spec: CardSpec; showPhoto
 /* ---------------- THEME 5: CANVA CORNER GEOMETRY ---------------- */
 function CanvaCornerGeometryFront({ spec, showPhoto }: { spec: CardSpec; showPhoto: boolean }) {
   return (
-    <div className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200 bg-white shadow-md">
+    <div className="id-card-face relative flex flex-col justify-between overflow-hidden bg-white">
       {/* Canva Geometric Corner Ribbons */}
       <svg
         viewBox="0 0 320 200"
@@ -394,7 +394,7 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
 
   return (
     <div
-      className="id-card-face relative flex flex-col justify-between overflow-hidden border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900 shadow-md"
+      className="id-card-face relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/50 text-slate-900"
       style={themeId === "1" ? DIAGONAL_BG : undefined}
     >
       {themeId === "2" && (
@@ -444,13 +444,14 @@ function CardBack({ spec, themeId }: { spec: CardSpec; themeId: CardThemeId }) {
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col items-center border border-slate-200/90 bg-white p-1.5 shadow-sm">
+        <div className="flex shrink-0 flex-col items-center border border-slate-200 bg-white p-1.5 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
           <QRCodeSVG
             value={spec.qrUrl}
             size={72}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
+            shapeRendering="crispEdges"
           />
           <span className="mt-1 text-[7pt] leading-none font-bold tracking-wider text-slate-700 uppercase">
             SCAN ME
@@ -520,9 +521,10 @@ export function IdCardSheet({
 
     setDownloadingKey(spec.key);
     try {
+      await document.fonts.ready;
       const [frontImg, backImg] = await Promise.all([
-        toPng(refs.front, { pixelRatio: 4, cacheBust: true }),
-        toPng(refs.back, { pixelRatio: 4, cacheBust: true }),
+        toPng(refs.front, { pixelRatio: 6, cacheBust: true }),
+        toPng(refs.back, { pixelRatio: 6, cacheBust: true }),
       ]);
 
       const pdf = new jsPDF({
@@ -666,25 +668,29 @@ export function IdCardSheet({
               </div>
 
               <div className="flex flex-wrap justify-center gap-4 print:block">
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      front: el,
-                    };
-                  }}
-                >
-                  <CardFrontByTheme spec={spec} themeId={themeId} showPhoto={showPhoto} />
+                <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                  <div
+                    ref={(el) => {
+                      faceRefs.current[spec.key] = {
+                        ...faceRefs.current[spec.key],
+                        front: el,
+                      };
+                    }}
+                  >
+                    <CardFrontByTheme spec={spec} themeId={themeId} showPhoto={showPhoto} />
+                  </div>
                 </div>
-                <div
-                  ref={(el) => {
-                    faceRefs.current[spec.key] = {
-                      ...faceRefs.current[spec.key],
-                      back: el,
-                    };
-                  }}
-                >
-                  <CardBack spec={spec} themeId={themeId} />
+                <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+                  <div
+                    ref={(el) => {
+                      faceRefs.current[spec.key] = {
+                        ...faceRefs.current[spec.key],
+                        back: el,
+                      };
+                    }}
+                  >
+                    <CardBack spec={spec} themeId={themeId} />
+                  </div>
                 </div>
               </div>
             </div>
