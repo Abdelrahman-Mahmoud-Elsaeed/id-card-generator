@@ -889,7 +889,7 @@ function FrontPage({
             </View>
           </View>
 
-          {/* Luxury Navy + Concentric Double Gold Rings around Portrait */}
+          {/* Clean Navy Ring around Portrait */}
           <View
             style={{
               position: "absolute",
@@ -900,8 +900,6 @@ function FrontPage({
               borderRadius: 49.75,
               backgroundColor: "#0b152c",
               padding: 5,
-              borderWidth: 1.4,
-              borderColor: "#c8a45d",
             }}
           >
             <View
@@ -909,19 +907,15 @@ function FrontPage({
                 width: "100%",
                 height: "100%",
                 borderRadius: 44.75,
-                borderWidth: 1.4,
-                borderColor: "#c8a45d",
-                padding: 5,
-                backgroundColor: "#0b152c",
+                backgroundColor: "#ffffff",
+                padding: 2,
               }}
             >
               <View
                 style={{
                   width: "100%",
                   height: "100%",
-                  borderRadius: 40,
-                  borderWidth: 1,
-                  borderColor: "#d4af37",
+                  borderRadius: 42.75,
                   overflow: "hidden",
                   backgroundColor: "#132444",
                 }}

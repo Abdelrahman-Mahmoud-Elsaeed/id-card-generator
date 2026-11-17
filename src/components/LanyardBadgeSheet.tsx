@@ -476,13 +476,13 @@ function BadgeFrontByTheme({
           </div>
         </div>
 
-        {/* Luxury Navy + Concentric Double Gold Rings around Portrait (slightly lower, kissing ribbon) */}
+        {/* Clean Navy Ring around Portrait */}
         <div
-          className="absolute left-1/2 z-10 -translate-x-1/2 rounded-full border-[1.5px] border-[#c8a45d] bg-[#0b152c] p-[5px] shadow-md"
+          className="absolute left-1/2 z-10 -translate-x-1/2 rounded-full bg-[#0b152c] p-[5px] shadow-md"
           style={{ top: "12.5%", width: "39%", height: "29.25%" }}
         >
-          <div className="h-full w-full rounded-full border-[1.5px] border-[#c8a45d] bg-[#0b152c] p-[5px]">
-            <div className="h-full w-full overflow-hidden rounded-full border border-[#d4af37] bg-[#132444]">
+          <div className="h-full w-full overflow-hidden rounded-full bg-white p-[2px]">
+            <div className="h-full w-full overflow-hidden rounded-full bg-[#132444]">
               <img
                 src="/me.png"
                 alt="Abdelrahman Mahmoud"
