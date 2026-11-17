@@ -336,19 +336,19 @@ function BadgeFrontByTheme({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Main top-left dark capsule wrapping around the circular portrait */}
+          {/* Main 45-deg capsule wrapping concentrically around portrait (127.5, 114, r=50) */}
           <path
-            d="M0,0 L114,0 L162,84 A48,48 0 1,1 92,152 L0,62 Z"
+            d="M0,0 L84.2,0 L162.85,78.65 A50,50 0 1,1 92.15,149.35 L0,57.2 Z"
             fill="#0b1120"
           />
-          {/* Top-right separate triangle with rounded inner corner & white gap */}
+          {/* Top-right triangle with parallel 45-deg edge & rounded corners */}
           <path
-            d="M128,0 L255,0 L255,134 Q248,132 242,126 L132,12 Q127,6 128,0 Z"
+            d="M111,0 L255,0 L255,144 Q255,152 247,144 L106,4 Q102,0 111,0 Z"
             fill="#0b1120"
           />
-          {/* Bottom-left dark curve with white diagonal gap */}
+          {/* Bottom-left accent with parallel 45-deg white gap */}
           <path
-            d="M0,78 L36,114 C48,148 36,210 0,256 Z"
+            d="M0,74.2 L42,116.2 Q48,122 44,132 C34,162 20,192 0,218 Z"
             fill="#0b1120"
           />
           {/* Bottom-left lower dark wave */}
@@ -363,50 +363,24 @@ function BadgeFrontByTheme({
 
         <div className="relative z-10">
           <PunchHole light />
-          <div className="absolute top-2.5 left-3 flex flex-col items-center">
-            <svg viewBox="0 0 100 100" className="h-6 w-6" aria-hidden="true">
-              <path
-                d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z"
-                stroke="#38bdf8"
-                strokeWidth="8"
-                fill="none"
-              />
-              <path
-                d="M50 26 L72 39 L72 61 L50 74 L28 61 L28 39 Z"
-                stroke="#0ea5e9"
-                strokeWidth="7"
-                fill="none"
-              />
-              <circle cx="50" cy="46" r="5" fill="#38bdf8" />
-              <path d="M50 51 L50 66" stroke="#38bdf8" strokeWidth="5" />
-            </svg>
-            <span className="mt-0.5 text-[4.5pt] font-bold tracking-[0.14em] text-white/90">
-              DiGiLiANS
-            </span>
+          <div className="absolute top-2.5 left-2.5 rounded-md bg-white/95 px-1.5 py-0.5 shadow-xs">
+            <img
+              src="/logos/digilians-full.png"
+              alt="DiGiLiANS"
+              className="h-6 w-auto object-contain"
+            />
           </div>
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-3 text-center">
           <div className="relative h-[2.85cm] w-[2.85cm] rounded-full bg-[#0b1120] p-[4px] shadow-md">
             <div className="relative h-full w-full overflow-hidden rounded-full bg-white">
-              <svg
-                viewBox="0 0 100 100"
-                className="pointer-events-none absolute inset-0 h-full w-full opacity-15"
+              <img
+                src="/logos/digilians-full.png"
+                alt=""
                 aria-hidden="true"
-              >
-                <path
-                  d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z"
-                  stroke="#0284c7"
-                  strokeWidth="8"
-                  fill="none"
-                />
-                <path
-                  d="M50 26 L72 39 L72 61 L50 74 L28 61 L28 39 Z"
-                  stroke="#0ea5e9"
-                  strokeWidth="7"
-                  fill="none"
-                />
-              </svg>
+                className="pointer-events-none absolute inset-0 m-auto h-4/5 w-4/5 object-contain opacity-15"
+              />
               <img
                 src="/me.png"
                 alt="Abdelrahman Mahmoud"
@@ -503,28 +477,13 @@ function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
 
         <div className="relative z-10 flex flex-col items-center">
           <PunchHole light />
-          <svg viewBox="0 0 100 100" className="mt-1 h-11 w-11" aria-hidden="true">
-            <path
-              d="M50 8 L88 30 L88 70 L50 92 L12 70 L12 30 Z"
-              stroke="#38bdf8"
-              strokeWidth="7"
-              fill="none"
+          <div className="mt-1 rounded-lg bg-white/95 px-3 py-1 shadow-xs">
+            <img
+              src="/logos/digilians-full.png"
+              alt="DiGiLiANS"
+              className="h-14 w-auto object-contain"
             />
-            <path
-              d="M50 26 L72 39 L72 61 L50 74 L28 61 L28 39 Z"
-              stroke="#0ea5e9"
-              strokeWidth="6"
-              fill="none"
-            />
-            <circle cx="50" cy="46" r="5" fill="#38bdf8" />
-            <path d="M50 51 L50 66" stroke="#38bdf8" strokeWidth="4.5" />
-          </svg>
-          <span className="mt-1 text-[8.5pt] font-bold text-white">
-            الرواد الرقميون
-          </span>
-          <span className="font-heading text-[8pt] font-bold tracking-[0.16em] text-sky-400">
-            DiGiLiANS
-          </span>
+          </div>
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 text-center">
