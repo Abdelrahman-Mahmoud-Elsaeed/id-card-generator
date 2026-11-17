@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Download, Loader2, Printer } from "lucide-react";
-import { toPng } from "html-to-image";
-import { jsPDF } from "jspdf";
+import { pdf } from "@react-pdf/renderer";
 import { QRCodeSVG } from "qrcode.react";
 
+import { LanyardBadgePdfDocument } from "@/components/pdf/LanyardBadgePdfDocument";
 import { Button } from "@/components/ui/button";
+import { downloadPdfBlob } from "@/lib/pdfUtils";
 import {
   BASE_PUBLIC_URL,
   VARIANT_CODES,
@@ -198,34 +199,22 @@ export function LanyardBadgeSheet() {
   const [platformCode, setPlatformCode] = useState("");
   const [platformIdText, setPlatformIdText] = useState("");
   const [isDownloading, setIsDownloading] = useState(false);
-  const frontRef = useRef<HTMLDivElement | null>(null);
-  const backRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     document.title = "Lanyard Badge (9 × 12 cm) — Portrait";
   }, []);
 
   async function downloadBadgePdf() {
-    if (!frontRef.current || !backRef.current) return;
-
     setIsDownloading(true);
     try {
-      await document.fonts.ready;
-      const [frontImg, backImg] = await Promise.all([
-        toPng(frontRef.current, { pixelRatio: 6, cacheBust: true }),
-        toPng(backRef.current, { pixelRatio: 6, cacheBust: true }),
-      ]);
-
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "cm",
-        format: [9, 12],
-      });
-
-      pdf.addImage(frontImg, "PNG", 0, 0, 9, 12);
-      pdf.addPage([9, 12], "portrait");
-      pdf.addImage(backImg, "PNG", 0, 0, 9, 12);
-      pdf.save("Abdelrahman-Mahmoud-badge-9x12.pdf");
+      const blob = await pdf(
+        <LanyardBadgePdfDocument
+          info={BADGE_INFO}
+          platformCode={platformCode}
+          platformIdText={platformIdText}
+        />
+      ).toBlob();
+      downloadPdfBlob(blob, "Abdelrahman-Mahmoud-badge-9x12.pdf");
     } finally {
       setIsDownloading(false);
     }
@@ -303,14 +292,10 @@ export function LanyardBadgeSheet() {
       {/* Badge Preview / Print Pages */}
       <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-6 print:block print:max-w-none">
         <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-          <div ref={frontRef}>
-            <BadgeFront platformCode={platformCode} platformIdText={platformIdText} />
-          </div>
+          <BadgeFront platformCode={platformCode} platformIdText={platformIdText} />
         </div>
         <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
-          <div ref={backRef}>
-            <BadgeBack />
-          </div>
+          <BadgeBack />
         </div>
       </div>
     </div>
