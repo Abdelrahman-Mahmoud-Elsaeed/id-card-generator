@@ -37,8 +37,7 @@ export function ensurePdfFontsRegistered() {
 }
 
 export function shapeArabicText(text: string): string {
-  const shaped = ArabicShaper.convertArabic(text);
-  return [...shaped].reverse().join("");
+  return ArabicShaper.convertArabic(text);
 }
 
 export function buildQrSvgPath(value: string): { size: number; path: string } {
