@@ -16,6 +16,8 @@ import {
   buildQrSvgPath,
   CARD_PAGE_SIZE,
   ensurePdfFontsRegistered,
+  formatPdfText,
+  hasArabicText,
   shapeArabicText,
 } from "@/lib/pdfUtils";
 
@@ -353,12 +355,13 @@ function ClassicFrontPage({
                 <Text
                   style={{
                     flex: 1,
+                    fontFamily: hasArabicText(row.value) ? "Amiri" : "Inter",
                     fontSize: 5.7,
                     fontWeight: 700,
                     color: row.active ? "#0f172a" : "#94a3b8",
                   }}
                 >
-                  {row.value}
+                  {formatPdfText(row.value)}
                 </Text>
               </View>
             ))}
@@ -519,34 +522,36 @@ function ThemedFrontPage({
           >
             <Text
               style={{
+                fontFamily: hasArabicText(d.jobProfile) ? "Amiri" : "Inter",
                 fontSize: 5.2,
                 fontWeight: 700,
                 letterSpacing: 0.4,
                 color: d.hasJobProfile ? "#0369a1" : "#94a3b8",
               }}
             >
-              {d.jobProfile}
+              {formatPdfText(d.jobProfile)}
             </Text>
             <Text
               style={{
                 marginTop: 2,
-                fontFamily: "SpaceGrotesk",
+                fontFamily: hasArabicText(d.name) ? "Amiri" : "SpaceGrotesk",
                 fontSize: 8.2,
                 fontWeight: 700,
                 color: d.hasName ? "#0f172a" : "#94a3b8",
               }}
             >
-              {d.name}
+              {formatPdfText(d.name)}
             </Text>
             <Text
               style={{
                 marginTop: 1.5,
+                fontFamily: hasArabicText(d.email) ? "Amiri" : "Inter",
                 fontSize: 5.2,
                 fontWeight: 600,
                 color: d.hasEmail ? "#475569" : "#94a3b8",
               }}
             >
-              {d.email}
+              {formatPdfText(d.email)}
             </Text>
             <View
               style={{
@@ -558,21 +563,23 @@ function ThemedFrontPage({
             >
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.program) ? "Amiri" : "Inter",
                   fontSize: 5,
                   fontWeight: 700,
                   color: d.hasProgram ? "#1e293b" : "#94a3b8",
                 }}
               >
-                {d.program}
+                {formatPdfText(d.program)}
               </Text>
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.track) ? "Amiri" : "Inter",
                   fontSize: 4.8,
                   fontWeight: 500,
                   color: d.hasTrack ? "#475569" : "#94a3b8",
                 }}
               >
-                {d.track}
+                {formatPdfText(d.track)}
               </Text>
             </View>
           </View>
@@ -590,12 +597,13 @@ function ThemedFrontPage({
         >
           <Text
             style={{
+              fontFamily: hasArabicText(d.location) ? "Amiri" : "Inter",
               fontSize: 5,
               fontWeight: 600,
               color: themeId === "2" ? "#bae6fd" : "#64748b",
             }}
           >
-            {d.location.toUpperCase()}
+            {formatPdfText(d.location.toUpperCase())}
           </Text>
           <ArabicDigiliansFooter
             color={themeId === "2" ? "#ffffff" : "#475569"}
@@ -681,26 +689,27 @@ function CardBackPage({
             >
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.jobProfile) ? "Amiri" : "Inter",
                   fontSize: 5.2,
                   fontWeight: 700,
                   letterSpacing: 0.4,
                   color: d.hasJobProfile ? "#0369a1" : "#94a3b8",
                 }}
               >
-                {d.jobProfile}
+                {formatPdfText(d.jobProfile)}
               </Text>
             </View>
 
             <Text
               style={{
                 marginTop: 4,
-                fontFamily: "SpaceGrotesk",
+                fontFamily: hasArabicText(d.name) ? "Amiri" : "SpaceGrotesk",
                 fontSize: 8.2,
                 fontWeight: 700,
                 color: d.hasName ? "#0f172a" : "#94a3b8",
               }}
             >
-              {d.name}
+              {formatPdfText(d.name)}
             </Text>
 
             <Text
@@ -717,19 +726,21 @@ function CardBackPage({
             <View style={{ marginTop: 6, flexDirection: "column", gap: 1.5 }}>
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.phone) ? "Amiri" : "Inter",
                   fontSize: 5.2,
                   color: d.hasPhone ? "#475569" : "#94a3b8",
                 }}
               >
-                {d.phone}
+                {formatPdfText(d.phone)}
               </Text>
               <Text
                 style={{
+                  fontFamily: hasArabicText(d.location) ? "Amiri" : "Inter",
                   fontSize: 5.2,
                   color: d.hasLocation ? "#475569" : "#94a3b8",
                 }}
               >
-                {d.location}
+                {formatPdfText(d.location)}
               </Text>
             </View>
           </View>
@@ -773,6 +784,7 @@ function CardBackPage({
               {
                 paddingBottom: 3,
                 textAlign: "center",
+                fontFamily: hasArabicText(d.accreditationFooter) ? "Amiri" : "Inter",
                 fontSize: 5,
                 fontWeight: 500,
                 letterSpacing: 0.4,
@@ -781,7 +793,7 @@ function CardBackPage({
               offsetStyle(offsets, "back-footer") ?? {},
             ]}
           >
-            {d.accreditationFooter}
+            {formatPdfText(d.accreditationFooter)}
           </Text>
           <View style={styles.navyBar} />
         </View>
