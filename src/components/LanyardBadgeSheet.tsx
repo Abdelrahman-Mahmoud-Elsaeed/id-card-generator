@@ -344,7 +344,7 @@ function BadgeFrontByTheme({
           <circle cx="127.5" cy="88" r="54" fill="#0b1120" />
           {/* Top-right triangle with parallel edge (dx/dy≈0.86) & rounded inner corners */}
           <path
-            d="M145,0 L255,0 L255,127 Q255,134 249,127 L141,4 Q138,0 145,0 Z"
+            d="M163,0 L255,0 L255,107 Q255,114 249,107 L159,4 Q156,0 163,0 Z"
             fill="#0b1120"
           />
           {/* Bottom-left accent with parallel edge (dx/dy=0.86) */}
