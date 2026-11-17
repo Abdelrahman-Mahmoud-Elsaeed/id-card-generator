@@ -336,19 +336,20 @@ function BadgeFrontByTheme({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Main dark capsule wrapping concentrically around portrait (127.5, 98, r=50) and containing punch hole (127.5, 16) */}
-          <path
-            d="M0,0 L142,0 Q158,38 174.5,80.9 A50,50 0 1,1 92,133 L0,41 Z"
+          {/* Exact circle centered at (127.5, 88) with r=54 + straight tangent band (slope dx/dy=0.86) */}
+          <polygon
+            points="0,0 123,0 168.4,52.8 86.6,123.2 0,22.5"
             fill="#0b1120"
           />
-          {/* Top-right triangle starting at x≈158, ending at y≈98 on right edge */}
+          <circle cx="127.5" cy="88" r="54" fill="#0b1120" />
+          {/* Top-right triangle with parallel edge (dx/dy≈0.86) & rounded inner corners */}
           <path
-            d="M162,0 L255,0 L255,95 Q255,101 249,95 L159,5 Q155,0 162,0 Z"
+            d="M145,0 L255,0 L255,127 Q255,134 249,127 L141,4 Q138,0 145,0 Z"
             fill="#0b1120"
           />
-          {/* Bottom-left accent with parallel 45-deg white gap */}
+          {/* Bottom-left accent with parallel edge (dx/dy=0.86) */}
           <path
-            d="M0,58 L42,100 Q48,106 44,116 C34,146 20,176 0,204 Z"
+            d="M0,38.5 L42,87.3 Q48,94 43,104 C32,132 18,160 0,185 Z"
             fill="#0b1120"
           />
           {/* Bottom-left lower dark wave */}
@@ -371,10 +372,10 @@ function BadgeFrontByTheme({
           />
         </div>
 
-        {/* Portrait locked to exact SVG arc center (127.5, 98) with diameter 87/255 = 34.12% */}
+        {/* Portrait locked to exact circle center (127.5, 88) with diameter 92 */}
         <div
           className="absolute left-1/2 z-10 -translate-x-1/2 overflow-hidden rounded-full bg-white"
-          style={{ top: "16.03%", width: "34.12%", height: "25.59%" }}
+          style={{ top: "12.35%", width: "36.08%", height: "27.06%" }}
         >
           <img
             src="/logos/digilians-full.png"
