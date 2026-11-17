@@ -867,25 +867,12 @@ function FrontPage({
                 position: "absolute",
                 top: 7,
                 left: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 4,
               }}
             >
               <Image
                 src="/logos/digilians.png"
                 style={{ maxHeight: 20, maxWidth: 42, objectFit: "contain" }}
               />
-              <Text
-                style={{
-                  fontFamily: "Amiri",
-                  fontSize: 7.5,
-                  fontWeight: 700,
-                  color: "#0f172a",
-                }}
-              >
-                {shapeArabicText("الرواد الرقميون")}
-              </Text>
             </View>
           </View>
 

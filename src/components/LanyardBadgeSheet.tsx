@@ -464,15 +464,12 @@ function BadgeFrontByTheme({
           <div className="flex justify-center pt-2 pb-1">
             <div className="h-3 w-3 rounded-full border-[1.5px] border-[#c8a45d] bg-slate-50 shadow-inner" />
           </div>
-          <div className="absolute top-2 left-3 flex items-center gap-1.5">
+          <div className="absolute top-2 left-3">
             <img
               src="/logos/digilians.png"
               alt="DiGiLiANS"
               className="h-6 w-auto object-contain"
             />
-            <span className="text-[7.5pt] font-bold text-slate-900">
-              الرواد الرقميون
-            </span>
           </div>
         </div>
 
