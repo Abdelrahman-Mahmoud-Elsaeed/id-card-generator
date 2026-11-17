@@ -892,13 +892,13 @@ export function LanyardBadgeSheet({
 
       {/* Badge Preview / Print Pages */}
       <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-6 print:block print:max-w-none">
-        <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-md print:rounded-none print:border-0 print:shadow-none">
           <BadgeFrontByTheme
             themeId={themeId}
             displayId={displayId}
           />
         </div>
-        <div className="border border-slate-200 shadow-md print:border-0 print:shadow-none">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-md print:rounded-none print:border-0 print:shadow-none">
           <BadgeBackByTheme themeId={themeId} />
         </div>
       </div>
