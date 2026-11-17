@@ -492,11 +492,9 @@ function CardFrontByTheme({
 export function IdCardSheet({
   themeId,
   onSelectTheme,
-  onSelectBadge,
 }: {
   themeId: CardThemeId;
   onSelectTheme: (id: CardThemeId) => void;
-  onSelectBadge?: () => void;
 }) {
   const [selected, setSelected] = useState<ProfileVariantKey | "all">("all");
   const [showPhoto, setShowPhoto] = useState(false);
@@ -573,18 +571,6 @@ export function IdCardSheet({
                 {theme.route} · {theme.name.replace(/^\d+\.\s*/, "")}
               </a>
             ))}
-            {onSelectBadge && (
-              <a
-                href="/badge"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onSelectBadge();
-                }}
-                className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100"
-              >
-                /badge · Lanyard 9×12
-              </a>
-            )}
           </div>
         </div>
 

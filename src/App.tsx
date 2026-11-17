@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { IdCardSheet, type CardThemeId } from "@/components/IdCardSheet";
-import { LanyardBadgeSheet } from "@/components/LanyardBadgeSheet";
 
-type ActiveRoute = CardThemeId | "badge";
-
-function resolveRouteFromPath(): ActiveRoute {
+function resolveThemeFromPath(): CardThemeId {
   const seg = window.location.pathname.replace(/^\/+|\/+$/g, "");
-  if (seg === "badge") return "badge";
   if (seg === "1" || seg === "2" || seg === "3" || seg === "4" || seg === "5") {
     return seg;
   }
@@ -15,40 +11,20 @@ function resolveRouteFromPath(): ActiveRoute {
 }
 
 export function App() {
-  const [route, setRoute] = useState<ActiveRoute>(() => resolveRouteFromPath());
+  const [themeId, setThemeId] = useState<CardThemeId>(() => resolveThemeFromPath());
 
   useEffect(() => {
-    const onPopState = () => setRoute(resolveRouteFromPath());
+    const onPopState = () => setThemeId(resolveThemeFromPath());
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
   function handleSelectTheme(id: CardThemeId) {
     window.history.pushState(null, "", `/${id}`);
-    setRoute(id);
+    setThemeId(id);
   }
 
-  function handleSelectBadge() {
-    window.history.pushState(null, "", "/badge");
-    setRoute("badge");
-  }
-
-  if (route === "badge") {
-    return (
-      <LanyardBadgeSheet
-        onSelectTheme={handleSelectTheme}
-        onSelectBadge={handleSelectBadge}
-      />
-    );
-  }
-
-  return (
-    <IdCardSheet
-      themeId={route}
-      onSelectTheme={handleSelectTheme}
-      onSelectBadge={handleSelectBadge}
-    />
-  );
+  return <IdCardSheet themeId={themeId} onSelectTheme={handleSelectTheme} />;
 }
 
 export default App;
