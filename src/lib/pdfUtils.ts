@@ -28,8 +28,8 @@ export function ensurePdfFontsRegistered() {
   });
 
   Font.register({
-    family: "Cairo",
-    fonts: [{ src: "/fonts/Cairo-SemiBold.ttf", fontWeight: 600 }],
+    family: "Amiri",
+    fonts: [{ src: "/fonts/Amiri-Bold.ttf", fontWeight: 700 }],
   });
 
   // Prevent hyphenation artifacts on names, emails, and job titles
