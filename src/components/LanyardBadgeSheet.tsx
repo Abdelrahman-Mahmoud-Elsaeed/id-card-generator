@@ -147,7 +147,7 @@ function PortraitAvatar({ circular = false }: { circular?: boolean }) {
     <div
       className={cn(
         "bg-white p-[2px] shadow-[0_2px_6px_rgba(15,23,42,0.12)] ring-1 ring-slate-200",
-        circular ? "h-[2.6cm] w-[2.6cm] rounded-full" : "h-[3cm] w-[2.45cm] rounded-xl"
+        circular ? "h-[2.2cm] w-[2.2cm] rounded-full" : "h-[2.5cm] w-[2.05cm] rounded-xl"
       )}
     >
       <div
@@ -489,33 +489,33 @@ function BadgeFrontByTheme({
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-3 text-center">
-          <h2 className="font-heading text-[12.5pt] leading-tight font-bold tracking-tight text-slate-900">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-3 pb-2 text-center">
+          <h2 className="font-heading text-[11pt] leading-tight font-bold tracking-tight text-slate-900">
             {BADGE_INFO.name}
           </h2>
-          <span className="mt-1.5 text-[7.5pt] font-bold tracking-wide text-[#0b152c] uppercase">
+          <span className="mt-1 text-[6.8pt] font-bold tracking-wide text-[#0b152c] uppercase">
             {BADGE_INFO.track}
           </span>
-          <span className="mt-1 text-[7pt] font-semibold text-[#b08a42]">
+          <span className="mt-0.5 text-[6.5pt] font-semibold text-[#b08a42]">
             {BADGE_INFO.program}
           </span>
 
-          <div className="mt-3.5">
+          <div className="mt-2.5">
             <ForumQrCard displayId={displayId} compact />
           </div>
         </div>
 
-        <div className="relative z-10 flex items-center justify-center gap-4 pt-1 pb-3">
+        <div className="relative z-10 flex items-center justify-center gap-3.5 pt-0.5 pb-2.5">
           <img
             src="/logos/military-academy.png"
             alt="Egyptian Military Academy"
-            className="h-7 w-auto object-contain"
+            className="h-6 w-auto object-contain"
           />
-          <span className="h-5 w-px bg-slate-300" />
+          <span className="h-4 w-px bg-slate-300" />
           <img
             src="/logos/mcit.png"
             alt="MCIT"
-            className="h-6 w-auto object-contain mix-blend-multiply"
+            className="h-5 w-auto object-contain mix-blend-multiply"
           />
         </div>
       </div>
@@ -585,10 +585,10 @@ function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 text-center">
-          <div className="flex flex-col items-center rounded-xl border border-[#c8a45d] bg-white p-3.5 shadow-[0_2px_8px_rgba(11,21,44,0.08)]">
+          <div className="flex flex-col items-center rounded-xl border border-[#c8a45d] bg-white p-3 shadow-[0_2px_8px_rgba(11,21,44,0.08)]">
             <QRCodeSVG
               value={BADGE_INFO.qrUrl}
-              size={136}
+              size={112}
               level="M"
               fgColor="#0b152c"
               bgColor="#ffffff"
@@ -742,10 +742,10 @@ function BadgeBackByTheme({ themeId }: { themeId: BadgeThemeId }) {
           themeId === "3" ? "pr-4 pl-9" : "px-5"
         )}
       >
-        <div className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+        <div className="flex flex-col items-center rounded-xl border border-slate-200 bg-white p-3 shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
           <QRCodeSVG
             value={BADGE_INFO.qrUrl}
-            size={140}
+            size={112}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
@@ -795,7 +795,7 @@ export function LanyardBadgeSheet({
   const displayId = platformIdText.trim() || "DIGI-2026-1098";
 
   useEffect(() => {
-    document.title = `${activeTheme.name} — Lanyard Badge (9 × 12 cm)`;
+    document.title = `${activeTheme.name} — Lanyard Badge (7.5 × 10.5 cm)`;
   }, [activeTheme.name]);
 
   async function downloadBadgePdf() {
@@ -810,7 +810,7 @@ export function LanyardBadgeSheet({
       ).toBlob();
       downloadPdfBlob(
         blob,
-        `Abdelrahman-Mahmoud-badge-9x12-design-${themeId}.pdf`
+        `Abdelrahman-Mahmoud-badge-7.5x10.5-design-${themeId}.pdf`
       );
     } finally {
       setIsDownloading(false);
@@ -824,7 +824,7 @@ export function LanyardBadgeSheet({
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
           <div>
             <h1 className="font-heading text-base font-bold text-slate-900">
-              {activeTheme.name} (9 cm × 12 cm)
+              {activeTheme.name} (7.5 cm × 10.5 cm)
             </h1>
             <p className="text-xs text-slate-500">{activeTheme.subtitle}</p>
           </div>

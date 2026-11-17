@@ -4,7 +4,7 @@ import QRCode from "qrcode";
 
 const PT_PER_CM = 28.3464567;
 export const CARD_PAGE_SIZE: [number, number] = [8.6 * PT_PER_CM, 5.4 * PT_PER_CM];
-export const BADGE_PAGE_SIZE: [number, number] = [9 * PT_PER_CM, 12 * PT_PER_CM];
+export const BADGE_PAGE_SIZE: [number, number] = [7.5 * PT_PER_CM, 10.5 * PT_PER_CM];
 
 let fontsRegistered = false;
 

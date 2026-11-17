@@ -735,15 +735,15 @@ function FrontPage({
             />
           </View>
 
-          {/* Portrait locked to exact circle center (127.5, 88) with diameter 92 */}
+          {/* Portrait locked to exact circle center (127.5, 88) scaled to 7.5x10.5 */}
           <View
             style={{
               position: "absolute",
-              top: 42,
-              left: 81.5,
-              width: 92,
-              height: 92,
-              borderRadius: 46,
+              top: 36.75,
+              left: 67.95,
+              width: 76.7,
+              height: 76.7,
+              borderRadius: 38.35,
               backgroundColor: "#ffffff",
               overflow: "hidden",
             }}
@@ -880,29 +880,29 @@ function FrontPage({
           <View
             style={{
               position: "absolute",
-              top: 42.5,
-              left: 77.75,
-              width: 99.5,
-              height: 99.5,
-              borderRadius: 49.75,
+              top: 37.2,
+              left: 64.85,
+              width: 82.9,
+              height: 82.9,
+              borderRadius: 41.45,
               backgroundColor: "#0b152c",
-              padding: 5,
+              padding: 4.5,
             }}
           >
             <View
               style={{
                 width: "100%",
                 height: "100%",
-                borderRadius: 44.75,
+                borderRadius: 37,
                 backgroundColor: "#ffffff",
-                padding: 2,
+                padding: 1.5,
               }}
             >
               <View
                 style={{
                   width: "100%",
                   height: "100%",
-                  borderRadius: 42.75,
+                  borderRadius: 35.5,
                   overflow: "hidden",
                   backgroundColor: "#132444",
                 }}
@@ -921,14 +921,14 @@ function FrontPage({
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "flex-end",
-              paddingHorizontal: 14,
-              paddingBottom: 10,
+              paddingHorizontal: 12,
+              paddingBottom: 8,
             }}
           >
             <Text
               style={{
                 fontFamily: "SpaceGrotesk",
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: 700,
                 color: "#0f172a",
                 textAlign: "center",
@@ -939,8 +939,8 @@ function FrontPage({
 
             <Text
               style={{
-                marginTop: 4,
-                fontSize: 7.6,
+                marginTop: 3,
+                fontSize: 6.8,
                 fontWeight: 700,
                 letterSpacing: 0.4,
                 color: "#0b152c",
@@ -952,8 +952,8 @@ function FrontPage({
 
             <Text
               style={{
-                marginTop: 2.5,
-                fontSize: 7.2,
+                marginTop: 2,
+                fontSize: 6.5,
                 fontWeight: 600,
                 color: "#b08a42",
                 textAlign: "center",
@@ -962,7 +962,7 @@ function FrontPage({
               {info.program}
             </Text>
 
-            <View style={{ marginTop: 11 }}>
+            <View style={{ marginTop: 9 }}>
               <ForumQrBox displayId={displayId} compact />
             </View>
           </View>
@@ -1184,7 +1184,7 @@ function BackPage({
                 padding: 10,
               }}
             >
-              <PdfQrCode value={info.qrUrl} size={105} />
+              <PdfQrCode value={info.qrUrl} size={88} />
               <Text
                 style={{
                   marginTop: 7,
