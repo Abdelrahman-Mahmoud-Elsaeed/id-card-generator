@@ -52,8 +52,19 @@
   height: 5.4cm;
 }
 
+.lanyard-badge-face {
+  width: 7.5cm;
+  height: 10.5cm;
+  page: badge;
+}
+
 @page {
   size: 8.6cm 5.4cm;
+  margin: 0;
+}
+
+@page badge {
+  size: 7.5cm 10.5cm;
   margin: 0;
 }
 
@@ -67,7 +78,8 @@
     print-color-adjust: exact;
   }
 
-  .id-card-face {
+  .id-card-face,
+  .lanyard-badge-face {
     break-after: page;
     page-break-after: always;
     box-shadow: none !important;
