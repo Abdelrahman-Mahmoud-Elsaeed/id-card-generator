@@ -409,6 +409,7 @@ function BadgeThemeBackground({
         width={BADGE_PAGE_SIZE[0]}
         height={BADGE_PAGE_SIZE[1]}
         viewBox="0 0 255 340"
+        preserveAspectRatio="none"
         style={styles.fillAbsolute}
       >
         <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
@@ -972,22 +973,45 @@ function FrontPage({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-              gap: 12,
               paddingTop: 1,
-              paddingBottom: 8,
+              paddingBottom: 9,
+              paddingLeft: 18,
             }}
           >
-            <Image
-              src="/logos/military-academy.png"
-              style={{ maxHeight: 30, maxWidth: 60, objectFit: "contain" }}
+            <View
+              style={{
+                width: 26,
+                height: 26,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                src="/logos/military-academy.png"
+                style={{ width: 24, height: 24, objectFit: "contain" }}
+              />
+            </View>
+            <View
+              style={{
+                width: 0.75,
+                height: 18,
+                backgroundColor: "#cbd5e1",
+                marginHorizontal: 9,
+              }}
             />
             <View
-              style={{ width: 0.75, height: 20, backgroundColor: "#cbd5e1" }}
-            />
-            <Image
-              src="/logos/mcit.png"
-              style={{ maxHeight: 25, maxWidth: 78, objectFit: "contain" }}
-            />
+              style={{
+                width: 56,
+                height: 24,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                src="/logos/mcit.png"
+                style={{ maxHeight: 20, maxWidth: 54, objectFit: "contain" }}
+              />
+            </View>
           </View>
         </View>
       </Page>
