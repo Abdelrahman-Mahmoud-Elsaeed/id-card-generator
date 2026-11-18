@@ -423,6 +423,7 @@ function BadgeThemeBackground({
         width={BADGE_PAGE_SIZE[0]}
         height={BADGE_PAGE_SIZE[1]}
         viewBox="0 0 255 340"
+        preserveAspectRatio="none"
         style={styles.fillAbsolute}
       >
         <Rect x={0} y={0} width={255} height={340} fill="#ffffff" />
@@ -1035,41 +1036,42 @@ function FrontPage({
               alignItems: "center",
               justifyContent: "center",
               paddingTop: 1,
-              paddingBottom: 8,
+              paddingBottom: 9,
+              paddingLeft: 18,
             }}
           >
             <View
               style={{
-                width: 38,
-                height: 28,
+                width: 26,
+                height: 26,
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
               <Image
                 src="/logos/military-academy.png"
-                style={{ width: 28, height: 28, objectFit: "contain" }}
+                style={{ width: 24, height: 24, objectFit: "contain" }}
               />
             </View>
             <View
               style={{
                 width: 0.75,
-                height: 20,
+                height: 18,
                 backgroundColor: "#cbd5e1",
-                marginHorizontal: 10,
+                marginHorizontal: 9,
               }}
             />
             <View
               style={{
-                width: 68,
-                height: 28,
+                width: 56,
+                height: 24,
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
               <Image
                 src="/logos/mcit.png"
-                style={{ maxHeight: 24, maxWidth: 68, objectFit: "contain" }}
+                style={{ maxHeight: 20, maxWidth: 54, objectFit: "contain" }}
               />
             </View>
           </View>
